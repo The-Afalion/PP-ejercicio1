@@ -1,16 +1,19 @@
 /**
- * @brief Implementation of the screen interface
+ * @brief Implementa la interfaz de la pantalla
  *
  * @file libscreen.c
- * @author AI Assistant
+ * @author Unai y Rodrigo
  * @version 1.0
- * @date 2026
+ * @date 15-02-2026
+ * @copyright GNU Public License
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "libscreen.h"
+
+#define CURSOR_START 0
 
 struct _Area {
     int x, y, width, height;
@@ -22,10 +25,15 @@ static int __rows = 0;
 static int __columns = 0;
 
 void screen_init(int rows, int columns) {
-    if (__data) free(__data);
+    if (__data) {
+        free(__data);
+    }
+    
     __rows = rows;
     __columns = columns;
+    
     __data = (char *)malloc(rows * columns * sizeof(char));
+    
     if (__data) {
         memset(__data, ' ', rows * columns);
     }
@@ -39,13 +47,17 @@ void screen_destroy() {
 }
 
 void screen_paint() {
-    if (!__data) return;
+    /* Variables declaradas al principio (Estricto ANSI C) */
+    int i, j;
 
-    /* Clear terminal using ANSI escape codes */
+    if (!__data) {
+        return;
+    }
+
     printf("\033[2J\033[H");
 
-    for (int i = 0; i < __rows; i++) {
-        for (int j = 0; j < __columns; j++) {
+    for (i = 0; i < __rows; i++) {
+        for (j = 0; j < __columns; j++) {
             putchar(__data[i * __columns + j]);
         }
         putchar('\n');
@@ -54,69 +66,83 @@ void screen_paint() {
 
 Area *screen_area_init(int x, int y, int width, int height) {
     Area *area = (Area *)malloc(sizeof(Area));
+    
     if (area) {
         area->x = x;
         area->y = y;
         area->width = width;
         area->height = height;
-        area->cursor_x = 0;
-        area->cursor_y = 0;
+        area->cursor_x = CURSOR_START;
+        area->cursor_y = CURSOR_START;
     }
     return area;
 }
 
 void screen_area_destroy(Area *area) {
-    if (area) free(area);
+    if (area) {
+        free(area);
+    }
 }
 
 void screen_area_clear(Area *area) {
-    if (!area || !__data) return;
+    /* Variables declaradas al principio (Estricto ANSI C) */
+    int i, j, screen_x, screen_y;
 
-    for (int i = 0; i < area->height; i++) {
-        for (int j = 0; j < area->width; j++) {
-            int screen_x = area->x + j;
-            int screen_y = area->y + i;
+    if (!area || !__data) {
+        return;
+    }
 
-            /* Boundary check */
+    for (i = 0; i < area->height; i++) {
+        for (j = 0; j < area->width; j++) {
+            screen_x = area->x + j;
+            screen_y = area->y + i;
+
             if (screen_x >= 0 && screen_x < __columns &&
                 screen_y >= 0 && screen_y < __rows) {
                 __data[screen_y * __columns + screen_x] = ' ';
             }
         }
     }
+    
     screen_area_reset_cursor(area);
 }
 
 void screen_area_reset_cursor(Area *area) {
     if (area) {
-        area->cursor_x = 0;
-        area->cursor_y = 0;
+        area->cursor_x = CURSOR_START;
+        area->cursor_y = CURSOR_START;
     }
 }
 
 void screen_area_puts(Area *area, char *str) {
-    if (!area || !__data || !str) return;
+    /* Variables declaradas al principio (Estricto ANSI C) */
+    int len, screen_y, screen_x, i, curr_x;
 
-    int len = strlen(str);
-    /* Truncate if string is wider than area */
-    if (len > area->width) len = area->width;
+    if (!area || !__data || !str) {
+        return;
+    }
 
-    /* Check if we have vertical space */
-    if (area->cursor_y >= area->height) return;
+    len = strlen(str);
+    
+    if (len > area->width) {
+        len = area->width;
+    }
 
-    int screen_y = area->y + area->cursor_y;
-    int screen_x = area->x;
+    if (area->cursor_y >= area->height) {
+        return;
+    }
 
-    for (int i = 0; i < len; i++) {
-        int curr_x = screen_x + i;
+    screen_y = area->y + area->cursor_y;
+    screen_x = area->x;
 
-        /* Boundary check */
+    for (i = 0; i < len; i++) {
+        curr_x = screen_x + i;
+
         if (curr_x >= 0 && curr_x < __columns &&
             screen_y >= 0 && screen_y < __rows) {
             __data[screen_y * __columns + curr_x] = str[i];
         }
     }
 
-    /* Move cursor to next line */
     area->cursor_y++;
 }
