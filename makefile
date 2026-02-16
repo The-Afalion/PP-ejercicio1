@@ -1,15 +1,16 @@
 # Variables
 CC = gcc
 CFLAGS = -Wall -pedantic -ansi -g
-LIBS = -lscreen -L.
-OBJETOS = command.o game_actions.o game_loop.o game_reader.o game.o graphic_engine.o object.o player.o space.o
+# No necesitamos LIBS si enlazamos el .o directamente
+# LIBS = -lscreen -L.
+OBJETOS = command.o game_actions.o game_loop.o game_reader.o game.o graphic_engine.o object.o player.o space.o libscreen.o
 
 # Regla principal
 all: castle
 
 # Enlazado del ejecutable
 castle: $(OBJETOS)
-	$(CC) -o $@ $(OBJETOS) $(LIBS)
+	$(CC) -o $@ $(OBJETOS)
 
 # Se compilan los modulos
 
@@ -40,7 +41,10 @@ player.o: player.c player.h types.h
 space.o: space.c space.h types.h
 	$(CC) $(CFLAGS) -c $<
 
-# Limpieza de archivos 
+libscreen.o: libscreen.c libscreen.h
+	$(CC) $(CFLAGS) -c $<
+
+# Limpieza de archivos
 .PHONY: clean
 clean:
 	rm -f $(OBJETOS) castle
