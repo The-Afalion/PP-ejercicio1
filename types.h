@@ -1,5 +1,5 @@
 /**
- * @brief It defines common types for the whole project
+ * @brief Define tipos comunes para todo el proyecto
  *
  * @file types.h
  * @author Profesores PPROG

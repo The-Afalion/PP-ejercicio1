@@ -28,12 +28,12 @@ void screen_init(int rows, int columns) {
     if (__data) {
         free(__data);
     }
-    
+
     __rows = rows;
     __columns = columns;
-    
-    __data = (char *)malloc(rows * columns * sizeof(char));
-    
+
+    __data = (char *) malloc(rows * columns * sizeof(char));
+
     if (__data) {
         memset(__data, ' ', rows * columns);
     }
@@ -65,8 +65,8 @@ void screen_paint() {
 }
 
 Area *screen_area_init(int x, int y, int width, int height) {
-    Area *area = (Area *)malloc(sizeof(Area));
-    
+    Area *area = (Area *) malloc(sizeof(Area));
+
     if (area) {
         area->x = x;
         area->y = y;
@@ -103,7 +103,7 @@ void screen_area_clear(Area *area) {
             }
         }
     }
-    
+
     screen_area_reset_cursor(area);
 }
 
@@ -123,7 +123,7 @@ void screen_area_puts(Area *area, char *str) {
     }
 
     len = strlen(str);
-    
+
     if (len > area->width) {
         len = area->width;
     }

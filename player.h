@@ -25,7 +25,7 @@ typedef struct Player Player;
  * @param id el número de identificación para el nuevo jugador
  * @return un nuevo jugador inicializado, o NULL en caso de error
  */
-Player* player_create(Id id);
+Player *player_create(Id id);
 
 /**
  * @brief Destruye un jugador, liberando la memoria previamente reservada
@@ -34,7 +34,7 @@ Player* player_create(Id id);
  * @param player puntero al jugador que debe ser destruido
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
-Status player_destroy(Player* player);
+Status player_destroy(Player *player);
 
 /**
  * @brief Obtiene el id de un jugador
@@ -43,7 +43,7 @@ Status player_destroy(Player* player);
  * @param player puntero al jugador
  * @return el id del jugador o NO_ID en caso de error
  */
-Id player_get_id(Player* player);
+Id player_get_id(Player *player);
 
 /**
  * @brief Establece el nombre de un jugador
@@ -52,7 +52,7 @@ Id player_get_id(Player* player);
  * @param name cadena con el nombre a asignar
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
-Status player_set_name(Player* player, char* name);
+Status player_set_name(Player *player, char *name);
 
 /**
  * @brief Obtiene el nombre de un jugador
@@ -61,7 +61,7 @@ Status player_set_name(Player* player, char* name);
  * @return una cadena con el nombre del jugador
  * @return NULL en caso de error
  */
-const char* player_get_name(Player* player);
+const char *player_get_name(Player *player);
 
 /**
  * @brief Establece la localización (espacio) donde se encuentra el jugador
@@ -70,7 +70,7 @@ const char* player_get_name(Player* player);
  * @param location el id del espacio donde se ubicará
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
-Status player_set_location(Player* player, Id location);
+Status player_set_location(Player *player, Id location);
 
 /**
  * @brief Obtiene la localización actual del jugador
@@ -78,7 +78,7 @@ Status player_set_location(Player* player, Id location);
  * @param player puntero al jugador
  * @return el id de la ubicación actual o NO_ID en caso de error
  */
-Id player_get_location(Player* player);
+Id player_get_location(Player *player);
 
 /**
  * @brief Asigna un objeto al inventario del jugador
@@ -87,7 +87,7 @@ Id player_get_location(Player* player);
  * @param object el id del objeto que el jugador llevará
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
-Status player_set_object(Player* player, Id object);
+Status player_set_object(Player *player, Id object);
 
 /**
  * @brief Obtiene el objeto que tiene el jugador
@@ -95,7 +95,7 @@ Status player_set_object(Player* player, Id object);
  * @param player puntero al jugador
  * @return el id del objeto que posee o NO_ID si no tiene ninguno
  */
-Id player_get_object(Player* player);
+Id player_get_object(Player *player);
 
 /**
  * @brief Imprime la información del jugador por pantalla,muestra el id, el nombre, la localización y el objeto que posee.
@@ -103,6 +103,6 @@ Id player_get_object(Player* player);
  * @param player puntero al jugador
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
-Status player_print(Player* player);
+Status player_print(Player *player);
 
 #endif

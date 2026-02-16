@@ -22,6 +22,6 @@
  * @param cmd Puntero al comando a ejecutar.
  * @return OK si se actualiza con éxito, ERROR en caso contrario.
  */
-Status game_actions_update(Game *game, Command *cmd);
+Status game_actions_update(Game * game, Command * cmd);
 
 #endif

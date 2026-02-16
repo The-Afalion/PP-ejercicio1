@@ -1,5 +1,5 @@
 /**
- * @brief It defines the screen interface
+ * @brief Define la interfaz de la pantalla
  *
  * @file libscreen.h
  * @author Profesores PPROG
@@ -14,86 +14,86 @@
 typedef struct _Area Area;
 
 /**
- * @brief It creates a new screen
+ * @brief Crea una nueva pantalla
  * @author Profesores PPROG
  *
- * This function should be called at the beginning of the program,
- *  so the complete screen is allocated before starting defining areas.
- * @param rows the number of rows that will have the full screen
- * @param columns the number of columns that will have the full screen
+ * Esta función debe ser llamada al principio del programa,
+ * para que la pantalla completa sea asignada antes de empezar a definir áreas.
+ * @param rows el número de filas que tendrá la pantalla completa
+ * @param columns el número de columnas que tendrá la pantalla completa
  */
 void screen_init(int rows, int columns);
 
 /**
- * @brief It destroys a new screen area
+ * @brief Destruye un área de pantalla nueva
  * @author Profesores PPROG
  *
- * As it frees the screen, it must be called at the end of the program,
- *  once the areas created have been freed.
+ * Como libera la pantalla, debe ser llamada al final del programa,
+ * una vez que las áreas creadas han sido liberadas.
  */
 void screen_destroy();
 
 /**
- * @brief It paints in the terminal the actual screen composition
+ * @brief Pinta en la terminal la composición actual de la pantalla
  * @author Profesores PPROG
  *
- * This function should be called when some updates
- *  in the screen want to be shown.
+ * Esta función debe ser llamada cuando se quieran mostrar
+ * algunas actualizaciones en la pantalla.
  */
 void screen_paint();
 
 /**
- * @brief It creates a new area inside a screen
+ * @brief Crea una nueva área dentro de una pantalla
  * @author Profesores PPROG
  *
- * screen_area_init allocates memory for a new area
- *  and initializes its members.
- * @param x the x-coordinate of the up-left corner of the area
- * @param y the x-coordinate of the up-left corner of the area
- * @param width the width of the area
- * @param height the height of the area
- * @return a new area, initialized
+ * screen_area_init asigna memoria para una nueva área
+ * e inicializa sus miembros.
+ * @param x la coordenada x de la esquina superior izquierda del área
+ * @param y la coordenada y de la esquina superior izquierda del área
+ * @param width el ancho del área
+ * @param height la altura del área
+ * @return una nueva área, inicializada
  */
-Area* screen_area_init(int x, int y, int width, int height);
+Area *screen_area_init(int x, int y, int width, int height);
 
 /**
- * @brief It destroys a new screen area
+ * @brief Destruye un área de pantalla nueva
  * @author Profesores PPROG
  *
- * This function should be called once the area is not needed anymore,
- *  before ending the programme.
- * @param area the area to be freed
+ * Esta función debe ser llamada una vez que el área ya no es necesaria,
+ * antes de terminar el programa.
+ * @param area el área a ser liberada
  */
-void screen_area_destroy(Area* area);
+void screen_area_destroy(Area *area);
 
 /**
- * @brief It cleares an area, eraising all its content
+ * @brief Limpia un área, borrando todo su contenido
  * @author Profesores PPROG
  *
- * This function should be called for earaising all the information in an area,
- *  before introducing a new state of it.
- * @param area the area to be cleared
+ * Esta función debe ser llamada para borrar toda la información en un área,
+ * antes de introducir un nuevo estado de la misma.
+ * @param area el área a ser limpiada
  */
-void screen_area_clear(Area* area);
+void screen_area_clear(Area *area);
 
 /**
- * @brief It resets the cursor of an area
+ * @brief Reinicia el cursor de un área
  * @author Profesores PPROG
  *
- * This function reset the cursor to the up-left corner of the area.
- * @param area the involved area
+ * Esta función reinicia el cursor a la esquina superior izquierda del área.
+ * @param area el área involucrada
  */
-void screen_area_reset_cursor(Area* area);
+void screen_area_reset_cursor(Area *area);
 
 /**
- * @brief It introduces some information inside an area
+ * @brief Introduce alguna información dentro de un área
  * @author Profesores PPROG
  *
- * This function sets the string that will be shown in an area.
- *  Each string introduced will be a line in the specified area.
- * @param area the area to be modified
- * @param str a string that contains the information to be included in a particular area
+ * Esta función establece la cadena que se mostrará en un área.
+ * Cada cadena introducida será una línea en el área especificada.
+ * @param area el área a ser modificada
+ * @param str una cadena que contiene la información a ser incluida en un área particular
  */
-void screen_area_puts(Area* area, char* str);
+void screen_area_puts(Area *area, char *str);
 
 #endif

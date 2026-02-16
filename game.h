@@ -25,12 +25,12 @@
  * Almacena todo el estado del juego.
  */
 typedef struct _Game {
-  Player* player;           /*!< Puntero al jugador */
-  Object* object;           /*!< Puntero al objeto principal */
-  Space *spaces[MAX_SPACES];/*!< Array de punteros a los espacios del mapa */
-  int n_spaces;             /*!< Número actual de espacios cargados */
-  Command *last_cmd;        /*!< Puntero al último comando ejecutado */
-  Bool finished;            /*!< Indica si el juego ha terminado  */
+    Player *player; /*!< Puntero al jugador */
+    Object *object; /*!< Puntero al objeto principal */
+    Space *spaces[MAX_SPACES]; /*!< Array de punteros a los espacios del mapa */
+    int n_spaces; /*!< Número actual de espacios cargados */
+    Command *last_cmd; /*!< Puntero al último comando ejecutado */
+    Bool finished; /*!< Indica si el juego ha terminado  */
 } Game;
 
 /**
@@ -65,7 +65,7 @@ Status game_destroy(Game *game);
  * @param space Puntero al espacio a añadir.
  * @return OK si se añade con éxito, ERROR si no cabe o falla.
  */
-Status game_add_space(Game *game, Space *space);
+Status game_add_space(Game * game, Space * space);
 
 /**
  * @brief Busca un espacio en el juego por su ID.
@@ -116,7 +116,7 @@ Status game_set_object_location(Game *game, Id id);
  * @param game Puntero al juego.
  * @return Puntero al último comando, o NULL si hay error.
  */
-Command* game_get_last_command(Game *game);
+Command *game_get_last_command(Game *game);
 
 /**
  * @brief Guarda el último comando introducido.
@@ -125,7 +125,7 @@ Command* game_get_last_command(Game *game);
  * @param command Puntero al comando a guardar.
  * @return OK si se guarda con éxito, ERROR en caso contrario.
  */
-Status game_set_last_command(Game *game, Command *command);
+Status game_set_last_command(Game * game, Command * command);
 
 /**
  * @brief Comprueba si el juego ha terminado.

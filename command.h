@@ -36,7 +36,7 @@ typedef struct _Command Command;
  * @author Unai y Rodrigo
  * @return Puntero al comando creado o NULL en caso de error.
  */
-Command* command_create();
+Command *command_create();
 
 /**
  * @brief Libera la memoria de un comando.
@@ -44,7 +44,7 @@ Command* command_create();
  * @param command Puntero al comando a destruir.
  * @return OK si se destruye con éxito, ERROR en caso contrario.
  */
-Status command_destroy(Command* command);
+Status command_destroy(Command *command);
 
 /**
  * @brief Asigna un código a un comando.
@@ -53,7 +53,7 @@ Status command_destroy(Command* command);
  * @param code Código a asignar.
  * @return OK si se asigna con éxito, ERROR en caso contrario.
  */
-Status command_set_code(Command* command, CommandCode code);
+Status command_set_code(Command *command, CommandCode code);
 
 /**
  * @brief Obtiene el código actual de un comando.
@@ -61,7 +61,7 @@ Status command_set_code(Command* command, CommandCode code);
  * @param command Puntero al comando.
  * @return El código del comando o NO_CMD si hay error.
  */
-CommandCode command_get_code(Command* command);
+CommandCode command_get_code(Command *command);
 
 /**
  * @brief Lee el comando introducido por el usuario desde teclado.
@@ -69,6 +69,6 @@ CommandCode command_get_code(Command* command);
  * @param command Puntero al comando donde se guardará la entrada.
  * @return OK si se lee con éxito, ERROR en caso contrario.
  */
-Status command_get_user_input(Command* command);
+Status command_get_user_input(Command *command);
 
 #endif
