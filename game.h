@@ -25,12 +25,12 @@
  * Almacena todo el estado del juego.
  */
 typedef struct _Game {
-  Player* player;           /*!< Puntero al jugador */
-  Object* object;           /*!< Puntero al objeto principal */
-  Space *spaces[MAX_SPACES];/*!< Array de punteros a los espacios del mapa */
-  int n_spaces;             /*!< Número actual de espacios cargados */
-  Command *last_cmd;        /*!< Puntero al último comando ejecutado */
-  Bool finished;            /*!< Indica si el juego ha terminado  */
+  Player* player;           /* Puntero al jugador */
+  Object* object;           /*Puntero al objeto */
+  Space *spaces[MAX_SPACES];/* Array de punteros a los espacios del mapa */
+  int n_spaces;             /*Número  de espacios */
+  Command *last_cmd;        /* Puntero al último comando ejecutado */
+  Bool finished;          
 } Game;
 
 /**

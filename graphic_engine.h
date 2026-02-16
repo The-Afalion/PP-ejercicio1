@@ -2,7 +2,7 @@
  * @brief Define la interfaz del motor gráfico textual
  *
  * @file graphic_engine.h
- * @author Unai
+ * @author Unai y Rodrigo
  * @version 1.0
  * @date 15-02-2026
  * @copyright GNU Public License
