@@ -2,7 +2,7 @@
  * @brief Implementa la estructura del juego
  *
  * @file game.c
- * @author Unai y Rodrigo
+ * @author Unai
  * @version 1.0
  * @date 15-02-2026
  * @copyright GNU Public License

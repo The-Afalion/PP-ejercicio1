@@ -2,7 +2,7 @@
  * @brief Define la interfaz de lectura de datos del juego
  *
  * @file game_reader.h
- * @author Unai y Rodrigo
+ * @author Unai
  * @version 1.0
  * @date 15-02-2026
  * @copyright GNU Public License
@@ -15,7 +15,7 @@
 
 /**
  * @brief Carga los espacios del mapa desde un archivo de texto.
- * @author Unai y Rodrigo
+ * @author Unai
  * @param game Puntero al juego principal donde se añadirán los espacios.
  * @param filename Cadena de caracteres con el nombre del archivo.
  * @return OK si se lee correctamente, ERROR si hay algún fallo.

@@ -2,7 +2,7 @@
  * @brief Implementa el intérprete de comandos
  *
  * @file command.c
- * @author Unai y Rodrigo
+ * @author Unai
  * @version 1.0
  * @date 15-02-2026
  * @copyright GNU Public License

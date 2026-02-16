@@ -1,7 +1,7 @@
 /**
  * @brief Implementación del módulo de jugador
  * @file player.c
- * @author Unai y Rodrigo
+ * @author Unai
  * @version 1.0
  * @date 15-02-2026
  */
