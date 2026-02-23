@@ -9,6 +9,7 @@
  */
 
 #include "space.h"
+#include "set.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +28,7 @@ struct Space
   Id south;
   Id east;
   Id west;
-  Id object;
+  Set *object;
 };
 
 Space *space_create(Id id)
@@ -52,7 +53,7 @@ Space *space_create(Id id)
   newSpace->south = NO_ID;
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
-  newSpace->object = NO_ID;
+  newSpace->object=set_create(NO_ID);
 
   return newSpace;
 }
@@ -64,6 +65,9 @@ Status space_destroy(Space *space)
   {
     return ERROR;
   }
+ if(!set_destroy(space->object)){
+  return ERROR;
+ }
 
   free(space);
   return OK;
@@ -190,17 +194,24 @@ Status space_set_object(Space *space, Id value)
   {
     return ERROR;
   }
-  space->object = value;
+  if(!set_add(space->object,value)){
+    return ERROR;
+  }
   return OK;
 }
 
-Id space_get_object(Space *space)
+Id space_get_object(Space *space,int indx)//ns si esta bn
 {
-  if (!space)
+  Id id;
+  if (!space||indx<0)
   {
     return NO_ID;
   }
-  return space->object;
+id=set_get_id(space->object,indx);
+if(id<0){
+  return NO_ID;
+}
+return id;
 }
 
 Status space_print(Space *space)
@@ -254,7 +265,7 @@ Status space_print(Space *space)
     fprintf(stdout, "---> No west link.\n");
   }
 
-  if (space_get_object(space) != NO_ID)
+  if (space_get_object(space) != NO_ID)//Revisar?
   {
     fprintf(stdout, "---> Object in the space (Id: %ld).\n", space->object);
   }

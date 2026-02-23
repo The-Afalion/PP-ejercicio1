@@ -12,6 +12,7 @@
 #define SPACE_H
 
 #include "types.h"
+#include "set.h"
 
 typedef struct Space Space;
 
@@ -155,7 +156,7 @@ Status space_set_object(Space* space, Id object_id);
  * @param space a pointer to the space
  * @return the id of the object in the space
  */
-Id space_get_object(Space* space);
+Id space_get_object(Space* space,int indx);
 
 /**
  * @brief It prints the space information
