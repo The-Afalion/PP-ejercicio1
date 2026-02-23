@@ -1,0 +1,8 @@
+# Archivos objeto compilados
+*.o
+
+# Ejecutable final
+castle
+
+# Archivos del IDE
+.idea/
