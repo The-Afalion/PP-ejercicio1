@@ -70,7 +70,7 @@ Status character_set_name(Character *character, const char *name);
   * @param character Un puntero al personaje
   * @return La descripción gráfica del personaje
   */
-const char *character_get_gdesc(const Character *character);
+ char *character_get_gdesc( Character *character);
 
 /**
   * @brief Establece la descripción gráfica de un personaje

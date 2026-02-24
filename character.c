@@ -15,17 +15,17 @@
 #include <string.h>
 
 #include "types.h"
-
+#define DESC 7
 /**
  * @brief Estructura que define un personaje
  */
 struct _Character {
   Id id;
   char name[CHARACTER_NAME_LEN + 1];
-  char gdesc[6 + 1];
+  char gdesc[DESC];
   int health;
   int friendly;
-  char message[1000];
+  char message[WORD_SIZE];
 };
 
 /**
@@ -106,7 +106,7 @@ Status character_set_name(Character *character, const char *name) {
 /**
  * @brief Obtiene la descripción gráfica de un personaje
  */
-const char *character_get_gdesc(const Character *character) {
+ char *character_get_gdesc(Character *character) {
   if (!character) {
     return NULL;
   }
