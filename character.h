@@ -1,5 +1,5 @@
 /**
- * @brief It defines the character module
+ * @brief Define el módulo del personaje
  *
  * @file character.h
  * @author Rodrigo
@@ -22,121 +22,129 @@ typedef struct _Character Character;
   * @brief Crea un nuevo personaje
   * @author Rodrigo
   *
-  * @param
+  * @param id El id del personaje a crear
+  * @return Un puntero al personaje creado, o NULL si hubo un error
   */
 Character *character_create(Id id);
 
 /**
-  * @brief Destruye al personaje
+  * @brief Destruye un personaje
   * @author Rodrigo
   *
+  * @param character Un puntero al personaje a destruir
   */
 void character_destroy(Character *character);
 
 /**
-  * @brief Obetiene la ID del personaje
+  * @brief Obtiene el id de un personaje
   * @author Rodrigo
   *
+  * @param character Un puntero al personaje
+  * @return El id del personaje
   */
 Id character_get_id(const Character *character);
 
 /**
-  * @brief It gets the character's name
-  * @Rodrigo
+  * @brief Obtiene el nombre de un personaje
+  * @author Rodrigo
   *
+  * @param character Un puntero al personaje
+  * @return El nombre del personaje
   */
 const char *character_get_name(const Character *character);
 
 /**
-  * @brief It sets the character's name
+  * @brief Establece el nombre de un personaje
   * @author Rodrigo
   *
-  * @param puntero de personaje a personaje
+  * @param character Un puntero al personaje
+  * @param name Una cadena con el nuevo nombre
+  * @return OK si todo fue bien, o ERROR si hubo algún error
   */
 Status character_set_name(Character *character, const char *name);
 
 /**
-  * @brief It gets the character's graphical description
+  * @brief Obtiene la descripción gráfica de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @return the character's graphical description
+  * @param character Un puntero al personaje
+  * @return La descripción gráfica del personaje
   */
 const char *character_get_gdesc(const Character *character);
 
 /**
-  * @brief It sets the character's graphical description
+  * @brief Establece la descripción gráfica de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @param gdesc a string with the new graphical description
-  * @return OK, if everything goes well or ERROR if there was some mistake
+  * @param character Un puntero al personaje
+  * @param gdesc Una cadena con la nueva descripción gráfica
+  * @return OK si todo fue bien, o ERROR si hubo algún error
   */
 Status character_set_gdesc(Character *character, const char *gdesc);
 
 /**
-  * @brief It gets the character's health
+  * @brief Obtiene la salud de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @return the character's health
+  * @param character Un puntero al personaje
+  * @return La salud del personaje
   */
 int character_get_health(const Character *character);
 
 /**
-  * @brief It sets the character's health
+  * @brief Establece la salud de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @param health the new health
-  * @return OK, if everything goes well or ERROR if there was some mistake
+  * @param character Un puntero al personaje
+  * @param health La nueva salud
+  * @return OK si todo fue bien, o ERROR si hubo algún error
   */
 Status character_set_health(Character *character, int health);
 
 /**
-  * @brief It gets the character's friendly status
+  * @brief Obtiene el estado de amistad de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @return the character's friendly status
+  * @param character Un puntero al personaje
+  * @return El estado de amistad del personaje
   */
 BOOL character_get_friendly(const Character *character);
 
 /**
-  * @brief It sets the character's friendly status
+  * @brief Establece el estado de amistad de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @param friendly the new friendly status
-  * @return OK, if everything goes well or ERROR if there was some mistake
+  * @param character Un puntero al personaje
+  * @param friendly El nuevo estado de amistad
+  * @return OK si todo fue bien, o ERROR si hubo algún error
   */
 Status character_set_friendly(Character *character, BOOL friendly);
 
 /**
-  * @brief It gets the character's message
+  * @brief Obtiene el mensaje de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @return the character's message
+  * @param character Un puntero al personaje
+  * @return El mensaje del personaje
   */
 const char *character_get_message(const Character *character);
 
 /**
-  * @brief It sets the character's message
+  * @brief Establece el mensaje de un personaje
   * @author Profesores PPROG
   *
-  * @param character a pointer to the character
-  * @param message a string with the new message
-  * @return OK, if everything goes well or ERROR if there was some mistake
+  * @param character Un puntero al personaje
+  * @param message Una cadena con el nuevo mensaje
+  * @return OK si todo fue bien, o ERROR si hubo algún error
   */
 Status character_set_message(Character *character, const char *message);
 
 /**
-  * @brief It prints the character's information
+  * @brief Imprime la información de un personaje
   * @author Profesores PPROG
   *
-  * This function shows the character's id, name, graphical description, health, friendly status and message.
-  * @param character a pointer to the character
+  * Esta función muestra el id, nombre, descripción gráfica, salud, estado de amistad y mensaje del personaje.
+  * @param character Un puntero al personaje
   */
 void character_print(const Character *character);
 

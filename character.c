@@ -1,5 +1,5 @@
 /**
- * @brief It implements the character module
+ * @brief Implementa el módulo del personaje
  *
  * @file character.c
  * @author Rodrigo
@@ -14,21 +14,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "types.h"
+
+/**
+ * @brief Estructura que define un personaje
+ */
 struct _Character {
   Id id;
   char name[CHARACTER_NAME_LEN + 1];
-  char gdesc[6+1];
+  char gdesc[6 + 1];
   int health;
-  char friendly;
+  BOOL friendly;
   char message[1000];
 };
 
 /**
-  * @brief Crea un nuevo personaje
-  * @author Rodrigo
-  *
-  * @param
-  */
+ * @brief Crea un nuevo personaje
+ */
 Character *character_create(Id id) {
   Character *newCharacter = NULL;
 
@@ -51,6 +53,9 @@ Character *character_create(Id id) {
   return newCharacter;
 }
 
+/**
+ * @brief Destruye un personaje
+ */
 void character_destroy(Character *character) {
   if (!character) {
     return;
@@ -60,7 +65,9 @@ void character_destroy(Character *character) {
   character = NULL;
 }
 
-
+/**
+ * @brief Obtiene el id de un personaje
+ */
 Id character_get_id(const Character *character) {
   if (!character) {
     return NO_ID;
@@ -68,6 +75,9 @@ Id character_get_id(const Character *character) {
   return character->id;
 }
 
+/**
+ * @brief Obtiene el nombre de un personaje
+ */
 const char *character_get_name(const Character *character) {
   if (!character) {
     return NULL;
@@ -75,6 +85,9 @@ const char *character_get_name(const Character *character) {
   return character->name;
 }
 
+/**
+ * @brief Establece el nombre de un personaje
+ */
 Status character_set_name(Character *character, const char *name) {
   if (!character || !name) {
     return ERROR;
@@ -90,13 +103,20 @@ Status character_set_name(Character *character, const char *name) {
   return OK;
 }
 
+/**
+ * @brief Obtiene la descripción gráfica de un personaje
+ */
 const char *character_get_gdesc(const Character *character) {
   if (!character) {
     return NULL;
   }
   return character->gdesc;
 }
-  Status character_set_gdesc(Character *character, const char *gdesc) {
+
+/**
+ * @brief Establece la descripción gráfica de un personaje
+ */
+Status character_set_gdesc(Character *character, const char *gdesc) {
   if (!character || !gdesc) {
     return ERROR;
   }
@@ -111,7 +131,9 @@ const char *character_get_gdesc(const Character *character) {
   return OK;
 }
 
-
+/**
+ * @brief Obtiene la salud de un personaje
+ */
 int character_get_health(const Character *character) {
   if (!character) {
     return -1;
@@ -119,6 +141,9 @@ int character_get_health(const Character *character) {
   return character->health;
 }
 
+/**
+ * @brief Establece la salud de un personaje
+ */
 Status character_set_health(Character *character, int health) {
   if (!character) {
     return ERROR;
@@ -127,6 +152,9 @@ Status character_set_health(Character *character, int health) {
   return OK;
 }
 
+/**
+ * @brief Obtiene el estado de amistad de un personaje
+ */
 BOOL character_get_friendly(const Character *character) {
   if (!character) {
     return FALSE;
@@ -134,6 +162,9 @@ BOOL character_get_friendly(const Character *character) {
   return character->friendly;
 }
 
+/**
+ * @brief Establece el estado de amistad de un personaje
+ */
 Status character_set_friendly(Character *character, BOOL friendly) {
   if (!character) {
     return ERROR;
@@ -142,6 +173,9 @@ Status character_set_friendly(Character *character, BOOL friendly) {
   return OK;
 }
 
+/**
+ * @brief Obtiene el mensaje de un personaje
+ */
 const char *character_get_message(const Character *character) {
   if (!character) {
     return NULL;
@@ -149,14 +183,17 @@ const char *character_get_message(const Character *character) {
   return character->message;
 }
 
+/**
+ * @brief Establece el mensaje de un personaje
+ */
 Status character_set_message(Character *character, const char *message) {
   if (!character || !message) {
     return ERROR;
   }
 
-  if (strlen(message) >= 100) {
-    strncpy(character->message, message, 100);
-    character->message[100] = '\0';
+  if (strlen(message) >= 999) {
+    strncpy(character->message, message, 999);
+    character->message[999] = '\0';
   } else {
     strcpy(character->message, message);
   }
@@ -164,15 +201,19 @@ Status character_set_message(Character *character, const char *message) {
   return OK;
 }
 
+/**
+ * @brief Imprime la información de un personaje
+ */
 void character_print(const Character *character) {
   if (!character) {
     return;
   }
 
-  fprintf(stdout, "--> Character (Id: %ld; Name: %s)\n", character->id, character->name);
+  fprintf(stdout, "--> Personaje (Id: %ld; Nombre: %s)\n", character->id,
+          character->name);
   fprintf(stdout, "--> Gdesc: %s\n", character->gdesc);
-  fprintf(stdout, "--> Health: %d\n", character->health);
-  fprintf(stdout, "--> Friendly: %s\n", character->friendly ? "TRUE" : "FALSE");
-  fprintf(stdout, "--> Message: %s\n", character->message);
+  fprintf(stdout, "--> Salud: %d\n", character->health);
+  fprintf(stdout, "--> Amistoso: %s\n",
+          character->friendly ? "VERDADERO" : "FALSO");
+  fprintf(stdout, "--> Mensaje: %s\n", character->message);
 }
-
