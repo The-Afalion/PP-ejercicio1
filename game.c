@@ -34,7 +34,7 @@ struct _Game {
   Space *spaces[MAX_SPACES];/* Array de punteros a los espacios del mapa */
   int n_spaces;             /*Número  de espacios */
   Command *last_cmd;        /* Puntero al último comando ejecutado */
-  Bool finished;
+  int finished;
 };
 
 /**
@@ -71,7 +71,7 @@ Status game_create(Game **game)
   (*game)->object = object_create(OBJECT_ID);
   (*game)->character = character_create(CHARACTER_ID);
   (*game)->last_cmd = command_create();
-  (*game)->finished = FALSE;
+  (*game)->finished = 0;
 
   return OK;
 }
@@ -274,17 +274,17 @@ Status game_set_last_command(Game *game, Command *command)
   return OK;
 }
 
-Bool game_get_finished(Game *game)
+int game_get_finished(Game *game)
 {
   /*Se comprueba  validez del puntero */
   if (!game)
   {
-    return FALSE;
+    return 0;
   }
   return game->finished;
 }
 
-Status game_set_finished(Game *game, Bool finished)
+Status game_set_finished(Game *game, int finished)
 {
   /* Se comprueba validez del puntero */
   if (!game)

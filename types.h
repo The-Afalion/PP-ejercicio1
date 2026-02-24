@@ -16,11 +16,6 @@
 
 typedef long Id;
 
-typedef enum {
- FALSE = 0,
- TRUE = 1
-} Bool;
-
 typedef enum { ERROR, OK } Status;
 
 typedef enum { N, S, E, W } Direction;

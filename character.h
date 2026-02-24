@@ -12,7 +12,6 @@
 #define CHARACTER_H
 
 #include "types.h"
-#include <stdbool.h>
 
 #define MAX_CHARACTERS 100
 #define CHARACTER_NAME_LEN 30
@@ -107,19 +106,19 @@ Status character_set_health(Character *character, int health);
   * @author Profesores PPROG
   *
   * @param character Un puntero al personaje
-  * @return El estado de amistad del personaje
+  * @return 1 si es amistoso, 0 si no lo es
   */
-bool character_get_friendly(const Character *character);
+int character_get_friendly(const Character *character);
 
 /**
   * @brief Establece el estado de amistad de un personaje
   * @author Profesores PPROG
   *
   * @param character Un puntero al personaje
-  * @param friendly El nuevo estado de amistad
+  * @param friendly 1 si es amistoso, 0 si no lo es
   * @return OK si todo fue bien, o ERROR si hubo algún error
   */
-Status character_set_friendly(Character *character, bool friendly);
+Status character_set_friendly(Character *character, int friendly);
 
 /**
   * @brief Obtiene el mensaje de un personaje

@@ -124,18 +124,18 @@ Status game_set_last_command(Game *game, Command *command);
  * @brief Comprueba si el juego ha terminado.
  * @author Unai
  * @param game Puntero al juego.
- * @return TRUE si ha terminado, FALSE si sigue activo.
+ * @return 1 si ha terminado, 0 si sigue activo.
  */
-Bool game_get_finished(Game *game);
+int game_get_finished(Game *game);
 
 /**
  * @brief Modifica el estado de finalización del juego.
  * @author Unai
  * @param game Puntero al juego.
- * @param finished TRUE para terminar, FALSE para continuar.
+ * @param finished 1 para terminar, 0 para continuar.
  * @return OK si se cambia con éxito, ERROR en caso contrario.
  */
-Status game_set_finished(Game *game, Bool finished);
+Status game_set_finished(Game *game, int finished);
 
 /**
  * @brief Imprime por pantalla el estado actual del juego (Depuración).

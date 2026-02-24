@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 #include "types.h"
 
@@ -25,7 +24,7 @@ struct _Character {
   char name[CHARACTER_NAME_LEN + 1];
   char gdesc[6 + 1];
   int health;
-  bool friendly;
+  int friendly;
   char message[1000];
 };
 
@@ -48,7 +47,7 @@ Character *character_create(Id id) {
   newCharacter->name[0] = '\0';
   newCharacter->gdesc[0] = '\0';
   newCharacter->health = 0;
-  newCharacter->friendly = false;
+  newCharacter->friendly = 0;
   newCharacter->message[0] = '\0';
 
   return newCharacter;
@@ -156,9 +155,9 @@ Status character_set_health(Character *character, int health) {
 /**
  * @brief Obtiene el estado de amistad de un personaje
  */
-bool character_get_friendly(const Character *character) {
+int character_get_friendly(const Character *character) {
   if (!character) {
-    return false;
+    return 0;
   }
   return character->friendly;
 }
@@ -166,7 +165,7 @@ bool character_get_friendly(const Character *character) {
 /**
  * @brief Establece el estado de amistad de un personaje
  */
-Status character_set_friendly(Character *character, bool friendly) {
+Status character_set_friendly(Character *character, int friendly) {
   if (!character) {
     return ERROR;
   }
@@ -215,6 +214,6 @@ void character_print(const Character *character) {
   fprintf(stdout, "--> Gdesc: %s\n", character->gdesc);
   fprintf(stdout, "--> Salud: %d\n", character->health);
   fprintf(stdout, "--> Amistoso: %s\n",
-          character->friendly ? "VERDADERO" : "FALSO");
+          character->friendly ? "SI" : "NO");
   fprintf(stdout, "--> Mensaje: %s\n", character->message);
 }
