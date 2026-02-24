@@ -14,6 +14,7 @@
 /* Definiciones para evitar números mágicos */
 #define SINGLE_ELEM 1
 #define FIRST_CHAR 0
+#define START_HEALTH 3
 
 /**
  * @brief Estructura de Jugador
@@ -25,6 +26,8 @@ struct Player
   char name[WORD_SIZE + SINGLE_ELEM];
   Id location;
   Id object;
+  int health;
+  char *gdesc;
 };
 
 Player *player_create(Id id)
@@ -51,6 +54,8 @@ Player *player_create(Id id)
   newPlayer->name[FIRST_CHAR] = '\0';
   newPlayer->location = NO_ID;
   newPlayer->object = NO_ID;
+  newPlayer->health=START_HEALTH;
+  newPlayer->gdesc=NULL;
 
   return newPlayer;
 }
@@ -64,6 +69,7 @@ Status player_destroy(Player *player)
   }
 
   /* Libera la memoria */
+  free(player->gdesc);
   free(player);
   return OK;
 }
@@ -157,9 +163,40 @@ Status player_print(Player *player)
   }
 
   /* Imprime la información*/
-  fprintf(stdout, "--> Jugador (Id: %ld; Nombre: %s)\n", player->id, player->name);
+  fprintf(stdout, "--> Jugador (Id: %ld; Nombre: %s; Descripción: %s)\n", player->id, player->name,player->gdesc);
+  fprintf(stdout, "--> Salud: %d\n",player->health);
   fprintf(stdout, "--> Localización: %ld\n", player->location);
   fprintf(stdout, "--> Objeto: %ld\n", player->object);
 
   return OK;
+}
+Status player_set_heatlh(Player *player,int h){
+  if(!player||h<=0){
+    return ERROR;
+  }
+  player->health=h;
+  return OK;
+}
+int player_get_health(Player*player){
+  if(!player){
+    return -1;
+  }
+  return player->health;
+}
+Status player_set_gdesc(Player*player,char*des){
+if(!player||!des){
+  return ERROR;
+}
+player->gdesc=(char*)malloc((strlen(des)+1)*sizeof(char));
+if(!player->gdesc){
+  return ERROR;
+}
+strcpy(player->gdesc,des);
+return OK;
+}
+char* player_get_gdesc(Player*player){
+  if(!player){
+    return NULL;
+  }
+  return player->gdesc;
 }

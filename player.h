@@ -105,4 +105,26 @@ Id player_get_object(Player* player);
  */
 Status player_print(Player* player);
 
+
+
+
+Status player_set_heatlh(Player *player,int h);
+
+
+
+
+
+int player_get_health(Player*player);
+
+
+
+
+
+Status player_set_gdesc(Player*player,char*des);
+
+
+
+
+
+char* player_get_gdesc(Player*player);
 #endif
