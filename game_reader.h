@@ -22,4 +22,13 @@
  */
 Status game_reader_load_spaces(Game *game, char *filename);
 
+/**
+ * @brief Carga los personajes desde un archivo de texto.
+ * @author Unai
+ * @param game Puntero al juego principal donde se añadirán los personajes.
+ * @param filename Cadena de caracteres con el nombre del archivo.
+ * @return OK si se lee correctamente, ERROR si hay algún fallo.
+ */
+Status game_reader_load_characters(Game *game, char *filename);
+
 #endif

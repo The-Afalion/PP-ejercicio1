@@ -15,6 +15,7 @@
 #include "space.h"
 #include "player.h"
 #include "object.h"
+#include "character.h"
 #include "types.h"
 
 /** @brief Número máximo de espacios en el juego */
@@ -158,6 +159,14 @@ Player* game_get_player(Game* game);
  * @return Puntero al objeto.
  */
 Object* game_get_object(Game* game);
+
+/**
+ * @brief Obtiene el puntero al personaje.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return Puntero al personaje.
+ */
+Character* game_get_character(Game* game);
 
 
 #endif

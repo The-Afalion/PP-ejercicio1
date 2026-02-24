@@ -14,12 +14,14 @@
 #include "space.h"
 #include "player.h"
 #include "object.h"
+#include "character.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define PLAYER_ID 0
 #define OBJECT_ID 0
+#define CHARACTER_ID 0
 #define FIRST_POSITION 0
 
 /**
@@ -28,6 +30,7 @@
 struct _Game {
   Player* player;           /* Puntero al jugador */
   Object* object;           /*Puntero al objeto */
+  Character* character;     /*Puntero al personaje*/
   Space *spaces[MAX_SPACES];/* Array de punteros a los espacios del mapa */
   int n_spaces;             /*Número  de espacios */
   Command *last_cmd;        /* Puntero al último comando ejecutado */
@@ -66,6 +69,7 @@ Status game_create(Game **game)
   (*game)->n_spaces = 0;
   (*game)->player = player_create(PLAYER_ID);
   (*game)->object = object_create(OBJECT_ID);
+  (*game)->character = character_create(CHARACTER_ID);
   (*game)->last_cmd = command_create();
   (*game)->finished = FALSE;
 
@@ -88,6 +92,12 @@ Status game_create_from_file(Game **game, char *filename)
 
   /* Se carga los espacios desde el archivo de texto */
   if (game_reader_load_spaces(*game, filename) == ERROR)
+  {
+    return ERROR;
+  }
+
+  /* Se carga los personajes desde el archivo de texto */
+  if (game_reader_load_characters(*game, filename) == ERROR)
   {
     return ERROR;
   }
@@ -121,6 +131,12 @@ Status game_destroy(Game *game)
 
   /* Se destruye el objeto y comprueba error */
   if (game->object && object_destroy(game->object) != OK)
+  {
+    return ERROR;
+  }
+
+  /* Se destruye el personaje y comprueba error */
+  if (game->character && character_destroy(game->character) != OK)
   {
     return ERROR;
   }
@@ -160,7 +176,6 @@ Space *game_get_space(Game *game, Id id)
 
 Id game_get_player_location(Game *game)
 {
-  /* Comprueba que el juego no sea NULL */
   if (game == NULL)
   {
     return NO_ID;
@@ -304,6 +319,7 @@ void game_print(Game *game)
     /* Imprime la información del jugador y del objeto */
     player_print(game->player);
     object_print(game->object);
+    character_print(game->character);
   }
 }
 
@@ -319,6 +335,13 @@ Object* game_get_object(Game* game) {
         return NULL;
     }
     return game->object;
+}
+
+Character* game_get_character(Game* game) {
+    if (!game) {
+        return NULL;
+    }
+    return game->character;
 }
 
 /**
