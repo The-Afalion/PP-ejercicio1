@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "command.hh"
+#include "command.h"
 #include "game.h"
 #include "game_actions.h"
 #include "graphic_engine.h"
