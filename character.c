@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "types.h"
 
@@ -24,7 +25,7 @@ struct _Character {
   char name[CHARACTER_NAME_LEN + 1];
   char gdesc[6 + 1];
   int health;
-  BOOL friendly;
+  bool friendly;
   char message[1000];
 };
 
@@ -47,7 +48,7 @@ Character *character_create(Id id) {
   newCharacter->name[0] = '\0';
   newCharacter->gdesc[0] = '\0';
   newCharacter->health = 0;
-  newCharacter->friendly = FALSE;
+  newCharacter->friendly = false;
   newCharacter->message[0] = '\0';
 
   return newCharacter;
@@ -155,9 +156,9 @@ Status character_set_health(Character *character, int health) {
 /**
  * @brief Obtiene el estado de amistad de un personaje
  */
-BOOL character_get_friendly(const Character *character) {
+bool character_get_friendly(const Character *character) {
   if (!character) {
-    return FALSE;
+    return false;
   }
   return character->friendly;
 }
@@ -165,7 +166,7 @@ BOOL character_get_friendly(const Character *character) {
 /**
  * @brief Establece el estado de amistad de un personaje
  */
-Status character_set_friendly(Character *character, BOOL friendly) {
+Status character_set_friendly(Character *character, bool friendly) {
   if (!character) {
     return ERROR;
   }
