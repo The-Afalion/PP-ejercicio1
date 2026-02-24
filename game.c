@@ -136,7 +136,9 @@ Status game_destroy(Game *game)
   }
 
   /* Se destruye el personaje y comprueba error */
-  if (game->character && character_destroy(game->character) != OK)
+  if (game->character){
+ character_destroy(game->character);
+  }
   {
     return ERROR;
   }
