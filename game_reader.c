@@ -14,6 +14,7 @@ Status game_reader_load_spaces(Game *game, char *filename) {
     Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
     Space *space = NULL;
     Status status = OK;
+    char *endptr;
 
     if (!filename) {
         return ERROR;
@@ -27,17 +28,17 @@ Status game_reader_load_spaces(Game *game, char *filename) {
     while (fgets(line, WORD_SIZE, file)) {
         if (strncmp("#s:", line, 3) == 0) {
             toks = strtok(line + 3, "|");
-            id = atol(toks);
+            id = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             strcpy(name, toks);
             toks = strtok(NULL, "|");
-            north = atol(toks);
+            north = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
-            east = atol(toks);
+            east = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
-            south = atol(toks);
+            south = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
-            west = atol(toks);
+            west = strtol(toks, &endptr, 10);
 #ifdef DEBUG
             printf("Leido: s:%ld|%s|%ld|%ld|%ld|%ld\n", id, name, north, east, south, west);
 #endif
@@ -71,9 +72,10 @@ Status game_reader_load_characters(Game *game, char *filename) {
     char *toks = NULL;
     Id id = NO_ID;
     int health = 0;
-    BOOL friendly = FALSE;
+    int friendly = 0;
     Character *character = NULL;
     Status status = OK;
+    char *endptr;
 
     if (!filename) {
         return ERROR;
@@ -87,15 +89,15 @@ Status game_reader_load_characters(Game *game, char *filename) {
     while (fgets(line, WORD_SIZE, file)) {
         if (strncmp("#c:", line, 3) == 0) {
             toks = strtok(line + 3, "|");
-            id = atol(toks);
+            id = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             strcpy(name, toks);
             toks = strtok(NULL, "|");
             strcpy(gdesc, toks);
             toks = strtok(NULL, "|");
-            health = atoi(toks);
+            health = (int) strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
-            friendly = (BOOL) atoi(toks);
+            friendly = (int) strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             strcpy(message, toks);
 
