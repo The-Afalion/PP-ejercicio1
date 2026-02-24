@@ -42,7 +42,7 @@ void character_destroy(Character *character);
   * @param character Un puntero al personaje
   * @return El id del personaje
   */
-Id character_get_id(const Character *character);
+Id character_get_id(Character *character);
 
 /**
   * @brief Obtiene el nombre de un personaje
@@ -51,7 +51,7 @@ Id character_get_id(const Character *character);
   * @param character Un puntero al personaje
   * @return El nombre del personaje
   */
-const char *character_get_name(const Character *character);
+char *character_get_name(Character *character);
 
 /**
   * @brief Establece el nombre de un personaje
@@ -61,7 +61,7 @@ const char *character_get_name(const Character *character);
   * @param name Una cadena con el nuevo nombre
   * @return OK si todo fue bien, o ERROR si hubo algún error
   */
-Status character_set_name(Character *character, const char *name);
+Status character_set_name(Character *character, char *name);
 
 /**
   * @brief Obtiene la descripción gráfica de un personaje
@@ -80,7 +80,7 @@ Status character_set_name(Character *character, const char *name);
   * @param gdesc Una cadena con la nueva descripción gráfica
   * @return OK si todo fue bien, o ERROR si hubo algún error
   */
-Status character_set_gdesc(Character *character, const char *gdesc);
+Status character_set_gdesc(Character *character, char *gdesc);
 
 /**
   * @brief Obtiene la salud de un personaje
@@ -89,7 +89,7 @@ Status character_set_gdesc(Character *character, const char *gdesc);
   * @param character Un puntero al personaje
   * @return La salud del personaje
   */
-int character_get_health(const Character *character);
+int character_get_health(Character *character);
 
 /**
   * @brief Establece la salud de un personaje
@@ -108,7 +108,7 @@ Status character_set_health(Character *character, int health);
   * @param character Un puntero al personaje
   * @return 1 si es amistoso, 0 si no lo es
   */
-int character_get_friendly(const Character *character);
+int character_get_friendly(Character *character);
 
 /**
   * @brief Establece el estado de amistad de un personaje
@@ -127,7 +127,7 @@ Status character_set_friendly(Character *character, int friendly);
   * @param character Un puntero al personaje
   * @return El mensaje del personaje
   */
-const char *character_get_message(const Character *character);
+ char *character_get_message( Character *character);
 
 /**
   * @brief Establece el mensaje de un personaje
@@ -137,7 +137,7 @@ const char *character_get_message(const Character *character);
   * @param message Una cadena con el nuevo mensaje
   * @return OK si todo fue bien, o ERROR si hubo algún error
   */
-Status character_set_message(Character *character, const char *message);
+Status character_set_message(Character *character, char *message);
 
 /**
   * @brief Imprime la información de un personaje
@@ -146,6 +146,6 @@ Status character_set_message(Character *character, const char *message);
   * Esta función muestra el id, nombre, descripción gráfica, salud, estado de amistad y mensaje del personaje.
   * @param character Un puntero al personaje
   */
-void character_print(const Character *character);
+void character_print( Character *character);
 
 #endif

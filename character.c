@@ -68,7 +68,7 @@ void character_destroy(Character *character) {
 /**
  * @brief Obtiene el id de un personaje
  */
-Id character_get_id(const Character *character) {
+Id character_get_id(Character *character) {
   if (!character) {
     return NO_ID;
   }
@@ -78,7 +78,7 @@ Id character_get_id(const Character *character) {
 /**
  * @brief Obtiene el nombre de un personaje
  */
-const char *character_get_name(const Character *character) {
+char *character_get_name(Character *character) {
   if (!character) {
     return NULL;
   }
@@ -88,7 +88,7 @@ const char *character_get_name(const Character *character) {
 /**
  * @brief Establece el nombre de un personaje
  */
-Status character_set_name(Character *character, const char *name) {
+Status character_set_name(Character *character, char *name) {
   if (!character || !name) {
     return ERROR;
   }
@@ -116,7 +116,7 @@ Status character_set_name(Character *character, const char *name) {
 /**
  * @brief Establece la descripción gráfica de un personaje
  */
-Status character_set_gdesc(Character *character, const char *gdesc) {
+Status character_set_gdesc(Character *character, char *gdesc) {
   if (!character || !gdesc) {
     return ERROR;
   }
@@ -134,7 +134,7 @@ Status character_set_gdesc(Character *character, const char *gdesc) {
 /**
  * @brief Obtiene la salud de un personaje
  */
-int character_get_health(const Character *character) {
+int character_get_health( Character *character) {
   if (!character) {
     return -1;
   }
@@ -155,7 +155,7 @@ Status character_set_health(Character *character, int health) {
 /**
  * @brief Obtiene el estado de amistad de un personaje
  */
-int character_get_friendly(const Character *character) {
+int character_get_friendly( Character *character) {
   if (!character) {
     return 0;
   }
@@ -176,7 +176,7 @@ Status character_set_friendly(Character *character, int friendly) {
 /**
  * @brief Obtiene el mensaje de un personaje
  */
-const char *character_get_message(const Character *character) {
+ char *character_get_message( Character *character) {
   if (!character) {
     return NULL;
   }
@@ -186,7 +186,7 @@ const char *character_get_message(const Character *character) {
 /**
  * @brief Establece el mensaje de un personaje
  */
-Status character_set_message(Character *character, const char *message) {
+Status character_set_message(Character *character, char *message) {
   if (!character || !message) {
     return ERROR;
   }
@@ -204,7 +204,7 @@ Status character_set_message(Character *character, const char *message) {
 /**
  * @brief Imprime la información de un personaje
  */
-void character_print(const Character *character) {
+void character_print( Character *character) {
   if (!character) {
     return;
   }
