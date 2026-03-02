@@ -29,8 +29,8 @@
  */
 struct _Game {
   Player* player;           /* Puntero al jugador */
-  Object* object;           /*Puntero al objeto */
-  Character* character;     /*Puntero al personaje*/
+  Object* object[MAX_SPACES];           /*Puntero al objeto */
+  Character* character[MAX_CHARACTERS];     /*Puntero al personaje*/
   Space *spaces[MAX_SPACES];/* Array de punteros a los espacios del mapa */
   int n_spaces;             /*Número  de espacios */
   Command *last_cmd;        /* Puntero al último comando ejecutado */
@@ -68,8 +68,12 @@ Status game_create(Game **game)
 
   (*game)->n_spaces = 0;
   (*game)->player = player_create(PLAYER_ID);
-  (*game)->object = object_create(OBJECT_ID);
-  (*game)->character = character_create(CHARACTER_ID);
+  (*game)->object[0] = object_create(OBJECT_ID);
+  (*game)->character[0] = character_create(CHARACTER_ID);
+  for(i=1;i<MAX_SPACES;i++){
+    (*game)->object[i]=NULL;
+    (*game)->character[i] = NULL;
+  }
   (*game)->last_cmd = command_create();
   (*game)->finished = 0;
 
@@ -104,7 +108,7 @@ Status game_create_from_file(Game **game, char *filename)
 
   /* Se coloca al jugador y al objeto en el primer espacio cargado */
   game_set_player_location(*game, game_get_space_id_at(*game, FIRST_POSITION));
-  game_set_object_location(*game, game_get_space_id_at(*game, FIRST_POSITION));
+  game_set_object_location(*game, game_get_space_id_at(*game, FIRST_POSITION),set_get_id(space_get_object((*game)->spaces[0]),0));
 
   return OK;
 }
@@ -196,10 +200,10 @@ Status game_set_player_location(Game *game, Id id)
   return player_set_location(game->player, id);
 }
 
-Id game_get_object_location(Game *game)
+Id game_get_object_location(Game *game,Id ID)
 {
-  int i;
-  Id id;
+  int i,h;
+  Id id,*d;
   Space *space;
 
   /* Comprueba que el juego no sea NULL */
@@ -211,21 +215,20 @@ Id game_get_object_location(Game *game)
   /* Se recorre los espacios buscando el objeto */
   for (i = 0; i < game->n_spaces; i++)
   {
-    id = game_get_space_id_at(game, i);
-    space = game_get_space(game, id);
-
-    /* Si el espacio tiene un objeto, devolvemos su ID */
-    if (space_get_object(space) != NO_ID)
-    {
-      return id;
+    d=space_get_object(game->spaces[i]);
+    for(h=0;h<strlen(d);h++){
+      if(d[h]==ID){
+        return game_get_space_id_at(game, i);
+      }
     }
   }
   return NO_ID;
 }
 
-Status game_set_object_location(Game *game, Id id)
+Status game_set_object_location(Game *game, Id id,Id ID)
 {
   Id temp;
+  int i;
 
   /* Comprueba que el juego no sea NULL */
   if (!game)
@@ -234,12 +237,12 @@ Status game_set_object_location(Game *game, Id id)
   }
 
   /*Busca donde esta el objeto*/
-  temp = game_get_object_location(game);
+  temp = game_get_object_location(game,ID);
 
   /* Si el objeto esta en el mapa, lo quitamos de esa sala */
   if (temp != NO_ID)
   {
-    if (space_set_object(game_get_space(game, temp), NO_ID) == ERROR)
+    if (set_del(space_get_object(game->spaces[temp]),ID))
     {
       return ERROR;
     }
@@ -248,9 +251,18 @@ Status game_set_object_location(Game *game, Id id)
   /* Si la nueva ID es válida, coloca el objeto en la nueva sala */
   if (id != NO_ID)
   {
-    return space_set_object(game_get_space(game, id), object_get_id(game->object));
+   for (i = 0; i < game->n_spaces; i++)
+  {
+    if(space_get_id(game->spaces[i])==id){
+     if( set_add(space_get_object(game->spaces[i]),ID)){
+      return OK;
+     }
+     else{
+      return ERROR;
+     }
+    }
   }
-  return OK;
+  }
 }
 
 Command *game_get_last_command(Game *game)

@@ -29,6 +29,7 @@ struct Space
   Id east;
   Id west;
   Set *object;
+  Id character;
 };
 
 Space *space_create(Id id)
@@ -177,7 +178,6 @@ Status space_set_west(Space *space, Id id)
   space->west = id;
   return OK;
 }
-
 Id space_get_west(Space *space)
 {
   if (!space)
@@ -281,4 +281,14 @@ Status space_print(Space *space)
   }
 
   return OK;
+}
+Status space_contains_id(Space* space,Id id){
+  if(!space||id==NO_ID){
+    return ERROR;
+  }
+  
+  if(set_find(space->id,id)){
+    return OK;
+  }
+  return ERROR;
 }
