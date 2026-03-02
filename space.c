@@ -200,23 +200,23 @@ Status space_set_object(Space *space, Id value)
   return OK;
 }
 
-Id space_get_object(Space *space,int indx)//ns si esta bn
+Id* space_get_object(Space *space)//ns si esta bn
 {
-  Id id;
-  if (!space||indx<0)
+  Id *id;
+  int i;
+  if (!space)
   {
     return NO_ID;
   }
-id=set_get_id(space->object,indx);
-if(id<0){
-  return NO_ID;
-}
-return id;
+  return set_get_ids(space->id);
+
+
 }
 
 Status space_print(Space *space)
 {
   Id idaux = NO_ID;
+  int i,*h;
 
   if (!space)
   {
@@ -265,9 +265,15 @@ Status space_print(Space *space)
     fprintf(stdout, "---> No west link.\n");
   }
 
-  if (space_get_object(space) != NO_ID)//Revisar?
+  if (space_get_object(space) != NULL)//Revisar?
   {
-    fprintf(stdout, "---> Object in the space (Id: %ld).\n", space->object);
+    h=set_get_ids(space->id);
+    fprintf(stdout, "---> Object in the space (Id: ");
+    for(i=0;i<set_get_numberid(space->id);i++){
+      fprintf(stdout,"%ld ",h[i]);
+    }
+    fprintf(stdout,")\n");
+
   }
   else
   {

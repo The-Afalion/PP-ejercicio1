@@ -156,7 +156,7 @@ Status space_set_object(Space* space, Id object_id);
  * @param space a pointer to the space
  * @return the id of the object in the space
  */
-Id space_get_object(Space* space,int indx);
+Id* space_get_object(Space* space);
 
 /**
  * @brief It prints the space information

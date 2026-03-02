@@ -113,3 +113,27 @@ Id set_get_id(Set *s, int indx)
     }
     return s->ids[indx];
 }
+int set_get_numberid(Set*s){
+    if(!s){
+        return -1;
+    }
+    return s->n_ids;
+}
+int* set_get_ids(Set*s){
+    
+    int *h,i,u;
+    if(!s){
+        return NULL;
+    }
+    h=(int*)malloc((s->n_ids)*(sizeof(Set)));
+    if(!h){
+        return NULL;
+    }
+    for(i=0,u=0;i<s->n_ids;u++){
+        if(s->ids[u]!=NO_ID){
+            h[i]=s->ids[u];
+            i++;
+        }
+    }
+    return h;
+}
