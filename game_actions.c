@@ -170,35 +170,30 @@ void game_actions_right(Game *game)
     return;
 }
 
-void game_actions_take(Game *game)
-{
-  /*Author:Unai*/
+void game_actions_take(Game *game) {
   Id player_loc = NO_ID;
-  Id obj_loc = NO_ID;
   Id obj_id = NO_ID;
 
-  if (!game)
-  {
+  if (!game) {
     return;
   }
 
   player_loc = game_get_player_location(game);
-  obj_loc = game_get_object_location(game);
+  if (player_loc == NO_ID) {
+    return;
+  }
 
-  /* Si el jugador y el objeto están en el mismo espacio */
-  if (player_loc != NO_ID && player_loc == obj_loc)
-  {
-
-    /* Como solo hay un objeto en el juego cogemos su ID */
-    obj_id = object_get_id(game_get_object(game));
-
-    /* Le ponemos al jugador el objeto */
-    player_set_object(game_get_player(game), obj_id);
-
-    /* Quitamos el objeto del espacio (lo ponemos a NO_ID) */
-    game_set_object_location(game, NO_ID);
+  for (obj_id = 1; obj_id < 100; obj_id++) {
+    if (game_get_object(game, obj_id) != NULL) {
+      if (game_get_object_location(game, obj_id) == player_loc) {
+        player_set_object(game_get_player(game), obj_id);
+        game_set_object_location(game, NO_ID, obj_id);
+        return;
+      }
+    }
   }
 }
+
 void game_actions_drop(Game *game)
 {
   /*Author:Unai*/
@@ -223,6 +218,6 @@ void game_actions_drop(Game *game)
     player_set_object(game_get_player(game), NO_ID);
 
     /* Ponemos el objeto en el espacio actual donde esta el jugador */
-    game_set_object_location(game, player_loc);
+    game_set_object_location(game, player_loc, obj_id);
   }
 }
