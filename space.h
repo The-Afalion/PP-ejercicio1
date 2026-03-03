@@ -167,5 +167,12 @@ Id* space_get_object(Space* space);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status space_print(Space* space);
+Status space_add_object(Space* space, Id object_id);
+Status space_remove_object(Space* space, Id object_id);
+int* space_get_objects(Space* space);
+int space_get_number_of_objects(Space* space);
+Status space_contains_object(Space* space, Id id);
+Status space_set_character(Space* space, Id id);
+Id space_get_character(Space* space);
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef SET_H
-#define SET_H
+#ifndef SET.H
+#define SET.H
 #include "types.h"
 typedef struct Set Set;
 Set* set_create(Id id);

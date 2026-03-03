@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     Graphic_engine *gengine;
     int result;
     Command *last_cmd;
-
+    srand(time(NULL));
     if (argc < 2) {
         fprintf(stderr, "Use: %s <game_data_file>\n", argv[0]);
         return 1;

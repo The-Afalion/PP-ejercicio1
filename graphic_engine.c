@@ -25,6 +25,7 @@
 #define HEIGHT_BAN 1
 #define HEIGHT_HLP 3
 #define HEIGHT_FDB 3
+#define MAX_OBJECTS 100
 
 struct _Graphic_engine
 {

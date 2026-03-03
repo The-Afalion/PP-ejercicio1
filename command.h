@@ -14,7 +14,7 @@
 #include "types.h"
 
 #define N_CMDT 2
-#define N_CMD 9
+#define N_CMD 11
 
 /**
  * @brief Tipos de formato para los comandos (corto o largo)
@@ -24,7 +24,7 @@ typedef enum { CMDS, CMDL } CommandType;
 /**
  * @brief Códigos de los comandos disponibles en el juego
  */
-typedef enum { NO_CMD = -1, UNKNOWN, EXIT, NEXT, BACK, TAKE, DROP, RIGHT, LEFT } CommandCode;
+typedef enum { NO_CMD = -1, UNKNOWN, EXIT, NEXT, BACK, TAKE, DROP , ATTACK ,CHAT, RIGHT, LEFT } CommandCode;
 
 /**
  * @brief Estructura opaca del comando
