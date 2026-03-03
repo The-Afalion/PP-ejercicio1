@@ -101,7 +101,7 @@ void set_print(Set *s)
     {
         if (s->ids[i] != NO_ID)
         {
-            printf(" %d", s->ids[i]);
+            printf(" %ld", s->ids[i]);
         }
     }
 }
