@@ -11,8 +11,8 @@
 #ifndef SPACE_H
 #define SPACE_H
 
-#include "types.h"
-#include "set.h"
+#include "types_h"
+#include "set_h"
 
 typedef struct Space Space;
 
