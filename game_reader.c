@@ -5,6 +5,7 @@
 #include "game.h"
 #include "space.h"
 #include "character.h"
+#include "object.h"
 
 Status game_reader_load_spaces(Game *game, char *filename) {
     FILE *file = NULL;
@@ -50,6 +51,54 @@ Status game_reader_load_spaces(Game *game, char *filename) {
                 space_set_south(space, south);
                 space_set_west(space, west);
                 game_add_space(game, space);
+            }
+        }
+    }
+
+    if (ferror(file)) {
+        status = ERROR;
+    }
+
+    fclose(file);
+
+    return status;
+}
+
+Status game_reader_load_objects(Game *game, char *filename) {
+    FILE *file = NULL;
+    char line[WORD_SIZE] = "";
+    char name[WORD_SIZE] = "";
+    char *toks = NULL;
+    Id id = NO_ID, location_id = NO_ID;
+    Object *object = NULL;
+    Status status = OK;
+    char *endptr;
+
+    if (!filename) {
+        return ERROR;
+    }
+
+    file = fopen(filename, "r");
+    if (file == NULL) {
+        return ERROR;
+    }
+
+    while (fgets(line, WORD_SIZE, file)) {
+        if (strncmp("#o:", line, 3) == 0) {
+            toks = strtok(line + 3, "|");
+            id = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            strcpy(name, toks);
+            toks = strtok(NULL, "|");
+            location_id = strtol(toks, &endptr, 10);
+#ifdef DEBUG
+            printf("Leido: o:%ld|%s|%ld\n", id, name, location_id);
+#endif
+            object = object_create(id);
+            if (object != NULL) {
+                object_set_name(object, name);
+                game_add_object(game, object);
+                game_set_object_location(game, location_id, id);
             }
         }
     }

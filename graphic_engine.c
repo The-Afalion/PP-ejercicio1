@@ -79,6 +79,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game)
   char str[255];
   CommandCode last_cmd = UNKNOWN;
   extern char *cmd_to_str[N_CMD][N_CMDT];
+  int i;
 
   /* Paint the in the map area */
   screen_area_clear(ge->map);
@@ -88,13 +89,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game)
     id_back = space_get_north(space_act);
     id_next = space_get_south(space_act);
 
-    if (game_get_object_location(game) == id_back)
-    {
-      obj = '+';
-    }
-    else
-    {
-      obj = ' ';
+    obj = ' ';
+    for (i = 1; i < MAX_OBJECTS; i++) {
+        if (game_get_object_location(game, i) == id_back) {
+            obj = '+';
+            break;
+        }
     }
 
     if (id_back != NO_ID)
@@ -109,13 +109,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game)
       screen_area_puts(ge->map, str);
     }
 
-    if (game_get_object_location(game) == id_act)
-    {
-      obj = '+';
-    }
-    else
-    {
-      obj = ' ';
+    obj = ' ';
+    for (i = 1; i < MAX_OBJECTS; i++) {
+        if (game_get_object_location(game, i) == id_act) {
+            obj = '+';
+            break;
+        }
     }
 
     if (id_act != NO_ID)
@@ -130,13 +129,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game)
       screen_area_puts(ge->map, str);
     }
 
-    if (game_get_object_location(game) == id_next)
-    {
-      obj = '+';
-    }
-    else
-    {
-      obj = ' ';
+    obj = ' ';
+    for (i = 1; i < MAX_OBJECTS; i++) {
+        if (game_get_object_location(game, i) == id_next) {
+            obj = '+';
+            break;
+        }
     }
 
     if (id_next != NO_ID)
@@ -156,7 +154,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game)
 
   /* . Mostrar dónde está el objeto en el mapa */
   /*Author:Rodrigo*/
-  if ((obj_loc = game_get_object_location(game)) != NO_ID)
+  obj_loc = NO_ID;
+  for (i = 1; i < MAX_OBJECTS; i++) {
+      obj_loc = game_get_object_location(game, i);
+      if (obj_loc != NO_ID) break;
+  }
+
+  if (obj_loc != NO_ID)
   {
     sprintf(str, "  Object location:%d", (int)obj_loc);
   }
