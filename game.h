@@ -20,7 +20,6 @@
 
 /** @brief Número máximo de espacios en el juego */
 #define MAX_SPACES 100
-#define MAX_OBJECTS 100
 
 /**
  * @brief Estructura principal de Game (opaca)
@@ -60,15 +59,6 @@ Status game_destroy(Game *game);
  * @return OK si se añade con éxito, ERROR si no cabe o falla.
  */
 Status game_add_space(Game *game, Space *space);
-
-/**
- * @brief Añade un nuevo objeto al array del juego.
- * @author Unai
- * @param game Puntero al juego.
- * @param object Puntero al objeto a añadir.
- * @return OK si se añade con éxito, ERROR si no cabe o falla.
- */
-Status game_add_object(Game *game, Object *object);
 
 /**
  * @brief Busca un espacio en el juego por su ID.

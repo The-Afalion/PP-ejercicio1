@@ -140,43 +140,23 @@ Status space_set_west(Space* space, Id id);
 Id space_get_west(Space* space);
 
 /**
- * @brief It adds an object to the space
- * @author Unai
+ * @brief It sets the object in the space
+ * @author Profesores PPROG
  *
  * @param space a pointer to the space
- * @param object_id the id of the object to be added
+ * @param object_id the id of the object to be set
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
-Status space_add_object(Space* space, Id object_id);
+Status space_set_object(Space* space, Id object_id);
 
 /**
- * @brief It deletes an object from the space
- * @author Unai
+ * @brief It gets the object from the space
+ * @author Profesores PPROG
  *
  * @param space a pointer to the space
- * @param object_id the id of the object to be deleted
- * @return OK, if everything goes well or ERROR if there was some mistake
+ * @return the id of the object in the space
  */
-Status space_del_object(Space* space, Id object_id);
-
-/**
- * @brief It gets the objects from the space
- * @author Unai
- *
- * @param space a pointer to the space
- * @return the ids of the objects in the space
- */
-Id* space_get_objects(Space* space);
-
-/**
- * @brief It checks if an object is in the space
- * @author Unai
- *
- * @param space a pointer to the space
- * @param object_id the id of the object to be checked
- * @return TRUE if the object is in the space, FALSE otherwise
- */
-BOOL space_has_object(Space* space, Id object_id);
+Id* space_get_object(Space* space);
 
 /**
  * @brief It prints the space information
@@ -187,5 +167,12 @@ BOOL space_has_object(Space* space, Id object_id);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status space_print(Space* space);
+Status space_add_object(Space* space, Id object_id);
+Status space_remove_object(Space* space, Id object_id);
+int* space_get_objects(Space* space);
+int space_get_number_of_objects(Space* space);
+Status space_contains_object(Space* space, Id id);
+Status space_set_character(Space* space, Id id);
+Id space_get_character(Space* space);
 
 #endif
