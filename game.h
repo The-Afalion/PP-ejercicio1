@@ -188,4 +188,19 @@ Status game_add_object(Game *game, Object *obj);
  */
 Status game_add_character(Game *game, Character *character);
 
+/**
+ * @brief Establece el mensaje de chat actual.
+ * @param game Puntero al juego.
+ * @param message Mensaje a establecer.
+ * @return OK si se establece con éxito, ERROR en caso contrario.
+ */
+Status game_set_chat_message(Game *game, char *message);
+
+/**
+ * @brief Obtiene el mensaje de chat actual.
+ * @param game Puntero al juego.
+ * @return Cadena con el mensaje de chat.
+ */
+char *game_get_chat_message(Game *game);
+
 #endif

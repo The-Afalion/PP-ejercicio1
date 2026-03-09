@@ -69,7 +69,9 @@ Status player_destroy(Player *player)
   }
 
   /* Libera la memoria */
-  free(player->gdesc);
+  if (player->gdesc) {
+      free(player->gdesc);
+  }
   free(player);
   return OK;
 }
@@ -163,7 +165,7 @@ Status player_print(Player *player)
   }
 
   /* Imprime la información*/
-  fprintf(stdout, "--> Jugador (Id: %ld; Nombre: %s; Descripción: %s)\n", player->id, player->name,player->gdesc);
+  fprintf(stdout, "--> Jugador (Id: %ld; Nombre: %s; Descripción: %s)\n", player->id, player->name,player->gdesc ? player->gdesc : "None");
   fprintf(stdout, "--> Salud: %d\n",player->health);
   fprintf(stdout, "--> Localización: %ld\n", player->location);
   fprintf(stdout, "--> Objeto: %ld\n", player->object);
@@ -184,15 +186,18 @@ int player_get_health(Player*player){
   return player->health;
 }
 Status player_set_gdesc(Player*player,char*des){
-if(!player||!des){
-  return ERROR;
-}
-player->gdesc=(char*)malloc((strlen(des)+1)*sizeof(char));
-if(!player->gdesc){
-  return ERROR;
-}
-strcpy(player->gdesc,des);
-return OK;
+  if(!player||!des){
+    return ERROR;
+  }
+  if (player->gdesc) {
+      free(player->gdesc);
+  }
+  player->gdesc=(char*)malloc((strlen(des)+1)*sizeof(char));
+  if(!player->gdesc){
+    return ERROR;
+  }
+  strcpy(player->gdesc,des);
+  return OK;
 }
 char* player_get_gdesc(Player*player){
   if(!player){

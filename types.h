@@ -20,4 +20,6 @@ typedef enum { ERROR, OK } Status;
 
 typedef enum { N, S, E, W } Direction;
 
+typedef enum { FALSE, TRUE } BOOL;
+
 #endif

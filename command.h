@@ -64,6 +64,14 @@ Status command_set_code(Command* command, CommandCode code);
 CommandCode command_get_code(Command* command);
 
 /**
+ * @brief Obtiene el argumento del comando.
+ * @author Unai
+ * @param command Puntero al comando.
+ * @return El argumento del comando o NULL si hay error.
+ */
+char* command_get_arg(Command* command);
+
+/**
  * @brief Lee el comando introducido por el usuario desde teclado.
  * @author Unai
  * @param command Puntero al comando donde se guardará la entrada.

@@ -1,10 +1,10 @@
 /**
- * @brief Define la interfaz del motor gráfico textual
+ * @brief It defines the textual graphic engine interface
  *
  * @file graphic_engine.h
- * @author Unai y Rodrigo
- * @version 1.0
- * @date 15-02-2026
+ * @author Profesores PPROG
+ * @version 0
+ * @date 24-01-2026
  * @copyright GNU Public License
  */
 
@@ -13,28 +13,10 @@
 
 #include "game.h"
 
-/**
- * @brief Estructura opaca del motor gráfico
- */
 typedef struct _Graphic_engine Graphic_engine;
 
-/**
- * @brief Crea e inicializa el motor gráfico.
- * @return Puntero al motor gráfico creado o NULL en caso de error.
- */
-Graphic_engine *graphic_engine_create();
-
-/**
- * @brief Libera la memoria utilizada por el motor gráfico.
- * @param ge Puntero al motor gráfico.
- */
-void graphic_engine_destroy(Graphic_engine *ge);
-
-/**
- * @brief Dibuja el estado actual del juego en la terminal.
- * @param ge Puntero al motor gráfico.
- * @param game Puntero al juego a representar.
- */
-void graphic_engine_paint_game(Graphic_engine *ge, Game *game);
+Graphic_engine* graphic_engine_create();
+void graphic_engine_destroy(Graphic_engine* ge);
+void graphic_engine_paint_game(Graphic_engine* ge, Game* game, Status last_cmd_status);
 
 #endif

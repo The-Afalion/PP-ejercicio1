@@ -11,10 +11,9 @@ Set *set_create(Id id)
 {
     int i;
     Set *s = NULL;
-    if (id < 0)
-    {
-        return NULL;
-    }
+
+    /* Removed check for id < 0 to allow creating empty sets with NO_ID */
+
     if (!(s = (Set *)malloc(sizeof(Set))))
     {
         return NULL;
@@ -101,7 +100,7 @@ void set_print(Set *s)
     {
         if (s->ids[i] != NO_ID)
         {
-            printf(" %d", s->ids[i]);
+            printf(" %ld", s->ids[i]);
         }
     }
 }

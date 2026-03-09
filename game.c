@@ -21,6 +21,7 @@ struct _Game {
   int n_spaces;
   Command *last_cmd;
   int finished;
+  char chat_message[WORD_SIZE];
 };
 
 /* Funciones privadas */
@@ -57,6 +58,7 @@ Status game_create(Game **game)
   (*game)->player = player_create(PLAYER_ID);
   (*game)->last_cmd = command_create();
   (*game)->finished = 0;
+  (*game)->chat_message[0] = '\0';
 
   return OK;
 }
@@ -72,6 +74,10 @@ Status game_create_from_file(Game **game, char *filename)
   }
 
   if (game_reader_load_spaces(*game, filename) == ERROR) {
+    return ERROR;
+  }
+
+  if (game_reader_load_objects(*game, filename) == ERROR) {
     return ERROR;
   }
 
@@ -415,4 +421,23 @@ Id game_get_space_id_at(Game *game, int position)
   }
 
   return space_get_id(game->spaces[position]);
+}
+
+Status game_set_chat_message(Game *game, char *message) {
+  if (!game || !message) {
+    return ERROR;
+  }
+
+  strncpy(game->chat_message, message, WORD_SIZE - 1);
+  game->chat_message[WORD_SIZE - 1] = '\0';
+
+  return OK;
+}
+
+char *game_get_chat_message(Game *game) {
+  if (!game) {
+    return NULL;
+  }
+
+  return game->chat_message;
 }

@@ -1,3 +1,11 @@
+/**
+ * @brief Implementación del módulo de carga de juegos
+ * @file game_reader.c
+ * @author Unai
+ * @version 1.0
+ * @date 15-02-2026
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +24,8 @@ Status game_reader_load_spaces(Game *game, char *filename) {
     Space *space = NULL;
     Status status = OK;
     char *endptr;
+    char *gdesc[GDESC_ROWS];
+    int i;
 
     if (!filename) {
         return ERROR;
@@ -40,6 +50,16 @@ Status game_reader_load_spaces(Game *game, char *filename) {
             south = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             west = strtol(toks, &endptr, 10);
+
+            for (i = 0; i < GDESC_ROWS; i++) {
+                toks = strtok(NULL, "|");
+                if (toks) {
+                    gdesc[i] = toks;
+                } else {
+                    gdesc[i] = "         ";
+                }
+            }
+
 #ifdef DEBUG
             printf("Leido: s:%ld|%s|%ld|%ld|%ld|%ld\n", id, name, north, east, south, west);
 #endif
@@ -50,6 +70,7 @@ Status game_reader_load_spaces(Game *game, char *filename) {
                 space_set_east(space, east);
                 space_set_south(space, south);
                 space_set_west(space, west);
+                space_set_gdesc(space, gdesc);
                 game_add_space(game, space);
             }
         }
@@ -119,7 +140,7 @@ Status game_reader_load_characters(Game *game, char *filename) {
     char gdesc[7] = "";
     char message[101] = "";
     char *toks = NULL;
-    Id id = NO_ID;
+    Id id = NO_ID, location_id = NO_ID;
     int health = 0;
     int friendly = 0;
     Character *character = NULL;
@@ -148,6 +169,8 @@ Status game_reader_load_characters(Game *game, char *filename) {
             toks = strtok(NULL, "|");
             friendly = (int) strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
+            location_id = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
             strcpy(message, toks);
 
             character = character_create(id);
@@ -157,6 +180,8 @@ Status game_reader_load_characters(Game *game, char *filename) {
                 character_set_health(character, health);
                 character_set_friendly(character, friendly);
                 character_set_message(character, message);
+                game_add_character(game, character);
+                game_set_character_location(game, location_id, id);
             }
         }
     }

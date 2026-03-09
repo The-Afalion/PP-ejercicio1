@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 
 
@@ -23,8 +24,8 @@ void game_actions_unknown(Game *game);
 void game_actions_exit(Game *game);
 void game_actions_next(Game *game);
 void game_actions_back(Game *game);
-void game_actions_take(Game *game);
-void game_actions_drop(Game *game);
+Status game_actions_take(Game *game);
+Status game_actions_drop(Game *game);
 void game_actions_attack(Game*game);
 void game_actions_chat(Game* game);
 void game_actions_left(Game *game);
@@ -36,6 +37,7 @@ void game_actions_right(Game *game);
 Status game_actions_update(Game *game, Command *command)
 {
   CommandCode cmd;
+  Status status = OK;
 
   game_set_last_command(game, command);
 
@@ -60,11 +62,11 @@ Status game_actions_update(Game *game, Command *command)
     break;
 
   case TAKE:
-    game_actions_take(game);
+    status = game_actions_take(game);
     break;
 
   case DROP:
-    game_actions_drop(game);
+    status = game_actions_drop(game);
     break;
   case ATTACK:
     game_actions_attack(game);
@@ -84,7 +86,7 @@ Status game_actions_update(Game *game, Command *command)
     break;
   }
 
-  return OK;
+  return status;
 }
 
 /**
@@ -135,7 +137,7 @@ void game_actions_back(Game *game)
 
   return;
 }
-void game_actions_take(Game *game)
+Status game_actions_take(Game *game)
 {
   Id player_loc = NO_ID;
   Id obj_id = NO_ID;
@@ -148,36 +150,36 @@ void game_actions_take(Game *game)
   Object *obj = NULL;
 
   if (!game) {
-    return;
+    return ERROR;
   }
 
   player_loc = game_get_player_location(game);
 
   if (player_loc == NO_ID) {
-    return;
+    return ERROR;
   }
 
   space = game_get_space(game, player_loc);
 
   if (!space) {
-    return;
+    return ERROR;
   }
 
   last_cmd = game_get_last_command(game);
 
   if (!last_cmd) {
-    return;
+    return ERROR;
   }
 
   arg = command_get_arg(last_cmd);
 
   if (!arg || arg[0] == '\0') {
-    return;
+    return ERROR;
   }
 
   /* Si el jugador ya lleva un objeto, no puede coger otro */
   if (player_get_object(game_get_player(game)) != NO_ID) {
-    return;
+    return ERROR;
   }
 
   num_objs = space_get_number_of_objects(space);
@@ -195,17 +197,20 @@ void game_actions_take(Game *game)
         }
       }
 
+      free(objs);
+
       if (obj_id != NO_ID) {
         player_set_object(game_get_player(game), obj_id);
-        space_remove_object(space, obj_id);
+        game_set_object_location(game, NO_ID, obj_id);
+        return OK;
       }
-
-      free(objs);
     }
   }
+
+  return ERROR;
 }
 
-void game_actions_drop(Game *game)
+Status game_actions_drop(Game *game)
 {
   Id player_loc = NO_ID;
   Id obj_id = NO_ID;
@@ -215,31 +220,31 @@ void game_actions_drop(Game *game)
   Object *obj = NULL;
 
   if (!game) {
-    return;
+    return ERROR;
   }
 
   player_loc = game_get_player_location(game);
 
   if (player_loc == NO_ID) {
-    return;
+    return ERROR;
   }
 
   space = game_get_space(game, player_loc);
 
   if (!space) {
-    return;
+    return ERROR;
   }
 
   last_cmd = game_get_last_command(game);
 
   if (!last_cmd) {
-    return;
+    return ERROR;
   }
 
   arg = command_get_arg(last_cmd);
 
   if (!arg || arg[0] == '\0') {
-    return;
+    return ERROR;
   }
 
   obj_id = player_get_object(game_get_player(game));
@@ -250,9 +255,12 @@ void game_actions_drop(Game *game)
     /* Comprobamos que el nombre del objeto que lleva coincide con lo que ha escrito */
     if (obj != NULL && strcasecmp(object_get_name(obj), arg) == 0) {
       player_set_object(game_get_player(game), NO_ID);
-      space_add_object(space, obj_id);
+      game_set_object_location(game, player_loc, obj_id);
+      return OK;
     }
   }
+
+  return ERROR;
 }
 void game_actions_attack(Game *game)
 {

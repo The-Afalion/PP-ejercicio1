@@ -26,6 +26,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "E
 struct _Command
 {
   CommandCode code; /*!< Código del comando */
+  char arg[CMD_LENGHT]; /*!< Argumento del comando */
 };
 
 Command *command_create()
@@ -43,6 +44,7 @@ Command *command_create()
 
   /* Inicializamos el comando por defecto (vacío) */
   newCommand->code = NO_CMD;
+  newCommand->arg[0] = '\0';
 
   return newCommand;
 }
@@ -85,9 +87,19 @@ CommandCode command_get_code(Command *command)
   return command->code;
 }
 
+char* command_get_arg(Command *command)
+{
+  /* Comprobamos que el comando exista */
+  if (!command)
+  {
+    return NULL;
+  }
+  return command->arg;
+}
+
 Status command_get_user_input(Command *command)
 {
-  char input[CMD_LENGHT] = "", *token = NULL;
+  char input[CMD_LENGHT] = "", *token = NULL, *arg = NULL;
   int i = UNKNOWN - NO_CMD + 1; /* Calculamos el índice para empezar a buscar */
   CommandCode cmd;
 
@@ -123,6 +135,18 @@ Status command_get_user_input(Command *command)
       {
         i++;
       }
+    }
+
+    /* Obtenemos el argumento si existe */
+    arg = strtok(NULL, " \n");
+    if (arg)
+    {
+      strncpy(command->arg, arg, CMD_LENGHT - 1);
+      command->arg[CMD_LENGHT - 1] = '\0';
+    }
+    else
+    {
+      command->arg[0] = '\0';
     }
 
     /* Asignamos el código encontrado */
