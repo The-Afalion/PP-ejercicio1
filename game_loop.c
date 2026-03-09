@@ -14,6 +14,7 @@
 #include "game.h"
 #include "command.h"
 #include "game_actions.h"
+#include <time.h>
 
 int main(int argc, char *argv[])
 {
@@ -21,7 +22,7 @@ int main(int argc, char *argv[])
   Command *command = NULL;
   Graphic_engine *gengine;
   Status status = OK;
-
+  srand(time(NULL));
   if (argc < 2)
   {
     fprintf(stderr, "Use: %s <game_data_file>\n", argv[0]);
