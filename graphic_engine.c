@@ -137,14 +137,13 @@ void _paint_space(Area *area, Game *game, Id space_id, Id id_east, Id id_west, c
     char **gdesc = NULL;
     Space *space = NULL;
     int i, k;
-    char obj_char = ' ';
     Id char_id = NO_ID;
     Character *character = NULL;
     const char *char_gdesc = NULL;
 
     if (space_id == NO_ID) {
-        /* Print empty space if ID is invalid */
-        for (i = 0; i < GDESC_ROWS + 2; i++) { /* +2 for borders */
+        /* 9 líneas vacías en total: Bordes(2) + ID(1) + Dibujo(5) + Objeto(1) */
+        for (i = 0; i < GDESC_ROWS + 4; i++) { 
             screen_area_puts(area, " ");
         }
         return;
@@ -155,42 +154,52 @@ void _paint_space(Area *area, Game *game, Id space_id, Id id_east, Id id_west, c
     char_id = space_get_character(space);
     if (char_id != NO_ID) {
         character = game_get_character(game, char_id);
-        if (character) {
-            /* Only show character if alive */
-            if (character_get_health(character) > 0) {
-                char_gdesc = character_get_gdesc(character);
-            }
+        if (character && character_get_health(character) > 0) {
+            char_gdesc = character_get_gdesc(character);
         }
     }
 
-    /* Check for objects in space */
+    /* --- 1. BUSCAMOS LOS OBJETOS --- */
+    char obj_str[25] = "";
+    Object *obj = NULL;
     for (k = 0; k < MAX_OBJECTS; k++) {
         if (game_get_object_location(game, k) == space_id) {
-            obj_char = '*'; /* Symbol for object */
-            break;
+            obj = game_get_object(game, k);
+            if (obj) {
+                if (strlen(obj_str) > 0 && strlen(obj_str) < 9) {
+                    strcat(obj_str, " ");
+                }
+                /* Recortamos a 9 caracteres para dejar los márgenes intactos */
+                strncat(obj_str, object_get_name(obj), 9 - strlen(obj_str));
+            }
         }
     }
 
-    /* Top border with ID */
-    sprintf(str, "  +--%3d------+", (int)space_id);
+    /* --- 2. BORDE SUPERIOR CONTINUO --- */
+    sprintf(str, "  +-----------+");
     screen_area_puts(area, str);
 
+    /* --- 3. LÍNEA DEL ID (Alineado a la derecha como en la foto) --- */
+    sprintf(str, "  |%11d|", (int)space_id);
+    screen_area_puts(area, str);
+
+    /* --- 4. DIBUJO DEL ESPACIO (GDESC) --- */
     if (gdesc) {
         for (i = 0; i < GDESC_ROWS; i++) {
-            char left_ind[10] = "      ";
-            char right_ind[10] = "      ";
-            char line_content[20];
+            char left_ind[5] = "  ";
+            char right_ind[5] = "  ";
+            char line_content[15];
 
-            /* Arrows for East/West on center line (index 2) */
+            /* Flechas de movimiento para este/oeste */
             if (i == 2) {
-                if (id_west != NO_ID) strcpy(left_ind, " <--  ");
-                if (id_east != NO_ID) strcpy(right_ind, "  --> ");
+                if (id_west != NO_ID) strcpy(left_ind, "<-");
+                if (id_east != NO_ID) strcpy(right_ind, "->");
             }
 
-            strncpy(line_content, gdesc[i], 19);
-            line_content[19] = '\0';
+            strncpy(line_content, gdesc[i], 9);
+            line_content[9] = '\0';
 
-            /* Overlay character on line 2 (index 2) */
+            /* Overlay del personaje en el medio */
             if (i == 2 && char_gdesc) {
                 int len = strlen(char_gdesc);
                 int start = (9 - len) / 2;
@@ -199,17 +208,10 @@ void _paint_space(Area *area, Game *game, Id space_id, Id id_east, Id id_west, c
                 }
             }
 
-            /* Overlay object symbol on line 3 (index 3) */
-            if (i == 3 && obj_char == '*') {
-                /* Put '*' in center */
-                if (strlen(line_content) > 4) {
-                    line_content[4] = '*';
-                }
-            }
+            /* Pintamos la línea con un espacio de margen interior: "| %-9s |" */
+            sprintf(str, "%s| %-9s |%s", left_ind, line_content, right_ind);
 
-            sprintf(str, "%s|%s|%s", left_ind, line_content, right_ind);
-
-            /* Show Tag on the last line */
+            /* Añadir etiqueta de jugador (Player, ^, v) en la última línea */
             if (i == GDESC_ROWS - 1) {
                  char temp[20];
                  sprintf(temp, " %s", tag ? tag : "");
@@ -220,24 +222,25 @@ void _paint_space(Area *area, Game *game, Id space_id, Id id_east, Id id_west, c
         }
         free(gdesc);
     } else {
-        /* Fallback */
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
-        sprintf(str, "  | %s       |", tag ? tag : "   ");
-        screen_area_puts(area, str);
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
+        /* Fallback si no hay dibujo en el fichero .dat */
+        for (i = 0; i < GDESC_ROWS; i++) {
+            sprintf(str, "  |           |");
+            screen_area_puts(area, str);
+        }
     }
 
-    /* Bottom border */
+    /* --- 5. LÍNEA DEL OBJETO (Con margen interior como en la foto) --- */
+    if (strlen(obj_str) > 0) {
+        sprintf(str, "  | %-9s |", obj_str);
+    } else {
+        sprintf(str, "  |           |");
+    }
+    screen_area_puts(area, str);
+
+    /* --- 6. BORDE INFERIOR --- */
     sprintf(str, "  +-----------+");
     screen_area_puts(area, str);
 }
-
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status)
 {
   Id id_act = NO_ID, id_n = NO_ID, id_s = NO_ID, id_e = NO_ID, id_w = NO_ID;
