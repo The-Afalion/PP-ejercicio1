@@ -112,24 +112,11 @@ int set_get_numberid(Set *s) {
     return s->n_ids;
 }
 
-int* set_get_ids(Set *s) {
-    int *id_copy = NULL;
-    int i;
-
+Id* set_get_ids(Set *s) {
     if (s == NULL || s->n_ids == 0) {
         return NULL; /* Returns NULL if no elements */
     }
 
-    /* Allocate memory only for the Ids it contains */
-    id_copy = (int *)malloc(s->n_ids * sizeof(Id));
-    if (id_copy == NULL) {
-        return NULL;
-    }
-
-    /* Copy the Ids */
-    for (i = 0; i < s->n_ids; i++) {
-        id_copy[i] = s->ids[i];
-    }
-
-    return id_copy;
+    return s->ids;
+   
 }

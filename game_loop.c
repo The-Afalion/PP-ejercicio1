@@ -40,8 +40,7 @@ int main(int argc, char *argv[])
     game_destroy(game);
     return 1;
   }
-
-  command = command_create();
+  command=game_get_last_command(game);
   while ((command_get_code(command) != EXIT) && !game_get_finished(game))
   {
     graphic_engine_paint_game(gengine, game, status);
@@ -49,7 +48,9 @@ int main(int argc, char *argv[])
     status = game_actions_update(game, command);
   }
 
-  command_destroy(command); 
+  /* Paint the last state */
+  graphic_engine_paint_game(gengine, game, status);
+
   game_destroy(game);
   graphic_engine_destroy(gengine);
 

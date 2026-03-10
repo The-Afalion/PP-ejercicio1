@@ -5,7 +5,7 @@
 #include "player.h"
 #include "object.h"
 #include "character.h"
-#include <stdio.h> 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -56,7 +56,7 @@ Status game_create(Game **game)
 
   (*game)->n_spaces = 0;
   (*game)->player = player_create(PLAYER_ID);
-  (*game)->last_cmd = NULL;
+  (*game)->last_cmd = command_create();
   (*game)->finished = 0;
   (*game)->chat_message[0] = '\0';
 
@@ -116,6 +116,10 @@ Status game_destroy(Game *game)
     if (game->characters[i]) {
       character_destroy(game->characters[i]);
     }
+  }
+
+  if (game->last_cmd) {
+    command_destroy(game->last_cmd);
   }
 
   free(game);
@@ -424,8 +428,7 @@ Status game_set_chat_message(Game *game, char *message) {
     return ERROR;
   }
 
-  strncpy(game->chat_message, message, WORD_SIZE - 1);
-  game->chat_message[WORD_SIZE - 1] = '\0';
+  if (!strcpy(game->chat_message, message)) return ERROR;
 
   return OK;
 }

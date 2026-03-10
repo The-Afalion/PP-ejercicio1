@@ -20,16 +20,16 @@
    Private functions
 */
 
-void game_actions_unknown(Game *game);
-void game_actions_exit(Game *game);
-void game_actions_next(Game *game);
-void game_actions_back(Game *game);
+Status game_actions_unknown(Game *game);
+Status game_actions_exit(Game *game);
+Status game_actions_next(Game *game);
+Status game_actions_back(Game *game);
 Status game_actions_take(Game *game);
 Status game_actions_drop(Game *game);
-void game_actions_attack(Game*game);
-void game_actions_chat(Game* game);
-void game_actions_left(Game *game);
-void game_actions_right(Game *game);
+Status game_actions_attack(Game*game);
+Status game_actions_chat(Game* game);
+Status game_actions_left(Game *game);
+Status game_actions_right(Game *game);
 /**
    Game actions implementation
 */
@@ -46,19 +46,19 @@ Status game_actions_update(Game *game, Command *command)
   switch (cmd)
   {
   case UNKNOWN:
-    game_actions_unknown(game);
+    status = game_actions_unknown(game);
     break;
 
   case EXIT:
-    game_actions_exit(game);
+    status = game_actions_exit(game);
     break;
 
   case NEXT:
-    game_actions_next(game);
+    status = game_actions_next(game);
     break;
 
   case BACK:
-    game_actions_back(game);
+    status = game_actions_back(game);
     break;
 
   case TAKE:
@@ -69,16 +69,16 @@ Status game_actions_update(Game *game, Command *command)
     status = game_actions_drop(game);
     break;
   case ATTACK:
-    game_actions_attack(game);
+    status = game_actions_attack(game);
     break;
   case CHAT:
-    game_actions_chat(game);
+    status = game_actions_chat(game);
     break;
   case LEFT:
-     game_actions_left(game);
-     break;
+    status = game_actions_left(game);
+    break;
   case RIGHT:
-    game_actions_right(game);
+    status = game_actions_right(game);
     break;
     
 
@@ -93,11 +93,14 @@ Status game_actions_update(Game *game, Command *command)
    Calls implementation for each action
 */
 
-void game_actions_unknown(Game *game) {}
+Status game_actions_unknown(Game *game) {
+  return ERROR;
+}
 
-void game_actions_exit(Game *game) {}
-
-void game_actions_next(Game *game)
+Status game_actions_exit(Game *game) {
+  return OK;
+}
+Status game_actions_next(Game *game)
 {
   Id current_id = NO_ID;
   Id space_id = NO_ID;
@@ -105,19 +108,20 @@ void game_actions_next(Game *game)
   space_id = game_get_player_location(game);
   if (space_id == NO_ID)
   {
-    return;
+    return ERROR;
   }
 
   current_id = space_get_south(game_get_space(game, space_id));
   if (current_id != NO_ID)
   {
     game_set_player_location(game, current_id);
+    return OK;
   }
 
-  return;
+  return ERROR;
 }
 
-void game_actions_back(Game *game)
+Status game_actions_back(Game *game)
 {
   Id current_id = NO_ID;
   Id space_id = NO_ID;
@@ -126,16 +130,17 @@ void game_actions_back(Game *game)
 
   if (NO_ID == space_id)
   {
-    return;
+    return ERROR;
   }
 
   current_id = space_get_north(game_get_space(game, space_id));
   if (current_id != NO_ID)
   {
     game_set_player_location(game, current_id);
+    return OK;
   }
 
-  return;
+  return ERROR;
 }
 Status game_actions_take(Game *game)
 {
@@ -144,7 +149,7 @@ Status game_actions_take(Game *game)
   Space *space = NULL;
   int num_objs = 0;
   int i = 0;
-  int *objs = NULL;
+  Id *objs = NULL;
   Command *last_cmd = NULL;
   char *arg = NULL;
   Object *obj = NULL;
@@ -262,7 +267,7 @@ Status game_actions_drop(Game *game)
 
   return ERROR;
 }
-void game_actions_attack(Game *game)
+Status game_actions_attack(Game *game)
 {
   Id space_id, char_id;
   Space *space;
@@ -272,44 +277,44 @@ void game_actions_attack(Game *game)
   int player_health, char_health;
 
   if (!game) {
-    return;
+    return ERROR;
   }
 
   player = game_get_player(game);
   if (!player) {
-    return;
+    return ERROR;
   }
 
   space_id = game_get_player_location(game);
   if (space_id == NO_ID) {
-    return;
+    return ERROR;
   }
 
   space = game_get_space(game, space_id);
   if (!space) {
-    return;
+    return ERROR;
   }
 
   char_id = space_get_character(space);
   if (char_id == NO_ID) {
-    return;
+    return ERROR;
   }
 
   character = game_get_character(game, char_id);
   if (!character) {
-    return;
+    return ERROR;
   }
 
   /* No se puede atacar si es amigo */
   if (character_get_friendly(character)) {
-    return;
+    return ERROR;
   }
 
   char_health = character_get_health(character);
   
   /* Si la salud es 0 o menos, ya está muerto, no se le ataca */
   if (char_health <= 0) {
-    return;
+    return ERROR;
   }
   random_num = rand() % 10;
 
@@ -328,52 +333,54 @@ void game_actions_attack(Game *game)
     char_health--;
     character_set_health(character, char_health);
   }
+  return OK;
 }
-void game_actions_chat(Game* game) {
+Status game_actions_chat(Game* game) {
   Id space_id;
   Id char_id;
   Space *space;
   Character *character;
 
   if (!game) {
-    return;
+    return ERROR;
   }
 
   space_id = game_get_player_location(game);
 
   if (space_id == NO_ID) {
-    return;
+    return ERROR;
   }
 
   space = game_get_space(game, space_id);
 
   if (!space) {
-    return;
+    return ERROR;
   }
 
   char_id = space_get_character(space);
 
   if (char_id == NO_ID) {
-    return;
+    return ERROR;
   }
 
   character = game_get_character(game, char_id);
 
   if (!character) {
-    return;
+    return ERROR;
   }
 
   if (character_get_friendly(character) == 0) {
-    return;
+    return ERROR;
   }
 
   if (character_get_health(character) <= 0) {
-    return;
+    return ERROR;
   }
 
   game_set_chat_message(game, character_get_message(character));
+  return OK;
 }
-void game_actions_left(Game *game)
+Status game_actions_left(Game *game)
 {
     Id current_id = NO_ID;
     Id space_id = NO_ID;
@@ -382,19 +389,20 @@ void game_actions_left(Game *game)
 
     if (NO_ID == space_id)
     {
-        return;
+        return ERROR;
     }
 
     current_id = space_get_west(game_get_space(game, space_id));
     if (current_id != NO_ID)
     {
         game_set_player_location(game, current_id);
+        return OK;
     }
 
-    return;
+    return ERROR;
 }
 
-void game_actions_right(Game *game)
+Status game_actions_right(Game *game)
 {
     Id current_id = NO_ID;
     Id space_id = NO_ID;
@@ -403,14 +411,15 @@ void game_actions_right(Game *game)
 
     if (NO_ID == space_id)
     {
-        return;
+        return ERROR;
     }
 
     current_id = space_get_east(game_get_space(game, space_id));
     if (current_id != NO_ID)
     {
         game_set_player_location(game, current_id);
+        return OK;
     }
 
-    return;
+    return ERROR;
 }
