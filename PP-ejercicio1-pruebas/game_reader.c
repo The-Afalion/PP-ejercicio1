@@ -24,8 +24,9 @@ Status game_reader_load_spaces(Game *game, char *filename) {
     Space *space = NULL;
     Status status = OK;
     char *endptr;
-    char *gdesc[GDESC_ROWS];
+    char gdesc[GDESC_ROWS][GDESC_COLS];
     int i;
+    Status des;
 
     if (!filename) {
         return ERROR;
@@ -51,12 +52,17 @@ Status game_reader_load_spaces(Game *game, char *filename) {
             toks = strtok(NULL, "|");
             west = strtol(toks, &endptr, 10);
 
-            for (i = 0; i < GDESC_ROWS; i++) {
+            for (i = 0,des=OK; i < GDESC_ROWS; i++) {
                 toks = strtok(NULL, "|");
                 if (toks) {
-                    gdesc[i] = toks;
+                    if(strlen(toks)!=GDESC_COLS-1){
+                        des=ERROR;
+                    }
+                    else{
+                        strcpy(gdesc[i] , toks);
+                    }
                 } else {
-                    gdesc[i] = "         ";
+                    strcpy(gdesc[i] ,"         ");
                 }
             }
 
@@ -70,7 +76,9 @@ Status game_reader_load_spaces(Game *game, char *filename) {
                 space_set_east(space, east);
                 space_set_south(space, south);
                 space_set_west(space, west);
-                space_set_gdesc(space, gdesc);
+                if(des!=ERROR){
+                    space_set_gdesc(space, gdesc);
+                }
                 game_add_space(game, space);
             }
         }

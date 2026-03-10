@@ -22,19 +22,24 @@
 #include "player.h"
 #include "object.h"
 
-#define WIDTH_MAP 48
-#define WIDTH_DES 29
+#define WIDTH_MAP 55
+#define WIDTH_DES 55
 #define WIDTH_BAN 25
-#define HEIGHT_MAP 24
+#define HEIGHT_MAP 30
 #define HEIGHT_BAN 1
-#define HEIGHT_HLP 3
+#define HEIGHT_HLP 2
 #define HEIGHT_FDB 3
 #define MAX_OBJECTS 100
+#define ROOM_WIDTH 15
+
 
 struct _Graphic_engine
 {
   Area *map, *descript, *banner, *help, *feedback;
 };
+
+void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL is_act) ;
+Status graphic_engine_get_objects_str(Game *game, Space *space, char *str);
 
 Graphic_engine *graphic_engine_create()
 {
@@ -60,6 +65,135 @@ Graphic_engine *graphic_engine_create()
 
   return ge;
 }
+/* Dibuja una fila de 3 espacios (Oeste, Centro, Este) horizontalmente */
+void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL is_act) {
+    Space *west, *east;
+    Character *character;
+    char str[255], west_str[85], middle_str[85], east_str[85], obj_list[ROOM_WIDTH + 1];
+    const char *character_gdesc;
+    char (*space_gdesc)[GDESC_COLS];
+    int i;
+    Status obj_list_status;
+
+    if (!area || !middle) return;
+
+    west = game_get_space(game, space_get_west(middle));
+    east = game_get_space(game, space_get_east(middle));    
+
+    /* TOP LINE */
+    sprintf(str, "%s  +---------------+  %s",
+        !west ? "                 " : "+---------------+",
+        !east ? "                 " : "+---------------+"
+    );
+    screen_area_puts(area, str);
+
+    /* MIDDLE LINE:  PLAYER + CHARACTER + ID */
+    if (!west) {
+        sprintf(west_str, "                 ");
+    } else {
+        character = game_get_character(game, space_get_character(west));
+        character_gdesc = !character ? "      " : character_get_gdesc(character);
+
+        sprintf(west_str, "|      %s %2d|", character_gdesc, (int) space_get_id(west));
+    }
+
+    character = game_get_character(game, space_get_character(middle));
+    character_gdesc = !character ? "      " : character_get_gdesc(character);
+    sprintf(middle_str, "  | %s  %s %2d|  ",is_act == TRUE ? "^C>" : "   " , character_gdesc, (int) space_get_id(middle));
+
+    if (!east) {
+        sprintf(east_str, "                 ");
+    } else {
+        character = game_get_character(game, space_get_character(east));
+        character_gdesc = !character ? "      " : character_get_gdesc(character);
+
+        sprintf(east_str, "|      %s %2d|", character_gdesc, (int) space_get_id(east));
+    }
+
+    sprintf(str, "%s%s%s", west_str, middle_str, east_str);
+    screen_area_puts(area, str);
+
+    /* GDESC LINES */
+    for (i = 0; i < GDESC_ROWS; i++) {
+        if (!west) {
+            sprintf(west_str, "                 ");
+        } else {
+            space_gdesc = space_get_gdesc(west);
+            sprintf(west_str, "|%s      |", !space_gdesc ? "         " : space_gdesc[i]);
+        }
+
+        space_gdesc = space_get_gdesc(middle);
+        sprintf(middle_str, "  |%s      |  ", !space_gdesc ? "         " : space_gdesc[i]);
+
+        if (!east) {
+            sprintf(east_str, "                 ");
+        } else {
+            space_gdesc = space_get_gdesc(east);
+            sprintf(east_str, "|%s      |", !space_gdesc ? "         " : space_gdesc[i]);
+        }
+
+        sprintf(str, "%s%s%s", west_str, middle_str, east_str);
+        screen_area_puts(area, str);
+    }
+
+    /* OBJECTS AND ARROWS LINE */
+    if (!west) {
+            sprintf(west_str, "                 ");
+        } else {
+            obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
+            sprintf(west_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+        }
+
+        obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
+        sprintf(middle_str, " %s|%s|%s ",
+            (west) ? "<" : " ",
+            obj_list_status == ERROR ? "               " : obj_list,
+            (east) ? ">" : " "
+        );
+
+        if (!east) {
+            sprintf(east_str, "                 ");
+        } else {
+            obj_list_status = graphic_engine_get_objects_str(game, east, obj_list);
+            sprintf(east_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+        }
+
+        sprintf(str, "%s%s%s", west_str, middle_str, east_str);
+        screen_area_puts(area, str);
+
+    /* FINAL LINE */
+    sprintf(str, "%s  +---------------+  %s",
+        !west ? "                 " : "+---------------+",
+        !east ? "                 " : "+---------------+"
+    );
+    screen_area_puts(area, str);
+}
+
+Status graphic_engine_get_objects_str(Game *game, Space *space, char *str) {
+    int *n,i,cont;
+    char car[ROOM_WIDTH+1] = "";
+    if(!game||!space||!str){
+        return ERROR;
+    }
+    n=space_get_objects(space);
+    if(!n){
+        return ERROR;
+    }
+    cont=space_get_number_of_objects(space);
+    if(cont==-1){
+        return ERROR;
+    }
+    for(i=0;i<cont;i++){
+        if(strlen(car)+strlen(object_get_name(game_get_object(game,n[i]))) < ROOM_WIDTH){
+            strcat(car,object_get_name(game_get_object(game,n[i])));
+        }
+
+        if(i<cont){
+            strcat(car,", ");
+        }
+    }
+    return OK;
+}
 
 void graphic_engine_destroy(Graphic_engine *ge)
 {
@@ -76,117 +210,9 @@ void graphic_engine_destroy(Graphic_engine *ge)
   free(ge);
 }
 
-/* Helper function to paint a space with its gdesc, objects, and characters */
-void _paint_space(Area *area, Game *game, Id space_id, Id id_east, Id id_west, char *tag) {
-    char str[255];
-    char **gdesc = NULL;
-    Space *space = NULL;
-    int i, k;
-    char obj_char = ' ';
-    Id char_id = NO_ID;
-    Character *character = NULL;
-    const char *char_gdesc = NULL;
-
-    if (space_id == NO_ID) {
-        /* Print empty space if ID is invalid */
-        for (i = 0; i < GDESC_ROWS + 2; i++) { /* +2 for borders */
-            screen_area_puts(area, " ");
-        }
-        return;
-    }
-
-    space = game_get_space(game, space_id);
-    gdesc = space_get_gdesc(space);
-    char_id = space_get_character(space);
-    if (char_id != NO_ID) {
-        character = game_get_character(game, char_id);
-        if (character) {
-            /* Only show character if alive */
-            if (character_get_health(character) > 0) {
-                char_gdesc = character_get_gdesc(character);
-            }
-        }
-    }
-
-    /* Check for objects in space */
-    for (k = 0; k < MAX_OBJECTS; k++) {
-        if (game_get_object_location(game, k) == space_id) {
-            obj_char = '*'; /* Symbol for object */
-            break;
-        }
-    }
-
-    /* Top border with ID */
-    sprintf(str, "  +--%3d------+", (int)space_id);
-    screen_area_puts(area, str);
-
-    if (gdesc) {
-        for (i = 0; i < GDESC_ROWS; i++) {
-            char left_ind[10] = "      ";
-            char right_ind[10] = "      ";
-            char line_content[20];
-
-            /* Arrows for East/West on center line (index 2) */
-            if (i == 2) {
-                if (id_west != NO_ID) strcpy(left_ind, " <--  ");
-                if (id_east != NO_ID) strcpy(right_ind, "  --> ");
-            }
-
-            strncpy(line_content, gdesc[i], 19);
-            line_content[19] = '\0';
-
-            /* Overlay character on line 2 (index 2) */
-            if (i == 2 && char_gdesc) {
-                int len = strlen(char_gdesc);
-                int start = (9 - len) / 2;
-                if (start >= 0 && start + len <= 9) {
-                    strncpy(line_content + start, char_gdesc, len);
-                }
-            }
-
-            /* Overlay object symbol on line 3 (index 3) */
-            if (i == 3 && obj_char == '*') {
-                /* Put '*' in center */
-                if (strlen(line_content) > 4) {
-                    line_content[4] = '*';
-                }
-            }
-
-            sprintf(str, "%s|%s|%s", left_ind, line_content, right_ind);
-
-            /* Show Tag on the last line */
-            if (i == GDESC_ROWS - 1) {
-                 char temp[20];
-                 sprintf(temp, " %s", tag ? tag : "");
-                 strcat(str, temp);
-            }
-
-            screen_area_puts(area, str);
-        }
-        free(gdesc);
-    } else {
-        /* Fallback */
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
-        sprintf(str, "  | %s       |", tag ? tag : "   ");
-        screen_area_puts(area, str);
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
-        sprintf(str, "  |           |");
-        screen_area_puts(area, str);
-    }
-
-    /* Bottom border */
-    sprintf(str, "  +-----------+");
-    screen_area_puts(area, str);
-}
-
-void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status)
-{
-  Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID, obj_loc = NO_ID;
-  Space *space_act = NULL;
+void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status) {
+  Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, obj_loc = NO_ID;
+  Space *act = NULL;
   char str[255];
   CommandCode last_cmd = UNKNOWN;
   extern char *cmd_to_str[N_CMD][N_CMDT];
@@ -196,38 +222,57 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   Character *character = NULL;
   Object *obj = NULL;
 
-  /* Paint the in the map area */
+  if (!game) return;
+
+  /* 1. Paint the MAP area */
   screen_area_clear(ge->map);
-  if ((id_act = game_get_player_location(game)) != NO_ID)
-  {
-    space_act = game_get_space(game, id_act);
-    id_back = space_get_north(space_act);
-    id_next = space_get_south(space_act);
+  if ((id_act = game_get_player_location(game)) != NO_ID) {
+    act = game_get_space(game, id_act);
 
-    /* --- NORTH SPACE --- */
-    _paint_space(ge->map, game, id_back, NO_ID, NO_ID, "^");
+    id_back = space_get_north(act);
+    id_next = space_get_south(act);
 
-    /* Connector */
+    if (id_next == NO_ID) {
+        id_top = space_get_north(game_get_space(game, id_back));
+
+        if (id_top != NO_ID) {
+            graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_top), FALSE);
+            
+            sprintf(str, " ");
+            screen_area_puts(ge->map, str);
+        }
+    }
+
     if (id_back != NO_ID) {
-        screen_area_puts(ge->map, "        ^");
-    } else {
-        screen_area_puts(ge->map, " ");
+        graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE);
+
+        sprintf(str, "                           ^");
+        screen_area_puts(ge->map, str);
     }
 
-    /* --- CURRENT SPACE --- */
-    _paint_space(ge->map, game, id_act, space_get_east(space_act), space_get_west(space_act), "(Player)");
+    graphic_engine_paint_spaces_row(ge->map, game, act, FALSE);
 
-    /* Connector */
     if (id_next != NO_ID) {
-        screen_area_puts(ge->map, "        v");
-    } else {
-        screen_area_puts(ge->map, " ");
+        sprintf(str, "                           v");
+        screen_area_puts(ge->map, str);
+    
+
+        graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
     }
 
-    /* --- SOUTH SPACE --- */
-    _paint_space(ge->map, game, id_next, NO_ID, NO_ID, "v");
+    if (id_back == NO_ID) {
+        id_next = space_get_south(game_get_space(game, id_next));
+
+        if (id_next != NO_ID) {
+            sprintf(str, " ");
+            screen_area_puts(ge->map, str);
+    
+            graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
+        }
+    }
   }
 
+  /* 2. Paint the DESCRIPTION area */
   screen_area_clear(ge->descript);
 
   /* --- Objects List --- */
@@ -279,25 +324,23 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   }
   screen_area_puts(ge->descript, str);
 
+  /* 3. Paint the BANNER area */
+  screen_area_puts(ge->banner, "  The haunted castle game ");
 
-  /* Paint in the banner area */
-  screen_area_puts(ge->banner, " The haunted castle game ");
-
-  /* Paint in the help area */
+  /* 4. Paint the HELP area */
   screen_area_clear(ge->help);
   sprintf(str, " The commands you can use are:");
   screen_area_puts(ge->help, str);
-  sprintf(str, "     next or n, back or b, exit or e");
+  sprintf(str, "     next/n, back/b, exit/e, take/t, drop/d");
   screen_area_puts(ge->help, str);
-  sprintf(str, "     take or t, drop or d, left or l, right or r, attack or a, chat or c");
+  sprintf(str, "     left/l, right/r, attack/a, chat/c");
   screen_area_puts(ge->help, str);
 
-  /* Paint in the feedback area */
+  /* 5. Paint the FEEDBACK area */
   last_cmd = command_get_code(game_get_last_command(game));
   sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS], last_cmd_status == OK ? "OK" : "ERROR");
   screen_area_puts(ge->feedback, str);
 
-  /* Mostrar mensaje de chat si existe */
   chat_msg = game_get_chat_message(game);
   if (chat_msg && chat_msg[0] != '\0') {
       sprintf(str, " Chat: %s", chat_msg);
@@ -305,7 +348,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
       game_set_chat_message(game, "");
   }
 
-  /* Dump to the terminal */
+  /* 6. Dump to the terminal */
   screen_paint();
   printf("prompt:> ");
 }

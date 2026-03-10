@@ -33,16 +33,16 @@ Command *command_create()
 {
   Command *newCommand = NULL;
 
-  /* Reservamos memoria para el comando */
+
   newCommand = (Command *)calloc(SINGLE_ELEM, sizeof(Command));
 
-  /* Comprobamos si hubo error en la reserva */
+
   if (newCommand == NULL)
   {
     return NULL;
   }
 
-  /* Inicializamos el comando por defecto (vacío) */
+
   newCommand->code = NO_CMD;
   newCommand->arg[0] = '\0';
 
@@ -51,13 +51,13 @@ Command *command_create()
 
 Status command_destroy(Command *command)
 {
-  /* Comprobamos que el comando exista */
+
   if (!command)
   {
     return ERROR;
   }
 
-  /* Liberamos la memoria */
+
   free(command);
   command = NULL;
   return OK;
@@ -65,13 +65,11 @@ Status command_destroy(Command *command)
 
 Status command_set_code(Command *command, CommandCode code)
 {
-  /* Comprobamos que el comando exista */
   if (!command)
   {
     return ERROR;
   }
 
-  /* Asignamos el nuevo código */
   command->code = code;
 
   return OK;
@@ -79,7 +77,6 @@ Status command_set_code(Command *command, CommandCode code)
 
 CommandCode command_get_code(Command *command)
 {
-  /* Comprobamos que el comando exista */
   if (!command)
   {
     return NO_CMD;
@@ -100,10 +97,10 @@ char* command_get_arg(Command *command)
 Status command_get_user_input(Command *command)
 {
   char input[CMD_LENGHT] = "", *token = NULL, *arg = NULL;
-  int i = UNKNOWN - NO_CMD + 1; /* Calculamos el índice para empezar a buscar */
+  int i = UNKNOWN - NO_CMD + 1;
   CommandCode cmd;
 
-  /* Comprobamos que el comando exista */
+
   if (!command)
   {
     return ERROR;
@@ -149,12 +146,12 @@ Status command_get_user_input(Command *command)
       command->arg[0] = '\0';
     }
 
-    /* Asignamos el código encontrado */
+
     return command_set_code(command, cmd);
   }
   else
   {
-    /* Si falla la lectura, forzamos la salida del juego */
+
     return command_set_code(command, EXIT);
   }
 }

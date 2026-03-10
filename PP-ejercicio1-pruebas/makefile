@@ -1,12 +1,14 @@
 # Variables
 #Author:Unai
 CC=gcc
-CFLAGS= -g -Wall -pedantic -ansi
+CFLAGS= -g -Wall -pedantic -ansi -I.
 OBJS = command.o game_actions.o game_loop.o game_reader.o game.o graphic_engine.o object.o player.o space.o character.o set.o
 
 # Crea el ejecutable.
+# Enlazamos los objetos y al final la librería screen.
+# Dejamos que gcc maneje las librerías del sistema implícitamente.
 castle: ${OBJS}
-	gcc -o castle $(OBJS) libscreen.a
+	$(CC) -o castle $(OBJS) -L. -lscreen
 
 command.o: command.c command.h types.h
 	$(CC) $(CFLAGS) -c command.c
@@ -32,15 +34,26 @@ object.o: object.c object.h types.h
 player.o: player.c player.h types.h
 	$(CC) $(CFLAGS) -c player.c
 
-space.o: space.c space.h types.h
+space.o: space.c space.h types.h set.h
 	$(CC) $(CFLAGS) -c space.c
 
 character.o: character.c character.h types.h
 	$(CC) $(CFLAGS) -c character.c
 
-set.o: set.c types.h types.h
+set.o: set.c set.h types.h
 	$(CC) $(CFLAGS) -c set.c
+
+#
+# Reglas para tests
+#
+test:
+	$(CC) -o space_test space_test.c space.c set.c $(CFLAGS)
+	./space_test
+	$(CC) -o set_test set_test.c set.c $(CFLAGS)
+	./set_test
+	$(CC) -o character_test character_test.c character.c $(CFLAGS)
+	./character_test
 
 #Elimina los compilados
 clean:
-	rm -rf *.o castle
+	rm -rf *.o castle space_test set_test character_test

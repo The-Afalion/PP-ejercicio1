@@ -321,7 +321,7 @@ Id space_get_character(Space *space)
 /**
  * @brief It sets the graphic description of the space
  */
-Status space_set_gdesc(Space* space, char** gdesc) {
+Status space_set_gdesc(Space* space, char gdesc[GDESC_ROWS][GDESC_COLS]) {
   int i;
 
   if (!space || !gdesc) {
@@ -329,11 +329,12 @@ Status space_set_gdesc(Space* space, char** gdesc) {
   }
 
   for (i = 0; i < GDESC_ROWS; i++) {
-    if (gdesc[i]) {
-      strncpy(space->gdesc[i], gdesc[i], GDESC_COLS - 1);
-      space->gdesc[i][GDESC_COLS - 1] = '\0';
+    if (strlen(gdesc[i]) == GDESC_COLS - 1) {
+     if( !strcpy(space->gdesc[i],gdesc[i])){
+      return ERROR;
+     }
     } else {
-      space->gdesc[i][0] = '\0';
+      strcpy(space->gdesc[i], "         ");
     }
   }
 
@@ -343,24 +344,12 @@ Status space_set_gdesc(Space* space, char** gdesc) {
 /**
  * @brief It gets the graphic description of the space
  */
-char** space_get_gdesc(Space* space) {
-  int i;
-  char** gdesc = NULL;
-
+char (*space_get_gdesc(Space* space))[GDESC_COLS] {
   if (!space) {
     return NULL;
   }
 
-  gdesc = (char**)malloc(GDESC_ROWS * sizeof(char*));
-  if (!gdesc) {
-    return NULL;
-  }
-
-  for (i = 0; i < GDESC_ROWS; i++) {
-    gdesc[i] = space->gdesc[i];
-  }
-
-  return gdesc;
+  return space->gdesc;
 }
 
 /**

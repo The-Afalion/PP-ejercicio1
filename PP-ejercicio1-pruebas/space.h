@@ -137,11 +137,11 @@ Id space_get_character(Space* space);
 /**
  * @brief It sets the graphic description of the space
  */
-Status space_set_gdesc(Space* space, char** gdesc);
+Status space_set_gdesc(Space* space, char gdesc[GDESC_ROWS][GDESC_COLS]);
 
 /**
  * @brief It gets the graphic description of the space
  */
-char** space_get_gdesc(Space* space);
+char(* space_get_gdesc(Space* space))[GDESC_COLS];
 
 #endif
