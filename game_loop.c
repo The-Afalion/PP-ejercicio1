@@ -49,8 +49,9 @@ int main(int argc, char *argv[])
     status = game_actions_update(game, command);
   }
 
- command_destroy(command); 
+  command_destroy(command); 
   game_destroy(game);
   graphic_engine_destroy(gengine);
 
   return 0;
+}
