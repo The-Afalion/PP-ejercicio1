@@ -49,12 +49,8 @@ int main(int argc, char *argv[])
     status = game_actions_update(game, command);
   }
 
-  /* Paint the last state */
-  graphic_engine_paint_game(gengine, game, status);
-
+ command_destroy(command); 
   game_destroy(game);
   graphic_engine_destroy(gengine);
-  command_destroy(command);
 
   return 0;
-}

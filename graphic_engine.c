@@ -91,9 +91,8 @@ void _paint_row(Area *area, Game *game, Id id_w, Id id_c, Id id_e, char *tag_c) 
             strcpy(central_content, g_c[i]);
             
             /* Flechas laterales solo en la fila central del dibujo */
-            char left_conn = (i == 2 && id_w != NO_ID) ? "<" : "|";
-            char right_conn = (i == 2 && id_e != NO_ID) ? ">" : "|";
-            
+            char left_conn = (i == 2 && id_w != NO_ID) ? '<' : '|';
+            char right_conn = (i == 2 && id_e != NO_ID) ? '>' : '|';
             sprintf(line_c, "%c%s%c", left_conn, central_content, right_conn);
         } else {
             sprintf(line_c, "               ");
@@ -114,7 +113,9 @@ void _paint_row(Area *area, Game *game, Id id_w, Id id_c, Id id_e, char *tag_c) 
     sprintf(str, "%s%s%s", line_w, line_c, line_e);
     screen_area_puts(area, str);
 
-    /* Limpieza de gdescs si fuera necesario según tu implementación */
+    if (g_w) free(g_w);
+    if (g_c) free(g_c);
+    if (g_e) free(g_e);
 }
 void graphic_engine_destroy(Graphic_engine *ge)
 {
