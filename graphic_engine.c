@@ -61,8 +61,6 @@ Graphic_engine *graphic_engine_create()
   return ge;
 }
 /* Dibuja una fila de 3 espacios (Oeste, Centro, Este) horizontalmente */
-/* Dibuja una fila de 3 espacios (Oeste, Centro, Este) horizontalmente */
-/* Dibuja una fila de 3 espacios (Oeste, Centro, Este) horizontalmente */
 void _paint_row(Area *area, Game *game, Id id_w, Id id_c, Id id_e, char *tag_c) {
     char str[512];
     char line_w[50], line_c[50], line_e[50];
@@ -72,121 +70,51 @@ void _paint_row(Area *area, Game *game, Id id_w, Id id_c, Id id_e, char *tag_c) 
     char **g_w = s_w ? space_get_gdesc(s_w) : NULL;
     char **g_c = s_c ? space_get_gdesc(s_c) : NULL;
     char **g_e = s_e ? space_get_gdesc(s_e) : NULL;
-    int i, k, len;
+    int i;
 
-    /* Cadenas para guardar los nombres de los objetos */
-    char obj_w[20] = "", obj_c[20] = "", obj_e[20] = "";
-    Object *obj = NULL;
-
-    /* 1. Búsqueda de objetos Oeste */
-    if (id_w != NO_ID) {
-        for (k = 0; k < MAX_OBJECTS; k++) {
-            if (game_get_object_location(game, k) == id_w) {
-                obj = game_get_object(game, k);
-                if (obj) {
-                    if (strlen(obj_w) > 0 && strlen(obj_w) < 9) strcat(obj_w, " ");
-                    strncat(obj_w, object_get_name(obj), 9 - strlen(obj_w));
-                }
-            }
-        }
-    }
-
-    /* 2. Búsqueda de objetos Centro */
-    if (id_c != NO_ID) {
-        for (k = 0; k < MAX_OBJECTS; k++) {
-            if (game_get_object_location(game, k) == id_c) {
-                obj = game_get_object(game, k);
-                if (obj) {
-                    if (strlen(obj_c) > 0 && strlen(obj_c) < 9) strcat(obj_c, " ");
-                    strncat(obj_c, object_get_name(obj), 9 - strlen(obj_c));
-                }
-            }
-        }
-    }
-
-    /* 3. Búsqueda de objetos Este */
-    if (id_e != NO_ID) {
-        for (k = 0; k < MAX_OBJECTS; k++) {
-            if (game_get_object_location(game, k) == id_e) {
-                obj = game_get_object(game, k);
-                if (obj) {
-                    if (strlen(obj_e) > 0 && strlen(obj_e) < 9) strcat(obj_e, " ");
-                    strncat(obj_e, object_get_name(obj), 9 - strlen(obj_e));
-                }
-            }
-        }
-    }
-
-    /* FILA 1: Borde superior */
+    /* 1. Borde superior */
     sprintf(line_w, id_w != NO_ID ? " +-----------+ " : "               ");
-    sprintf(line_c, id_c != NO_ID ? " +-----------+ " : "               ");
+    sprintf(line_c, id_c != NO_ID ? " +--%3d------+ " : "               ", (int)id_c);
     sprintf(line_e, id_e != NO_ID ? " +-----------+ " : "               ");
     sprintf(str, "%s%s%s", line_w, line_c, line_e);
     screen_area_puts(area, str);
 
-    /* FILA 2: ID del espacio */
-    sprintf(line_w, id_w != NO_ID ? " |%11d| " : "               ", (int)id_w);
-    sprintf(line_c, id_c != NO_ID ? " |%11d| " : "               ", (int)id_c);
-    sprintf(line_e, id_e != NO_ID ? " |%11d| " : "               ", (int)id_e);
-    sprintf(str, "%s%s%s", line_w, line_c, line_e);
-    screen_area_puts(area, str);
-
-    /* FILA 3 a 7: GDESC */
+    /* 2. Contenido de GDESC (filas) */
     for (i = 0; i < GDESC_ROWS; i++) {
-        if (s_w && g_w) sprintf(line_w, " | %-9s | ", g_w[i]);
-        else if (id_w != NO_ID) sprintf(line_w, " |           | ");
+        /* Lógica para Oeste */
+        if (s_w && g_w) sprintf(line_w, " |%11s| ", g_w[i]);
         else sprintf(line_w, "               ");
 
+        /* Lógica para Centro (con tag y flechas) */
         if (s_c && g_c) {
-            char central[12];
-            char left_conn = (i == 2 && id_w != NO_ID) ? '<' : '|';
-            char right_conn = (i == 2 && id_e != NO_ID) ? '>' : '|';
-            strncpy(central, g_c[i], 9);
-            central[9] = '\0';
-            sprintf(line_c, " %c %-9s %c ", left_conn, central, right_conn);
-        } else if (id_c != NO_ID) {
-            sprintf(line_c, " |           | ");
+            char central_content[12];
+            strcpy(central_content, g_c[i]);
+            
+            /* Flechas laterales solo en la fila central del dibujo */
+            char left_conn = (i == 2 && id_w != NO_ID) ? "<" : "|";
+            char right_conn = (i == 2 && id_e != NO_ID) ? ">" : "|";
+            
+            sprintf(line_c, "%c%s%c", left_conn, central_content, right_conn);
         } else {
             sprintf(line_c, "               ");
         }
 
-        if (s_e && g_e) sprintf(line_e, " | %-9s | ", g_e[i]);
-        else if (id_e != NO_ID) sprintf(line_e, " |           | ");
+        /* Lógica para Este */
+        if (s_e && g_e) sprintf(line_e, " |%11s| ", g_e[i]);
         else sprintf(line_e, "               ");
 
         sprintf(str, "%s%s%s", line_w, line_c, line_e);
         screen_area_puts(area, str);
     }
 
-    /* FILA 8: Línea de Objetos y Tag del jugador */
-    sprintf(line_w, id_w != NO_ID ? " | %-9s | " : "               ", obj_w);
-    sprintf(line_c, id_c != NO_ID ? " | %-9s |%s" : "               ", obj_c, tag_c ? tag_c : "");
-    sprintf(line_e, id_e != NO_ID ? " | %-9s | " : "               ", obj_e);
-    
-    sprintf(str, "%s%s%s", line_w, line_c, line_e);
-    
-    /* TRUCO CLAVE: Recortamos todos los espacios vacíos a la derecha. 
-       Así la línea nunca superará el límite de 48 caracteres de tu mapa y no saltará. */
-    len = strlen(str);
-    while (len > 0 && str[len - 1] == ' ') {
-        str[len - 1] = '\0';
-        len--;
-    }
-    screen_area_puts(area, str);
-
-    /* FILA 9: Borde inferior */
+    /* 3. Borde inferior y Tag */
     sprintf(line_w, id_w != NO_ID ? " +-----------+ " : "               ");
-    sprintf(line_c, id_c != NO_ID ? " +-----------+ " : "               ");
+    sprintf(line_c, id_c != NO_ID ? " +-----------+ %s" : "               ", tag_c ? tag_c : "");
     sprintf(line_e, id_e != NO_ID ? " +-----------+ " : "               ");
     sprintf(str, "%s%s%s", line_w, line_c, line_e);
-    
-    /* Repetimos el truco aquí por si acaso */
-    len = strlen(str);
-    while (len > 0 && str[len - 1] == ' ') {
-        str[len - 1] = '\0';
-        len--;
-    }
     screen_area_puts(area, str);
+
+    /* Limpieza de gdescs si fuera necesario según tu implementación */
 }
 void graphic_engine_destroy(Graphic_engine *ge)
 {
@@ -205,14 +133,13 @@ void graphic_engine_destroy(Graphic_engine *ge)
 
 /* Helper function to paint a space with its gdesc, objects, and characters */
 void _paint_space(Area *area, Game *game, Id space_id, Id id_east, Id id_west, char *tag) {
-    char str[255], obj_str[25] = "";
+    char str[255];
     char **gdesc = NULL;
     Space *space = NULL;
     int i, k;
     Id char_id = NO_ID;
     Character *character = NULL;
     const char *char_gdesc = NULL;
-    Object *obj = NULL;
 
     if (space_id == NO_ID) {
         /* 9 líneas vacías en total: Bordes(2) + ID(1) + Dibujo(5) + Objeto(1) */
@@ -233,6 +160,8 @@ void _paint_space(Area *area, Game *game, Id space_id, Id id_east, Id id_west, c
     }
 
     /* --- 1. BUSCAMOS LOS OBJETOS --- */
+    char obj_str[25] = "";
+    Object *obj = NULL;
     for (k = 0; k < MAX_OBJECTS; k++) {
         if (game_get_object_location(game, k) == space_id) {
             obj = game_get_object(game, k);

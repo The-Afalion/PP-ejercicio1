@@ -2,137 +2,134 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-struct Set
-{
-    Id ids[WORD_SIZE];
+
+#define MAX_IDS 100 /* Defines a maximum size for the set */
+
+struct Set {
+    Id ids[MAX_IDS];
     int n_ids;
 };
-Set *set_create(Id id)
-{
-    int i;
+
+Set *set_create(Id id) {
     Set *s = NULL;
+    int i;
 
-    /* Removed check for id < 0 to allow creating empty sets with NO_ID */
-
-    if (!(s = (Set *)malloc(sizeof(Set))))
-    {
+    s = (Set *)malloc(sizeof(Set));
+    if (s == NULL) {
         return NULL;
     }
-    s->ids[0] = id;
-    for (i = 1; i < WORD_SIZE; i++)
-    {
+
+    /* A new set is created empty. The 'id' parameter is ignored. */
+    s->n_ids = 0;
+    for (i = 0; i < MAX_IDS; i++) {
         s->ids[i] = NO_ID;
     }
-    s->n_ids = 0;
-    if (id != NO_ID)
-    {
-        s->n_ids++;
-    }
+
     return s;
 }
-Status set_destroy(Set *s)
-{
+
+Status set_destroy(Set *s) {
+    if (s == NULL) {
+        return ERROR; /* Added NULL check */
+    }
     free(s);
     return OK;
 }
 
-Status set_add(Set *s, Id id)
-{
-    int i;
-    if (!s || id == NO_ID || s->n_ids >= WORD_SIZE)
-    {
+Status set_add(Set *s, Id id) {
+    if (s == NULL || id == NO_ID || s->n_ids >= MAX_IDS) {
         return ERROR;
     }
-    if (set_find(s, id))
-    {
-        return ERROR;
+
+    /* set_find returns OK if found, so if it is found, we cannot add it again. */
+    if (set_find(s, id) == OK) {
+        return ERROR; /* Already exists */
     }
-    for (i = 0; i < WORD_SIZE; i++)
-    {
-        if (s->ids[i] == NO_ID)
-        {
-            s->ids[i] = id;
-            s->n_ids++;
-            return OK;
-        }
-    }
-    return ERROR;
+
+    s->ids[s->n_ids] = id;
+    s->n_ids++;
+
+    return OK;
 }
-Status set_del(Set *s, Id id)
-{
-    int i;
-    if (!s || id == NO_ID)
-    {
+
+Status set_del(Set *s, Id id) {
+    int i, j;
+
+    if (s == NULL || id == NO_ID) {
         return ERROR;
     }
-    for (i = 0; i < WORD_SIZE; i++)
-    {
-        if (s->ids[i] == id)
-        {
-            s->ids[i] = NO_ID;
+
+    for (i = 0; i < s->n_ids; i++) {
+        if (s->ids[i] == id) {
+            /* Shift elements to fill the gap */
+            for (j = i; j < s->n_ids - 1; j++) {
+                s->ids[j] = s->ids[j + 1];
+            }
+            s->ids[s->n_ids - 1] = NO_ID;
             s->n_ids--;
             return OK;
         }
     }
-    return ERROR;
+
+    return ERROR; /* Not found */
 }
-Status set_find(Set *s, Id id)
-{
+
+Status set_find(Set *s, Id id) {
     int i;
-    if (!s || id == NO_ID)
-    {
+    if (s == NULL || id == NO_ID) {
         return ERROR;
     }
 
-    for (i = 0; i < WORD_SIZE; i++)
-    {
-        if (s->ids[i] == id)
-        {
-            return OK;
+    for (i = 0; i < s->n_ids; i++) {
+        if (s->ids[i] == id) {
+            return OK; /* Found */
         }
     }
-    return ERROR;
+    return ERROR; /* Not found */
 }
-void set_print(Set *s)
-{
+
+void set_print(Set *s) {
     int i;
-    for (i = 0; i < WORD_SIZE; i++)
-    {
-        if (s->ids[i] != NO_ID)
-        {
-            printf(" %ld", s->ids[i]);
-        }
+    if (s == NULL) {
+        return;
+    }
+    for (i = 0; i < s->n_ids; i++) {
+        printf(" %ld", s->ids[i]);
     }
 }
-Id set_get_id(Set *s, int indx)
-{
-    if (!s || indx < 0 || indx >= WORD_SIZE)
-    {
+
+Id set_get_id(Set *s, int indx) {
+    if (s == NULL || indx < 0 || indx >= s->n_ids) {
         return NO_ID;
     }
     return s->ids[indx];
 }
-int set_get_numberid(Set*s){
-    if(!s){
-        return -1;
+
+int set_get_numberid(Set *s) {
+    if (s == NULL) {
+        return 0; /* A NULL set has 0 elements */
     }
     return s->n_ids;
 }
-int* set_get_ids(Set*s){
-    
-    int *h,i,u;
-    if(!s){
+
+int* set_get_ids(Set *s) {
+    int *id_copy = NULL;
+    int i;
+
+    if (s == NULL || s->n_ids == 0) {
+        return NULL; /* Returns NULL if no elements */
+    }
+
+    /* Allocate memory only for the Ids it contains */
+    id_copy = (int *)malloc(s->n_ids * sizeof(Id));
+    if (id_copy == NULL) {
         return NULL;
     }
-    h=(int*)malloc((s->n_ids)*(sizeof(Set)));
-    if(!h){
-        return NULL;
+
+    /* Copy the Ids */
+    for (i = 0; i < s->n_ids; i++) {
+        id_copy[i] = s->ids[i];
     }
-    for(i=0,u=0;i<s->n_ids;u++){
-        if(s->ids[u]!=NO_ID){
-            h[i]=s->ids[u];
-            i++;
-        }
-    }
-    return h;
+
+    return id_copy;
 }

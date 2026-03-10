@@ -23,7 +23,7 @@ typedef struct _Character Character;
   * @author Rodrigo
   *
   * @param id El id del personaje a crear
-  * @return Un puntero al personaje creado, o NULL si hubo un error
+  * @return Un puntero al personaje creado,NULL si hay error
   */
 Character *character_create(Id id);
 
@@ -31,7 +31,7 @@ Character *character_create(Id id);
   * @brief Destruye un personaje
   * @author Rodrigo
   *
-  * @param character Un puntero al personaje a destruir
+  * @param character Un puntero a personaje a destruir
   */
 void character_destroy(Character *character);
 
@@ -39,7 +39,7 @@ void character_destroy(Character *character);
   * @brief Obtiene el id de un personaje
   * @author Rodrigo
   *
-  * @param character Un puntero al personaje
+  * @param character Un puntero a personaje
   * @return El id del personaje
   */
 Id character_get_id(Character *character);
@@ -48,7 +48,7 @@ Id character_get_id(Character *character);
   * @brief Obtiene el nombre de un personaje
   * @author Rodrigo
   *
-  * @param character Un puntero al personaje
+  * @param character Un puntero a personaje
   * @return El nombre del personaje
   */
 char *character_get_name(Character *character);
@@ -57,7 +57,7 @@ char *character_get_name(Character *character);
   * @brief Establece el nombre de un personaje
   * @author Rodrigo
   *
-  * @param character Un puntero al personaje
+  * @param character Un puntero a personaje
   * @param name Una cadena con el nuevo nombre
   * @return OK si todo fue bien, o ERROR si hubo algún error
   */
