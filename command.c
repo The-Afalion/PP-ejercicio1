@@ -25,8 +25,8 @@ char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "E
  */
 struct _Command
 {
-  CommandCode code; /*!< Código del comando */
-  char arg[CMD_LENGHT]; /*!< Argumento del comando */
+  CommandCode code; 
+  char arg[CMD_LENGHT];
 };
 
 Command *command_create()
@@ -121,7 +121,6 @@ Status command_get_user_input(Command *command)
 
     cmd = UNKNOWN;
 
-    /* Buscamos si la palabra coincide con algún comando corto o largo */
     while (cmd == UNKNOWN && i < N_CMD)
     {
       if (!strcasecmp(token, cmd_to_str[i][CMDS]) || !strcasecmp(token, cmd_to_str[i][CMDL]))
@@ -134,7 +133,6 @@ Status command_get_user_input(Command *command)
       }
     }
 
-    /* Obtenemos el argumento si existe */
     arg = strtok(NULL, " \n");
     if (arg)
     {
