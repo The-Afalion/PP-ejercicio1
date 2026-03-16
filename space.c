@@ -1,10 +1,10 @@
 /**
- * @brief It implements the space module
+ * @brief Implementa el módulo de espacio
  *
  * @file space.c
- * @author Profesores PPROG
- * @version 0
- * @date 27-01-2025
+ * @author Unai
+ * @version 2.0
+ * @date 16-03-2026
  * @copyright GNU Public License
  */
 
@@ -17,21 +17,29 @@
 #define SINGLE_ELEM 1
 #define FIRST_CHAR 0
 
+/**
+ * @brief Estructura de Espacio
+ * Contiene la información de un área del juego, sus conexiones, 
+ * objetos presentes, personajes y descripción gráfica.
+ */
 struct Space
 {
-  Id id;
-  char name[WORD_SIZE + SINGLE_ELEM];
-  Id north;
-  Id south;
-  Id east;
-  Id west;
-  Set *objects; 
-  Id character;
-  char gdesc[GDESC_ROWS][GDESC_COLS];
+  Id id;                                     /*!< Identificador del espacio */
+  char name[WORD_SIZE + SINGLE_ELEM];        /*!< Nombre del espacio */
+  Id north;                                  /*!< ID del espacio al norte */
+  Id south;                                  /*!< ID del espacio al sur */
+  Id east;                                   /*!< ID del espacio al este */
+  Id west;                                   /*!< ID del espacio al oeste */
+  Set *objects;                              /*!< Conjunto de objetos en el espacio */
+  Id character;                              /*!< ID del personaje en el espacio */
+  char gdesc[GDESC_ROWS][GDESC_COLS];        /*!< Descripción gráfica */
 };
 
 /**
- * @brief It creates a new space
+ * @brief Crea un nuevo espacio e inicializa sus campos
+ * @author Unai
+ * @param id Identificador único para el nuevo espacio
+ * @return Un nuevo espacio inicializado, o NULL en caso de error
  */
 Space *space_create(Id id)
 {
@@ -59,6 +67,7 @@ Space *space_create(Id id)
   newSpace->objects = set_create(NO_ID);
   newSpace->character = NO_ID;
 
+  /* Inicialización de la descripción gráfica con espacios en blanco */
   for (i = 0; i < GDESC_ROWS; i++) {
     for (j = 0; j < GDESC_COLS - 1; j++) {
       newSpace->gdesc[i][j] = ' ';
@@ -70,7 +79,10 @@ Space *space_create(Id id)
 }
 
 /**
- * @brief It destroys a space
+ * @brief Destruye un espacio y libera la memoria de sus componentes
+ * @author Unai
+ * @param space Puntero al espacio que debe ser destruido
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_destroy(Space *space)
 {
@@ -89,7 +101,10 @@ Status space_destroy(Space *space)
 }
 
 /**
- * @brief It gets the id of a space
+ * @brief Obtiene el ID de un espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return El ID del espacio o NO_ID en caso de error
  */
 Id space_get_id(Space *space)
 {
@@ -101,7 +116,11 @@ Id space_get_id(Space *space)
 }
 
 /**
- * @brief It sets the name of a space
+ * @brief Establece el nombre de un espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param name Cadena con el nombre a asignar
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_set_name(Space *space, char *name)
 {
@@ -118,7 +137,10 @@ Status space_set_name(Space *space, char *name)
 }
 
 /**
- * @brief It gets the name of a space
+ * @brief Obtiene el nombre de un espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return Puntero a la cadena de nombre o NULL en caso de error
  */
 const char *space_get_name(Space *space)
 {
@@ -130,7 +152,11 @@ const char *space_get_name(Space *space)
 }
 
 /**
- * @brief It sets the id of the space located at the north
+ * @brief Establece la conexión norte del espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param id ID del espacio al norte
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_set_north(Space *space, Id id)
 {
@@ -143,7 +169,10 @@ Status space_set_north(Space *space, Id id)
 }
 
 /**
- * @brief It gets the id of the space located at the north
+ * @brief Obtiene el ID del espacio al norte
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return ID del espacio al norte o NO_ID en caso de error
  */
 Id space_get_north(Space *space)
 {
@@ -155,7 +184,11 @@ Id space_get_north(Space *space)
 }
 
 /**
- * @brief It sets the id of the space located at the south
+ * @brief Establece la conexión sur del espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param id ID del espacio al sur
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_set_south(Space *space, Id id)
 {
@@ -168,7 +201,10 @@ Status space_set_south(Space *space, Id id)
 }
 
 /**
- * @brief It gets the id of the space located at the south
+ * @brief Obtiene el ID del espacio al sur
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return ID del espacio al sur o NO_ID en caso de error
  */
 Id space_get_south(Space *space)
 {
@@ -180,7 +216,11 @@ Id space_get_south(Space *space)
 }
 
 /**
- * @brief It sets the id of the space located at the east
+ * @brief Establece la conexión este del espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param id ID del espacio al este
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_set_east(Space *space, Id id)
 {
@@ -193,7 +233,10 @@ Status space_set_east(Space *space, Id id)
 }
 
 /**
- * @brief It gets the id of the space located at the east
+ * @brief Obtiene el ID del espacio al este
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return ID del espacio al este o NO_ID en caso de error
  */
 Id space_get_east(Space *space)
 {
@@ -205,7 +248,11 @@ Id space_get_east(Space *space)
 }
 
 /**
- * @brief It sets the id of the space located at the west
+ * @brief Establece la conexión oeste del espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param id ID del espacio al oeste
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_set_west(Space *space, Id id)
 {
@@ -218,7 +265,10 @@ Status space_set_west(Space *space, Id id)
 }
 
 /**
- * @brief It gets the id of the space located at the west
+ * @brief Obtiene el ID del espacio al oeste
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return ID del espacio al oeste o NO_ID en caso de error
  */
 Id space_get_west(Space *space)
 {
@@ -230,7 +280,11 @@ Id space_get_west(Space *space)
 }
 
 /**
- * @brief It adds an object to the space
+ * @brief Añade un objeto al conjunto de objetos del espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param object_id ID del objeto a añadir
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_add_object(Space *space, Id object_id)
 {
@@ -242,7 +296,11 @@ Status space_add_object(Space *space, Id object_id)
 }
 
 /**
- * @brief It removes an object from the space
+ * @brief Elimina un objeto del conjunto de objetos del espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param object_id ID del objeto a eliminar
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_remove_object(Space *space, Id object_id)
 {
@@ -254,7 +312,10 @@ Status space_remove_object(Space *space, Id object_id)
 }
 
 /**
- * @brief It gets the objects in the space
+ * @brief Obtiene el conjunto de objetos presentes en el espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return Array de IDs de objetos o NULL en caso de error
  */
 Id* space_get_objects(Space *space)
 {
@@ -266,7 +327,10 @@ Id* space_get_objects(Space *space)
 }
 
 /**
- * @brief It gets the number of objects in the space
+ * @brief Obtiene el número de objetos que hay en el espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return El número de objetos o -1 en caso de error
  */
 int space_get_number_of_objects(Space *space)
 {
@@ -278,7 +342,11 @@ int space_get_number_of_objects(Space *space)
 }
 
 /**
- * @brief It checks if the space contains an object
+ * @brief Comprueba si un objeto determinado está en el espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param id ID del objeto a buscar
+ * @return OK si el objeto existe, ERROR en caso contrario
  */
 Status space_contains_object(Space* space, Id id)
 {
@@ -294,7 +362,11 @@ Status space_contains_object(Space* space, Id id)
 }
 
 /**
- * @brief It sets the character in the space
+ * @brief Establece el personaje que se encuentra en el espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param id ID del personaje a asignar
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_set_character(Space *space, Id id)
 {
@@ -307,7 +379,10 @@ Status space_set_character(Space *space, Id id)
 }
 
 /**
- * @brief It gets the character in the space
+ * @brief Obtiene el personaje que se encuentra en el espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return ID del personaje o NO_ID en caso de error
  */
 Id space_get_character(Space *space)
 {
@@ -319,7 +394,11 @@ Id space_get_character(Space *space)
 }
 
 /**
- * @brief It sets the graphic description of the space
+ * @brief Establece la descripción gráfica de un espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @param gdesc Matriz de caracteres con el nuevo arte gráfico
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_set_gdesc(Space* space, char gdesc[GDESC_ROWS][GDESC_COLS]) {
   int i;
@@ -342,7 +421,10 @@ Status space_set_gdesc(Space* space, char gdesc[GDESC_ROWS][GDESC_COLS]) {
 }
 
 /**
- * @brief It gets the graphic description of the space
+ * @brief Obtiene la descripción gráfica de un espacio
+ * @author Unai
+ * @param space Puntero al espacio
+ * @return Puntero a la matriz de descripción gráfica o NULL en caso de error
  */
 char (*space_get_gdesc(Space* space))[GDESC_COLS] {
   if (!space) {
@@ -353,7 +435,10 @@ char (*space_get_gdesc(Space* space))[GDESC_COLS] {
 }
 
 /**
- * @brief It prints the space information
+ * @brief Imprime la información del espacio por salida estándar
+ * @author Unai
+ * @param space Puntero al espacio a imprimir
+ * @return OK si tiene éxito, ERROR en caso contrario
  */
 Status space_print(Space *space)
 {

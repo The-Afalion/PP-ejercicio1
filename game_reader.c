@@ -3,7 +3,7 @@
  * @file game_reader.c
  * @author Unai
  * @version 1.0
- * @date 15-02-2026
+ * @date 16-03-2026
  */
 
 #include <stdio.h>
@@ -15,6 +15,10 @@
 #include "character.h"
 #include "object.h"
 
+/**
+ * @brief Carga los espacios desde un archivo de datos
+ * @author Unai
+ */
 Status game_reader_load_spaces(Game *game, char *filename) {
     FILE *file = NULL;
     char line[WORD_SIZE] = "";
@@ -28,14 +32,10 @@ Status game_reader_load_spaces(Game *game, char *filename) {
     int i;
     Status des;
 
-    if (!filename) {
-        return ERROR;
-    }
+    if (!filename) return ERROR;
 
     file = fopen(filename, "r");
-    if (file == NULL) {
-        return ERROR;
-    }
+    if (file == NULL) return ERROR;
 
     while (fgets(line, WORD_SIZE, file)) {
         if (strncmp("#s:", line, 3) == 0) {
@@ -52,23 +52,16 @@ Status game_reader_load_spaces(Game *game, char *filename) {
             toks = strtok(NULL, "|");
             west = strtol(toks, &endptr, 10);
 
-            for (i = 0,des=OK; i < GDESC_ROWS; i++) {
+            for (i = 0, des = OK; i < GDESC_ROWS; i++) {
                 toks = strtok(NULL, "|");
                 if (toks) {
-                    if(strlen(toks)!=GDESC_COLS-1){
-                        des=ERROR;
-                    }
-                    else{
-                        strcpy(gdesc[i] , toks);
-                    }
+                    if (strlen(toks) != GDESC_COLS - 1) des = ERROR;
+                    else strcpy(gdesc[i], toks);
                 } else {
-                    strcpy(gdesc[i] ,"         ");
+                    strcpy(gdesc[i], "         ");
                 }
             }
 
-#ifdef DEBUG
-            printf("Leido: s:%ld|%s|%ld|%ld|%ld|%ld\n", id, name, north, east, south, west);
-#endif
             space = space_create(id);
             if (space != NULL) {
                 space_set_name(space, name);
@@ -76,23 +69,23 @@ Status game_reader_load_spaces(Game *game, char *filename) {
                 space_set_east(space, east);
                 space_set_south(space, south);
                 space_set_west(space, west);
-                if(des!=ERROR){
-                    space_set_gdesc(space, gdesc);
-                }
+                if (des != ERROR) space_set_gdesc(space, gdesc);
+                
+                /* ASIGNACIÓN: Añadimos el objeto de tipo espacio a la lista general del juego */
                 game_add_space(game, space);
             }
         }
     }
 
-    if (ferror(file)) {
-        status = ERROR;
-    }
-
+    if (ferror(file)) status = ERROR;
     fclose(file);
-
     return status;
 }
 
+/**
+ * @brief Carga los objetos desde un archivo de datos
+ * @author Unai
+ */
 Status game_reader_load_objects(Game *game, char *filename) {
     FILE *file = NULL;
     char line[WORD_SIZE] = "";
@@ -103,14 +96,10 @@ Status game_reader_load_objects(Game *game, char *filename) {
     Status status = OK;
     char *endptr;
 
-    if (!filename) {
-        return ERROR;
-    }
+    if (!filename) return ERROR;
 
     file = fopen(filename, "r");
-    if (file == NULL) {
-        return ERROR;
-    }
+    if (file == NULL) return ERROR;
 
     while (fgets(line, WORD_SIZE, file)) {
         if (strncmp("#o:", line, 3) == 0) {
@@ -120,27 +109,29 @@ Status game_reader_load_objects(Game *game, char *filename) {
             strcpy(name, toks);
             toks = strtok(NULL, "|");
             location_id = strtol(toks, &endptr, 10);
-#ifdef DEBUG
-            printf("Leido: o:%ld|%s|%ld\n", id, name, location_id);
-#endif
+
             object = object_create(id);
             if (object != NULL) {
                 object_set_name(object, name);
+                
+                /* ASIGNACIÓN: Guardamos el puntero del objeto en el array global de objetos del juego */
                 game_add_object(game, object);
+                
+                /* ASIGNACIÓN: Metemos el ID del objeto dentro del Set de objetos del espacio indicado */
                 game_set_object_location(game, location_id, id);
             }
         }
     }
 
-    if (ferror(file)) {
-        status = ERROR;
-    }
-
+    if (ferror(file)) status = ERROR;
     fclose(file);
-
     return status;
 }
 
+/**
+ * @brief Carga los personajes desde un archivo de datos
+ * @author Unai
+ */
 Status game_reader_load_characters(Game *game, char *filename) {
     FILE *file = NULL;
     char line[WORD_SIZE] = "";
@@ -155,14 +146,10 @@ Status game_reader_load_characters(Game *game, char *filename) {
     Status status = OK;
     char *endptr;
 
-    if (!filename) {
-        return ERROR;
-    }
+    if (!filename) return ERROR;
 
     file = fopen(filename, "r");
-    if (file == NULL) {
-        return ERROR;
-    }
+    if (file == NULL) return ERROR;
 
     while (fgets(line, WORD_SIZE, file)) {
         if (strncmp("#c:", line, 3) == 0) {
@@ -188,17 +175,17 @@ Status game_reader_load_characters(Game *game, char *filename) {
                 character_set_health(character, health);
                 character_set_friendly(character, friendly);
                 character_set_message(character, message);
+                
+                /* ASIGNACIÓN: Guardamos el puntero del personaje en el registro general del juego */
                 game_add_character(game, character);
+                
+                /* ASIGNACIÓN : Vinculamos el ID del personaje al campo 'character' del espacio correspondiente */
                 game_set_character_location(game, location_id, id);
             }
         }
     }
 
-    if (ferror(file)) {
-        status = ERROR;
-    }
-
+    if (ferror(file)) status = ERROR;
     fclose(file);
-
     return status;
 }

@@ -4,7 +4,7 @@
  * @file player.h
  * @author Unai
  * @version 1.0
- * @date 08-02-2026
+ * @date 15-03-2026
  * @copyright GNU Public License
  */
 
@@ -58,8 +58,7 @@ Status player_set_name(Player* player, char* name);
  * @brief Obtiene el nombre de un jugador
  * @author Unai
  * @param player puntero al jugador
- * @return una cadena con el nombre del jugador
- * @return NULL en caso de error
+ * @return una cadena con el nombre del jugador o NULL en caso de error
  */
 const char* player_get_name(Player* player);
 
@@ -98,33 +97,45 @@ Status player_set_object(Player* player, Id object);
 Id player_get_object(Player* player);
 
 /**
- * @brief Imprime la información del jugador por pantalla,muestra el id, el nombre, la localización y el objeto que posee.
+ * @brief Imprime la información del jugador por pantalla (id, nombre, localización, objeto, etc.)
  * @author Unai
  * @param player puntero al jugador
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
 Status player_print(Player* player);
 
+/**
+ * @brief Establece los puntos de salud del jugador
+ * @author Unai
+ * @param player puntero al jugador
+ * @param h valor entero que representa la salud
+ * @return OK si tiene éxito, ERROR en caso contrario
+ */
+Status player_set_heatlh(Player *player, int h);
 
+/**
+ * @brief Obtiene los puntos de salud actuales del jugador
+ * @author Unai
+ * @param player puntero al jugador
+ * @return un entero con el valor de salud o -1 en caso de error
+ */
+int player_get_health(Player* player);
 
+/**
+ * @brief Establece la descripción gráfica (gdesc) del jugador
+ * @author Unai
+ * @param player puntero al jugador
+ * @param des cadena con la descripción gráfica
+ * @return OK si tiene éxito, ERROR en caso contrario
+ */
+Status player_set_gdesc(Player* player, char* des);
 
-Status player_set_heatlh(Player *player,int h);
+/**
+ * @brief Obtiene la descripción gráfica (gdesc) del jugador
+ * @author Unai
+ * @param player puntero al jugador
+ * @return puntero a la cadena de texto de la descripción o NULL en caso de error
+ */
+char* player_get_gdesc(Player* player);
 
-
-
-
-
-int player_get_health(Player*player);
-
-
-
-
-
-Status player_set_gdesc(Player*player,char*des);
-
-
-
-
-
-char* player_get_gdesc(Player*player);
 #endif

@@ -4,7 +4,7 @@
  * @file game_reader.h
  * @author Unai
  * @version 1.0
- * @date 15-02-2026
+ * @date 15-03-2026
  * @copyright GNU Public License
  */
 

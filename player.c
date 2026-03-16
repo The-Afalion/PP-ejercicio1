@@ -172,20 +172,20 @@ Status player_print(Player *player)
 
   return OK;
 }
-Status player_set_heatlh(Player *player,int h){
+Status player_set_heatlh(Player *player,int h){/*Cambia salud del jugador,si la salud es <= 0 devielve error*/
   if(!player||h<=0){
     return ERROR;
   }
   player->health=h;
   return OK;
 }
-int player_get_health(Player*player){
+int player_get_health(Player*player){/*Devuelve salud del jugador*/
   if(!player){
     return -1;
   }
   return player->health;
 }
-Status player_set_gdesc(Player*player,char*des){
+Status player_set_gdesc(Player*player,char*des){/*Cambia descripcion del jugador,si la descripcion es NULL devielve error*/
   if(!player||!des){
     return ERROR;
   }
@@ -199,7 +199,7 @@ Status player_set_gdesc(Player*player,char*des){
   strcpy(player->gdesc,des);
   return OK;
 }
-char* player_get_gdesc(Player*player){
+char* player_get_gdesc(Player*player){/*Devuelve la descripcion */
   if(!player){
     return NULL;
   }
