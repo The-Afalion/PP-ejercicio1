@@ -7,7 +7,6 @@
  */
 
 #include "player.h"
-#include "inventory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,6 +75,10 @@ Status player_destroy(Player *player)
   if (player->gdesc)
   {
     free(player->gdesc);
+  }
+  if (player->backpack)
+  {
+    free(player->backpack);
   }
   free(player);
   return OK;
@@ -249,4 +252,13 @@ char *player_get_gdesc(Player *player)
     return NULL;
   }
   return player->gdesc;
+}
+
+Inventory *player_get_backpack(Player *player)
+{
+  if (!player)
+  {
+    return NULL;
+  }
+  return player->backpack;
 }

@@ -227,7 +227,7 @@ void graphic_engine_destroy(Graphic_engine *ge)
  * @author Unai
  */
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status) {
-  Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, obj_loc = NO_ID;
+  Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, obj_loc = NO_ID, object_in_backpack = NULL;
   Space *act = NULL;
   char str[255];
   CommandCode last_cmd = UNKNOWN;
@@ -236,6 +236,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   Player *player = NULL;
   Character *character = NULL;
   Object *obj = NULL;
+  int obj_found = 0;
+  int max_backpack_obj = inventory_get_max_objs(player_get_backpack(player));
 
   if (!game) return;
 
@@ -306,12 +308,22 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   sprintf(str, " Player: %d (%d)", (int)player_get_location(player), player_get_health(player));
   screen_area_puts(ge->descript, str);
 
-  if (player_get_object(player) != NO_ID) {
-    obj = game_get_object(game, player_get_object(player));
-    sprintf(str, " Player has: %s", obj ? object_get_name(obj) : "Unknown");
-  } else sprintf(str, " Player has no objects");
-  
-  screen_area_puts(ge->descript, str);
+  screen_area_puts(ge->descript, "Player has: ");
+  for (i = 0; i < max_backpack_obj; i++)
+  {
+    object_in_backpack = player_get_object(player, i);
+    if (object_in_backpack!=NULL)
+    {
+        obj = game_get_object(game, object_in_backpack);
+        sprintf(str, "  - %s", obj ? object_get_name(obj) : "Unknown");
+        screen_area_puts(ge->descript, str);
+        obj_found++;
+    }
+  }
+  if (obj_found == 0)
+  {
+    screen_area_puts(ge->descript, "no objects");
+  }
 
   /* CHAT: Mostramos el mensaje si el jugador ha hablado con alguien */
   screen_area_puts(ge->descript, " ");

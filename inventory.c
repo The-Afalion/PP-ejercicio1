@@ -47,7 +47,7 @@ Inventory *inventory_create(int max_objs) {
 }
 
 /** Libera la memoria del anterior inventario (destroy) y crea uno nuevo */
-STATUS inventory_destroy(Inventory *inventory) {
+Status inventory_destroy(Inventory *inventory) {
   if (inventory == NULL) {
     return ERROR;
   }
@@ -73,7 +73,7 @@ int inventory_get_max_objs(Inventory *inventory) {
 }
 
 /** Máximo de objetos */
-STATUS inventory_set_objs(Inventory *inventory, Set *objs) {
+Status inventory_set_objs(Inventory *inventory, Set *objs) {
   if (inventory == NULL || objs == NULL) {
     return ERROR;
   }
@@ -84,7 +84,7 @@ STATUS inventory_set_objs(Inventory *inventory, Set *objs) {
   return OK;
 }
 
-STATUS inventory_set_max_objs(Inventory *inventory, int max_objs) {
+Status inventory_set_max_objs(Inventory *inventory, int max_objs) {
   if (inventory == NULL || max_objs < 0) {
     return ERROR;
   }
@@ -95,7 +95,7 @@ STATUS inventory_set_max_objs(Inventory *inventory, int max_objs) {
 }
 
 /** Añade un objeto al inventario */
-STATUS inventory_add_object(Inventory *inventory, Id obj_id) {
+Status inventory_add_object(Inventory *inventory, Id obj_id) {
   if (inventory == NULL || obj_id == NO_ID) {
     return ERROR;
   }
@@ -108,7 +108,7 @@ STATUS inventory_add_object(Inventory *inventory, Id obj_id) {
 }
 
 /** Destruye un objeto del inventario */
-STATUS inventory_del_object(Inventory *inventory, Id obj_id) {
+Status inventory_del_object(Inventory *inventory, Id obj_id) {
   if (inventory == NULL || obj_id == NO_ID) {
     return ERROR;
   }
@@ -129,7 +129,7 @@ BOOL inventory_is_full(Inventory *inventory) {
   return FALSE;
 }
 
-STATUS inventory_print(Inventory *inventory) {
+Status inventory_print(Inventory *inventory) {
   if (inventory == NULL) {
     return ERROR;
   }
@@ -138,4 +138,4 @@ STATUS inventory_print(Inventory *inventory) {
   set_print(inventory->objs);
 
   return OK;
-}w
+}

@@ -1,15 +1,33 @@
-#s:11|Entrada|-1|-1|12|-1| _   !#  |[_]--'---|!'!""`""!|! ! /^\ !|!_!_!I!_!|
-#s:12|Pasillo|11|-1|13|121|!-------!|! . . !  |! . . !  |! . . !  |!-------!|
-#s:121|Mazmorra|-1|12|-1|-1|. -=== -.|! . . !  |! .'. !  |()_____()|II_____II|
-#s:13|Comedor|12|131|14|-1|/\ /\ /\ |//\\/\\/\|//\\/\\/\|II II II |---------|
-#s:131|Habitacion|-1|132|-1|13|+-------+|! H H H !|!       !|! H H H !|+-------+|
-#s:132|Baño|-1|-1|-1|131|+-------+|! B B B !|!       !|! B B B !|+-------+|
-#s:14|Cocina|13|-1|15|-1|+-------+|! K K K !|!       !|! K K K !|+-------+|
-#s:15|Patio|14|-1|16|-1|+-------+|! P P P !|!       !|! P P P !|+-------+|
-#s:16|Jardin|15|-1|-1|-1|+-------+|! J J J !|!       !|! J J J !|+-------+|
+#p:1|knight|^C>|11|5|3|
+#c:31|Malo|enemig|121|2|0|Grrr!|
+#c:32|Bueno|amigos|12|20|1|Hola|
 #o:21|Sword|11
 #o:22|Candelabra|12
 #o:23|Armor|121
 #o:24|Tapestry|13
-#c:31|Malo|enemig|2|0|121|Grrr!|
-#c:32|Bueno|amigos|20|1|12|Hola|
+#s:11|Entrada| _   !#  |[_]--'---|!'!""`""!|! ! /^\ !|!_!_!I!_!|
+#s:12|Pasillo|!-------!|! . . !  |! . . !  |! . . !  |!-------!|
+#s:121|Mazmorra|. -=== -.|! . . !  |! .'. !  |()_____()|II_____II|
+#s:13|Comedor|/\ /\ /\ |//\\/\\/\|//\\/\\/\|II II II |---------|
+#s:131|Habitacion|+-------+|! H H H !|!       !|! H H H !|+-------+|
+#s:132|Baño|+-------+|! B B B !|!       !|! B B B !|+-------+|
+#s:14|Cocina|+-------+|! K K K !|!       !|! K K K !|+-------+|
+#s:15|Patio|+-------+|! P P P !|!       !|! P P P !|+-------+|
+#s:16|Jardin|+-------+|! J J J !|!       !|! J J J !|+-------+|
+#l:101|L_Entrada_Pasillo|11|12|2|1|
+#l:102|L_Pasillo_Entrada|12|11|0|1|
+#l:103|L_Pasillo_Comedor|12|13|2|1|
+#l:104|L_Comedor_Pasillo|13|12|0|1|
+#l:105|L_Pasillo_Mazmorra|12|121|3|0|
+#l:106|L_Mazmorra_Pasillo|121|12|1|1|
+#l:107|L_Comedor_Habitacion|13|131|1|1|
+#l:108|L_Habitacion_Comedor|131|13|3|1|
+#l:109|L_Habitacion_Bano|131|132|1|1|
+#l:110|L_Bano_Habitacion|132|131|3|1|
+#l:111|L_Comedor_Cocina|13|14|2|1|
+#l:112|L_Cocina_Comedor|14|13|0|1|
+#l:113|L_Cocina_Patio|14|15|2|1|
+#l:114|L_Patio_Cocina|15|14|0|1|
+#l:115|L_Patio_Jardin|15|16|2|1|
+#l:116|L_Jardin_Patio|16|15|0|1|
+#l:117|L_Atajo_Jardin|121|16|4|1|
