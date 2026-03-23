@@ -9,6 +9,7 @@
  */
 
 #include "game_actions.h"
+#include "inventory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -159,6 +160,7 @@ Status game_actions_take(Game *game)
   Command *last_cmd = NULL;
   char *arg = NULL;
   Object *obj = NULL;
+  Inventory *inv = NULL;
 
   if (!game) return ERROR;
 
@@ -175,7 +177,8 @@ Status game_actions_take(Game *game)
   if (!arg || arg[0] == '\0') return ERROR;
 
   /* Si el jugador ya lleva un objeto, no puede coger otro */
-  if (player_get_object(game_get_player(game)) != NO_ID) {
+  /*MODIFICAR POR LO DE INVENTORY*/
+  if (inventory_is_full(player_get_backpack(game_get_player(game))) == TRUE) {
     return ERROR;
   }
 
@@ -204,7 +207,7 @@ Status game_actions_take(Game *game)
       /* Si hemos encontrado el objeto, hacemos el intercambio */
       if (obj_id != NO_ID) {
         /* ASIGNACIÓN: Se lo damos al jugador */
-        player_set_object(game_get_player(game), obj_id);
+        player_add_object(game_get_player(game), obj_id);
         
         /* EXTRACCIÓN: Lo quitamos del mapa (asignándolo a NO_ID) */
         game_set_object_location(game, NO_ID, obj_id);
@@ -224,6 +227,10 @@ Status game_actions_drop(Game *game)
 {
   Id player_loc = NO_ID;
   Id obj_id = NO_ID;
+  Command *last_cmd = NULL;
+  Object *obj;
+  char *arg = NULL;
+  int i, max_objects;
 
   if (!game) return ERROR;
 
@@ -231,17 +238,36 @@ Status game_actions_drop(Game *game)
   player_loc = game_get_player_location(game);
   if (player_loc == NO_ID) return ERROR;
 
-  /* Miramos qué objeto tiene el jugador en las manos */
-  obj_id = player_get_object(game_get_player(game));
+  /*Obtenemos el argumento del comando*/
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd) return NULL;
 
-  /* Si el jugador lleva algo, lo suelta */
-  if (obj_id != NO_ID) {
-    /* EXTRACCIÓN: Le vaciamos las manos al jugador */
-    player_set_object(game_get_player(game), NO_ID);
-    
-    /* ASIGNACIÓN: Colocamos el objeto en la sala actual */
-    game_set_object_location(game, player_loc, obj_id);
-    return OK;
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0') return NULL;
+
+  /*Bucameos el objeto por el nombre dentro de la mochila*/
+  max_objects = inventory_get_max_objs(player_get_backpack(game_get_player(game)));
+  for (i = 0; i < max_objects; i++)
+  {
+    obj_id = player_get_object(game_get_player(game), i);
+    if (obj_id != NO_ID)
+    {
+      obj = game_get_object(game, obj_id);
+
+      /*si coincide el nombre del objeto con el argumento introducido*/
+      if (obj != NULL && object_get_name(obj) != NULL)
+      {
+        if (strcasecmp(object_get_name(obj), arg) == 0)
+        {
+          /*Lo borramos del inventario*/
+          player_del_object(game_get_player(game), obj_id);
+
+          /*Lo colocamos en la sala*/
+          game_set_object_location(game, player_loc, obj_id);
+          return OK;
+        }
+      }
+    }
   }
 
   /* Retorna error si el jugador no llevaba nada encima */

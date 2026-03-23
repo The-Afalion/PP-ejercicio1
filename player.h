@@ -12,6 +12,7 @@
 #define PLAYER_H
 
 #include "types.h"
+#include "inventory.h"
 
 /**
  * @brief Estructura de Jugador (implementación oculta en player.c)
@@ -156,5 +157,13 @@ Status player_set_gdesc(Player* player, char* des);
  * @return puntero a la cadena de texto de la descripción o NULL en caso de error
  */
 char* player_get_gdesc(Player* player);
+
+/**
+ * @brief Obtiene el inventario del jugador
+ * @author Alejandro
+ * @param player puntero al jugador
+ * @return el inventario del jugador o NULL en caso de error
+ */
+Inventory *player_get_backpack(Player *player);
 
 #endif
