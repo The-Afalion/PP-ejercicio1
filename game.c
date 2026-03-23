@@ -461,37 +461,6 @@ char *game_get_chat_message(Game *game)
 }
 
 
-BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
-{
-  Space *s = NULL;
-  Id link_id = NO_ID;
-  Link *l = NULL;
-  if (!game || space_id == NO_ID || dir == desconocido)
-  {
-    return NO_ID;
-  }
-  for (size_t i = 0; i < MAX_SPACES; i++)
-  {
-    if (space_get_id(game->spaces[i]) == space_id)
-    {
-      s = game->spaces[i];
-    }
-  }
-
-  for (size_t i = 0; i < MAX_LINKS; i++)
-  {
-    link_id = space_get_link_from_index(s, i);
-    l = space_get_link(s, link_id);
-    if (link_get_direction(l) == dir)
-    {
-      break;
-    }
-  }
-
-  return link_get_open(l);
-}
-
-
 /*---Funciones enlaces---*/
 Id game_get_link(Game *game, Id link_id)
 {
