@@ -2,7 +2,8 @@
 #Author:Unai
 CC=gcc
 CFLAGS= -g -Wall -pedantic -ansi -I.
-OBJS = command.o game_actions.o game_loop.o game_reader.o game.o graphic_engine.o object.o player.o space.o character.o set.o
+OBJS = command.o game_actions.o game_loop.o game_reader.o game.o graphic_engine.o object.o player.o space.o
+
 
 # Crea el ejecutable.
 # Enlazamos los objetos y al final la librería screen.
@@ -43,6 +44,8 @@ character.o: character.c character.h types.h
 set.o: set.c set.h types.h
 	$(CC) $(CFLAGS) -c set.c
 
+run: 
+	./castle castle.dat
 #
 # Reglas para tests
 #

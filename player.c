@@ -7,6 +7,7 @@
  */
 
 #include "player.h"
+#include "inventory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,12 +23,13 @@
  */
 struct Player
 {
-  Id id;
-  char name[WORD_SIZE + SINGLE_ELEM];
-  Id location;
-  Id object;
-  int health;
-  char *gdesc;
+  Id id;                              /*Id del jugador*/
+  char name[WORD_SIZE + SINGLE_ELEM]; /*Nombre del jugador*/
+  Id location;                        /*Ubicación actual del jugador*/
+  Inventory *backpack;                /*Inventario del jugador*/
+  int nobj;                           /*Número de objetos en el inventario*/
+  int health;                         /*Puntos de salud del jugador*/
+  char *gdesc;                        /*Descripción gráfica del jugador*/
 };
 
 Player *player_create(Id id)
@@ -49,13 +51,14 @@ Player *player_create(Id id)
     return NULL;
   }
 
+
   /* Inicializa los valores por defecto del jugador */
   newPlayer->id = id;
   newPlayer->name[FIRST_CHAR] = '\0';
   newPlayer->location = NO_ID;
-  newPlayer->object = NO_ID;
-  newPlayer->health=START_HEALTH;
-  newPlayer->gdesc=NULL;
+  newPlayer->backpack = NULL;
+  newPlayer->health = START_HEALTH;
+  newPlayer->gdesc = NULL;
 
   return newPlayer;
 }
@@ -69,8 +72,9 @@ Status player_destroy(Player *player)
   }
 
   /* Libera la memoria */
-  if (player->gdesc) {
-      free(player->gdesc);
+  if (player->gdesc)
+  {
+    free(player->gdesc);
   }
   free(player);
   return OK;
@@ -134,7 +138,7 @@ Id player_get_location(Player *player)
   return player->location;
 }
 
-Status player_set_object(Player *player, Id object)
+Status player_add_object(Player *player, Id object)
 {
   /* Comprueba validez del puntero */
   if (!player)
@@ -142,18 +146,48 @@ Status player_set_object(Player *player, Id object)
     return ERROR;
   }
   /* Guarda el objeto en el inventario */
-  player->object = object;
+  if (inventory_add_object(player->backpack, object) == ERROR)
+  {
+    return ERROR;
+  }
   return OK;
 }
 
-Id player_get_object(Player *player)
+Id player_get_object(Player *player, int index)
 {
   /* Comprueba validez del puntero */
-  if (!player)
+  if (!player || index < 0 || index >= inventory_get_max_objs(player->backpack))
   {
     return NO_ID;
   }
-  return player->object;
+  /* Devuelve el objeto en la posición dada */
+  return set_get_id_at(inventory_get_objs(player->backpack), index);
+}
+
+BOOL player_has_object(Player *player, Id object)
+{
+  /* Comprueba validez del puntero y verifica si el objeto está en el inventario */
+  if (!player)
+  {
+    return FALSE;
+  }
+
+  return inventory_has_object(player->backpack, object);
+}
+
+Status player_del_object(Player *player, Id object)
+{
+  /* Comprueba validez del puntero */
+  if (!player||player_has_object(player, object) == FALSE)
+  {
+    return ERROR;
+  }
+  /* Elimina el objeto del inventario */
+  if (inventory_del_object(player->backpack, object) == ERROR)
+  {
+    return ERROR;
+  }
+  return OK;
 }
 
 Status player_print(Player *player)
@@ -165,42 +199,52 @@ Status player_print(Player *player)
   }
 
   /* Imprime la información*/
-  fprintf(stdout, "--> Jugador (Id: %ld; Nombre: %s; Descripción: %s)\n", player->id, player->name,player->gdesc ? player->gdesc : "None");
-  fprintf(stdout, "--> Salud: %d\n",player->health);
+  fprintf(stdout, "--> Jugador (Id: %ld; Nombre: %s; Descripción: %s)\n", player->id, player->name, player->gdesc ? player->gdesc : "None");
+  fprintf(stdout, "--> Salud: %d\n", player->health);
   fprintf(stdout, "--> Localización: %ld\n", player->location);
-  fprintf(stdout, "--> Objeto: %ld\n", player->object);
+  inventory_print(player->backpack);
 
   return OK;
 }
-Status player_set_heatlh(Player *player,int h){/*Cambia salud del jugador,si la salud es <= 0 devielve error*/
-  if(!player||h<=0){
+Status player_set_heatlh(Player *player, int h)
+{ /*Cambia salud del jugador,si la salud es <= 0 devielve error*/
+  if (!player || h <= 0)
+  {
     return ERROR;
   }
-  player->health=h;
+  player->health = h;
   return OK;
 }
-int player_get_health(Player*player){/*Devuelve salud del jugador*/
-  if(!player){
+int player_get_health(Player *player)
+{ /*Devuelve salud del jugador*/
+  if (!player)
+  {
     return -1;
   }
   return player->health;
 }
-Status player_set_gdesc(Player*player,char*des){/*Cambia descripcion del jugador,si la descripcion es NULL devielve error*/
-  if(!player||!des){
+Status player_set_gdesc(Player *player, char *des)
+{ /*Cambia descripcion del jugador,si la descripcion es NULL devielve error*/
+  if (!player || !des)
+  {
     return ERROR;
   }
-  if (player->gdesc) {
-      free(player->gdesc);
+  if (player->gdesc)
+  {
+    free(player->gdesc);
   }
-  player->gdesc=(char*)malloc((strlen(des)+1)*sizeof(char));
-  if(!player->gdesc){
+  player->gdesc = (char *)malloc((strlen(des) + 1) * sizeof(char));
+  if (!player->gdesc)
+  {
     return ERROR;
   }
-  strcpy(player->gdesc,des);
+  strcpy(player->gdesc, des);
   return OK;
 }
-char* player_get_gdesc(Player*player){/*Devuelve la descripcion */
-  if(!player){
+char *player_get_gdesc(Player *player)
+{ /*Devuelve la descripcion */
+  if (!player)
+  {
     return NULL;
   }
   return player->gdesc;

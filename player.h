@@ -83,18 +83,37 @@ Id player_get_location(Player* player);
  * @brief Asigna un objeto al inventario del jugador
  * @author Unai
  * @param player puntero al jugador
- * @param object el id del objeto que el jugador llevará
+ * @param object el id del objeto que se añade al inventario del jugador
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
 Status player_set_object(Player* player, Id object);
 
 /**
- * @brief Obtiene el objeto que tiene el jugador
+ * @brief Obtiene el id de un objeto del inventario del jugador
  * @author Unai
  * @param player puntero al jugador
- * @return el id del objeto que posee o NO_ID si no tiene ninguno
+ * @param index posición del objeto en el inventario
+ * @return el id del objeto que posee en ese índice O NO_ID si hay algun error
  */
-Id player_get_object(Player* player);
+Id player_get_object(Player* player, int index);
+
+/**
+ * @brief Elimina el objeto del inventario del jugador
+ * @author Unai
+ * @param player puntero al jugador
+ * @param object el id del objeto a eliminar
+ * @return OK si el objeto fue eliminado, ERROR si no se encontró o en caso de error
+ */
+Status player_del_object(Player *player, Id object);
+
+/**
+ * @brief Verifica si el jugador posee un objeto específico en su inventario
+ * @author Unai
+ * @param player puntero al jugador
+ * @param object el id del objeto a verificar
+ * @return TRUE si el jugador tiene el objeto, FALSE si no lo tiene o en caso de error
+ */
+BOOL player_has_object(Player *player, Id object);
 
 /**
  * @brief Imprime la información del jugador por pantalla (id, nombre, localización, objeto, etc.)
