@@ -16,6 +16,7 @@
 #define SINGLE_ELEM 1
 #define FIRST_CHAR 0
 #define MAX_SPACES 100
+#define MAX_LINKS 4
 
 /**
  * @brief Estructura de Espacio
@@ -26,7 +27,6 @@ struct Space
 {
   Id id;                                     /*!< Identificador del espacio */
   char name[WORD_SIZE + SINGLE_ELEM];        /*!< Nombre del espacio */
-  Link *link[MAX_SPACES];                    /*!< Array de punteros a enlaces */
   Set *objects;                              /*!< Conjunto de objetos en el espacio */
   Id character;                              /*!< ID del personaje en el espacio */
   char gdesc[GDESC_ROWS][GDESC_COLS];        /*!< Descripción gráfica */
@@ -54,10 +54,6 @@ Space *space_create(Id id)
   newSpace->objects = set_create(NO_ID);
   newSpace->character = NO_ID;
 
-  /* Inicialización del array de links a NULL (vacío) */
-  for (i = 0; i < MAX_SPACES; i++) {
-      newSpace->link[i] = NULL;
-  }
 
   /* Inicialización de la descripción gráfica con espacios en blanco */
   for (i = 0; i < GDESC_ROWS; i++) {
@@ -81,9 +77,6 @@ Status space_destroy(Space *space)
   {
     set_destroy(space->objects);
   }
-
-  /* Nota: No se destruyen los enlaces (Links) aquí porque habitualmente
-     el módulo Game es quien los gestiona y libera al final de la partida */
 
   free(space);
   return OK;
@@ -125,55 +118,6 @@ const char *space_get_name(Space *space)
  * Nuevas funciones de gestión de Links
  * ------------------------------------------------------------------- */
 
-Status space_add_link(Space* space, Link* link) 
-{
-    int i;
-
-    if (!space || !link) {
-        return ERROR;
-    }
-
-    /* Recorremos el array buscando el primer hueco disponible (NULL) */
-    for (i = 0; i < MAX_SPACES; i++) {
-        if (space->link[i] == NULL) {
-            space->link[i] = link;
-            return OK; /* Enlace añadido correctamente */
-        }
-    }
-
-    /* Si llegamos aquí, es que el array está lleno y no hay espacio */
-    return ERROR; 
-}
-
-Link* space_get_link(Space* space, Id link_id) 
-{
-    int i;
-
-    if (!space || link_id == NO_ID) {
-        return NULL;
-    }
-
-    /* Buscamos el enlace por su ID dentro de los que no sean nulos */
-    for (i = 0; i < MAX_SPACES; i++) {
-        if (space->link[i] != NULL && link_get_id(space->link[i]) == link_id) {
-            return space->link[i];
-        }
-    }
-
-    return NULL; /* No se encontró el enlace */
-}
-int space_get_number_of_links(Space *space){
-  int i,cont;
-  if(!space){
-    return -1;
-  }
-  for(i=0,cont=0;i<MAX_SPACES;i++){
-    if(space->link[i]!=NULL){
-      cont++;
-    }
-  }
-  return cont;
-}
 Status space_add_object(Space *space, Id object_id)
 {
   if (!space)
@@ -281,13 +225,6 @@ Status space_print(Space *space)
   }
 
   fprintf(stdout, "--> Space (Id: %ld; Name: %s)\n", space->id, space->name);
-  
-  fprintf(stdout, "---> Links in space:\n");
-  for (i = 0; i < MAX_SPACES; i++) {
-      if (space->link[i] != NULL) {
-          fprintf(stdout, "     - Link %d: Id %ld\n", i, link_get_id(space->link[i]));
-      }
-  }
 
   fprintf(stdout, "---> Character in space: %ld.\n", space->character);
 

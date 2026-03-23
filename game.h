@@ -13,6 +13,7 @@
 
 #include "command.h"
 #include "space.h"
+#include "link.h"
 #include "player.h"
 #include "object.h"
 #include "character.h"
@@ -226,4 +227,47 @@ Status game_set_chat_message(Game *game, char *message);
  */
 char *game_get_chat_message(Game *game);
 
+/**
+ * @brief Obtiene el ID del espacio conectado a un espacio dado en una dirección específica.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param space_id ID del espacio de partida.
+ * @param dir Dirección de la conexión.
+ * @return ID del espacio conectado, o NO_ID si no hay conexión.
+ */
+Id game_get_connection(Game *game, Id space_id, Direction dir);
+
+/**
+ * @brief Comprueba si la conexión en una dirección desde un espacio dado está abierta.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param space_id ID del espacio de partida.
+ * @param dir Dirección de la conexión.
+ * @return TRUE si la conexión está abierta, FALSE si está cerrada o hay error.
+ */
+BOOL game_connection_is_open(Game *game, Id space_id, Direction dir);
+
+/**
+ * @brief Añade un nuevo enlace a la lista general del juego.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param link Puntero al enlace a añadir.
+ * @return OK si se añade con éxito, ERROR si no hay espacio o hay fallo.
+  */
+Link* game_get_link(Game* game, Id link_id);
+/**
+ * @brief Obtiene el número de enlaces actualmente cargados en el juego.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return Número de enlaces, o -1 si hay error.
+ */
+int game_get_number_of_links(Game *game);
+/**
+ * @brief Añade un nuevo enlace al juego.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param link Puntero al enlace a añadir.
+ * @return OK si se añade con éxito, ERROR si no hay espacio o hay fallo.
+ */
+Status game_add_link(Game *game, Link *link);
 #endif

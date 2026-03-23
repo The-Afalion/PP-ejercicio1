@@ -16,6 +16,7 @@
 #define SINGLE_ELEM 1
 #define FIRST_CHAR 0
 #define START_HEALTH 3
+#define INVENTORY_SIZE 3
 
 /**
  * @brief Estructura de Jugador
@@ -56,7 +57,7 @@ Player *player_create(Id id)
   newPlayer->id = id;
   newPlayer->name[FIRST_CHAR] = '\0';
   newPlayer->location = NO_ID;
-  newPlayer->backpack = NULL;
+  newPlayer->backpack = inventory_create(INVENTORY_SIZE);
   newPlayer->health = START_HEALTH;
   newPlayer->gdesc = NULL;
 
