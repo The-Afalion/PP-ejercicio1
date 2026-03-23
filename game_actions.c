@@ -21,14 +21,11 @@
 */
 Status game_actions_unknown(Game *game);
 Status game_actions_exit(Game *game);
-Status game_actions_next(Game *game);
-Status game_actions_back(Game *game);
+Status game_actions_move(Game *game);
 Status game_actions_take(Game *game);
 Status game_actions_drop(Game *game);
 Status game_actions_attack(Game*game);
 Status game_actions_chat(Game* game);
-Status game_actions_left(Game *game);
-Status game_actions_right(Game *game);
 
 /**
  * @brief Actualiza el estado del juego según el comando recibido
@@ -54,12 +51,6 @@ Status game_actions_update(Game *game, Command *command)
   case EXIT:
     status = game_actions_exit(game);
     break;
-  case NEXT:
-    status = game_actions_next(game);
-    break;
-  case BACK:
-    status = game_actions_back(game);
-    break;
   case TAKE:
     status = game_actions_take(game);
     break;
@@ -72,12 +63,8 @@ Status game_actions_update(Game *game, Command *command)
   case CHAT:
     status = game_actions_chat(game);
     break;
-  case LEFT:
-    status = game_actions_left(game);
-    break;
-  case RIGHT:
-    status = game_actions_right(game);
-    break;
+  case MOVE:
+    status = game_actions_move(game);
   default:
     break;
   }
@@ -102,46 +89,45 @@ Status game_actions_exit(Game *game) {
 }
 
 /**
- * @brief Mueve al jugador hacia el sur (siguiente espacio)
- * @author Unai
+ * @brief Permite al jugador moverse a cualquier espacio
+ * @author Alejandro Dominguez
  */
-Status game_actions_next(Game *game)
+Status game_actions_move(Game *game)
 {
-  Id current_id = NO_ID;
-  Id space_id = NO_ID;
+  Id current_space_id = NO_ID, destination_id = NO_ID;  
+  char *arg = NULL;
+  Direction dir = desconocido;
+  Command *last_cmd = NULL;
 
-  space_id = game_get_player_location(game);
-  if (space_id == NO_ID) return ERROR;
+  if (!game) return ERROR;
 
-  current_id = space_get_south(game_get_space(game, space_id));
-  if (current_id != NO_ID)
+  /*Obtener la direccion*/
+  last_cmd = game_get_last_command(game);
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
+  /*Traducimos el arg para que lo entinda la dirccion*/
+  if (strcasecmp(arg, "north") == 0 || strcasecmp(arg, "n") == 0 ) dir = norte;
+  else if (strcasecmp(arg, "south") == 0 || strcasecmp(arg, "s") == 0 ) dir = sur;
+  else if (strcasecmp(arg, "west") == 0 || strcasecmp(arg, "w") == 0 ) dir = oeste;
+  else if (strcasecmp(arg, "east") == 0 || strcasecmp(arg, "e") == 0 ) dir = este;
+
+  /*Obtenemos la unicacion actual del jugador*/
+  current_space_id = game_get_player_location(game);
+  if (!current_space_id) return ERROR;
+
+  /*Verificamos si se puede*/
+  if (dir = desconocido || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
+
+  destination_id = game_get_connection(game, current_space_id, dir);
+
+  /*Movemos al jugador*/
+  if(destination_id != NO_ID)
   {
-    /* Mueve al jugador a la nueva sala */
-    game_set_player_location(game, current_id);
+    game_set_player_location(game, destination_id);
     return OK;
   }
-  return ERROR;
-}
 
-/**
- * @brief Mueve al jugador hacia el norte (espacio anterior)
- * @author Unai
- */
-Status game_actions_back(Game *game)
-{
-  Id current_id = NO_ID;
-  Id space_id = NO_ID;
-
-  space_id = game_get_player_location(game);
-  if (NO_ID == space_id) return ERROR;
-
-  current_id = space_get_north(game_get_space(game, space_id));
-  if (current_id != NO_ID)
-  {
-    /* Mueve al jugador a la nueva sala */
-    game_set_player_location(game, current_id);
-    return OK;
-  }
   return ERROR;
 }
 
@@ -360,46 +346,4 @@ Status game_actions_chat(Game* game) {
   /* Imprimimos en la interfaz el mensaje del personaje */
   game_set_chat_message(game, character_get_message(character));
   return OK;
-}
-
-/**
- * @brief Mueve al jugador hacia el oeste (izquierda)
- * @author Rodrigo
- */
-Status game_actions_left(Game *game)
-{
-    Id current_id = NO_ID, space_id = NO_ID;
-    
-    space_id = game_get_player_location(game);
-    if (NO_ID == space_id) return ERROR;
-
-    current_id = space_get_west(game_get_space(game, space_id));
-    if (current_id != NO_ID)
-    {
-        /* Mueve al jugador a la nueva sala */
-        game_set_player_location(game, current_id);
-        return OK;
-    }
-    return ERROR;
-}
-
-/**
- * @brief Mueve al jugador hacia el este (derecha)
- * @author Rodrigo
- */
-Status game_actions_right(Game *game)
-{
-    Id current_id = NO_ID, space_id = NO_ID;
-    
-    space_id = game_get_player_location(game);
-    if (NO_ID == space_id) return ERROR;
-
-    current_id = space_get_east(game_get_space(game, space_id));
-    if (current_id != NO_ID)
-    {
-        /* Mueve al jugador a la nueva sala */
-        game_set_player_location(game, current_id);
-        return OK;
-    }
-    return ERROR;
 }

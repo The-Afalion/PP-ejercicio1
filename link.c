@@ -9,7 +9,7 @@ struct _Link {
     Id origin;
     Id destination;
     Direction direction;
-    Bool open;
+    BOOL open;
 };
 
 Link* link_create(Id id) {

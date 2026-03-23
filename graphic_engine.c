@@ -335,8 +335,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "     next/n, back/b, exit/e, take/t, drop/d");
-  screen_area_puts(ge->help, "     left/l, right/r, attack/a, chat/c");
+  screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
 
   last_cmd = command_get_code(game_get_last_command(game));
   sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS], last_cmd_status == OK ? "OK" : "ERROR");
