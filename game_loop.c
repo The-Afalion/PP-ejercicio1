@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
   Game *game = NULL;
   Command *command = NULL;
   Graphic_engine *gengine;
-  Status status = OK;
 
   if (argc < 2)
   {
@@ -28,7 +27,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  if ((status = game_create_from_file(&game, argv[1])) == ERROR)
+  if ((game_create_from_file(&game, argv[1])) == ERROR)
   {
     fprintf(stderr, "Error while initializing game.\n");
     return 1;
@@ -43,13 +42,13 @@ int main(int argc, char *argv[])
   command=game_get_last_command(game);
   while ((command_get_code(command) != EXIT) && !game_get_finished(game))
   {
-    graphic_engine_paint_game(gengine, game, status);
+    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game));
     command_get_user_input(command);
-    status = game_actions_update(game, command);
+    game_set_last_command_status(game, game_actions_update(game, command));
   }
 
   /* Paint the last state */
-  graphic_engine_paint_game(gengine, game, status);
+  graphic_engine_paint_game(gengine, game, game_get_last_command_status(game));
 
   game_destroy(game);
   graphic_engine_destroy(gengine);

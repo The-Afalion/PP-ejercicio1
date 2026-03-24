@@ -13,6 +13,7 @@
 #define FIRST_POSITION 0
 #define MAX_OBJECTS 100
 #define MAX_LINKS 800
+#define MAX_PLAYERS 8
 
 /**
  * @brief Estructura de Game
@@ -20,16 +21,28 @@
  */
 struct _Game
 {
-  Player *player;                        /* Puntero al jugador */
-  Object *objects[MAX_OBJECTS];          /* Array de punteros a objetos */
-  Character *characters[MAX_CHARACTERS]; /*Array de punteros a personajes */
-  Space *spaces[MAX_SPACES];             /*Array de punteros a espacios */
-  int n_spaces;                          /* Número actual de espacios cargados */
-  Link *link[MAX_LINKS];                  /* Array de punteros a enlaces */
-  int n_links;                           /*!< Número actual de enlaces cargados */
-  Command *last_cmd;                     /* Último comando introducido por el usuario */
-  int finished;                          /*El juego ha finalizado */
-  char chat_message[WORD_SIZE];          /* Último chat */
+  Player *players[MAX_PLAYERS];               /*!< Array de punteros a jugadores */
+  int turn;                                   /*!< Número de turno actual */
+  Object *objects[MAX_OBJECTS];               /*!< Array de punteros a objetos */
+  Character *characters[MAX_CHARACTERS];      /*!< Array de punteros a personajes */
+  Space *spaces[MAX_SPACES];                  /*!< Array de punteros a espacios */
+  int n_spaces;                               /*!< Número actual de espacios cargados */
+  Link *link[MAX_LINKS];                      /*!< Array de punteros a enlaces */
+  int n_links;                                /*!< Número actual de enlaces cargados */
+  int finished;                               /*!< El juego ha finalizado */
+  InterfaceData *interface_data[MAX_PLAYERS]; /*!< Datos de la interfaz para cada jugador */
+};
+/**
+ * @brief Estructura de datos para la interfaz de cada jugador
+ * Almacena el último comando y su estado, mensaje de chat.
+ */
+struct _InterfaceData
+{
+
+  Command *last_cmd;            /*!< Último comando introducido por el usuario*/
+  char chat_message[WORD_SIZE]; /*!< Último chat */
+  Status last_status;           /*!< Último estado */
+
 };
 
 /* Prototipos de funciones privadas */
@@ -59,15 +72,24 @@ Status game_create(Game **game)
     (*game)->characters[i] = NULL;
   for (i = 0; i < MAX_LINKS; i++)
     (*game)->link[i] = NULL;
+  for (i = 0; i < MAX_PLAYERS; i++)
+    (*game)->players[i] = NULL;
+  for (size_t i = 0; i < MAX_PLAYERS; i++)
+  {
+    (*game)->interface_data[i] = (InterfaceData *)calloc(1,sizeof(InterfaceData));
+    if (!(*game)->interface_data[i])
+      return ERROR;
+    (*game)->interface_data[i]->last_cmd = command_create();
+    (*game)->interface_data[i]->chat_message[0] = '\0';
+    (*game)->interface_data[i]->last_status = ERROR;
+  }
+  
 
- 
   /* Inicialización de estado y componentes básicos */
   (*game)->n_spaces = 0;
   (*game)->n_links = 0;
-  (*game)->player = player_create(PLAYER_ID);
-  (*game)->last_cmd = command_create();
   (*game)->finished = 0;
-  (*game)->chat_message[0] = '\0';
+  (*game)->turn = 0;
 
   return OK;
 }
@@ -110,8 +132,14 @@ Status game_destroy(Game *game)
   for (i = 0; i < game->n_spaces; i++)
     space_destroy(game->spaces[i]);
 
-  if (game->player)
-    player_destroy(game->player);
+  if (game->players)
+  {
+    for (i = 0; i < MAX_PLAYERS; i++)
+    {
+      if (game->players[i])
+        player_destroy(game->players[i]);
+    }
+  }
 
   for (i = 0; i < MAX_OBJECTS; i++)
   {
@@ -130,10 +158,9 @@ Status game_destroy(Game *game)
     if (game->link[i])
       link_destroy(game->link[i]);
   }
-  
 
-  if (game->last_cmd)
-    command_destroy(game->last_cmd);
+  if (game->interface_data[game->turn]->last_cmd)
+    command_destroy(game->interface_data[game->turn]->last_cmd);
 
   free(game);
   return OK;
@@ -163,14 +190,14 @@ Id game_get_player_location(Game *game)
 {
   if (!game)
     return NO_ID;
-  return player_get_location(game->player);
+  return player_get_location(game->players[game->turn]);
 }
 
 Status game_set_player_location(Game *game, Id id)
 {
   if (id == NO_ID || !game)
     return ERROR;
-  return player_set_location(game->player, id);
+  return player_set_location(game->players[game->turn], id);
 }
 
 /**
@@ -290,15 +317,30 @@ Status game_set_character_location(Game *game, Id space_id, Id character_id)
 
 Command *game_get_last_command(Game *game)
 {
-  return (!game) ? NULL : game->last_cmd;
+  return (!game) ? NULL : game->interface_data[game->turn]->last_cmd;
 }
 
 Status game_set_last_command(Game *game, Command *command)
 {
   if (!game || !command)
+  game_set_last_command_status(game, ERROR);
+  game->interface_data[game->turn]->last_cmd = command;
+  game_set_last_command_status(game, OK);
+  return game->interface_data[game->turn]->last_status;
+
+}
+
+Status game_set_last_command_status(Game *game, Status status){
+  if (!game)
     return ERROR;
-  game->last_cmd = command;
-  return OK;
+  game->interface_data[game->turn]->last_status = status;
+  return status;
+}
+
+Status game_get_last_command_status(Game *game){
+  if (!game)
+    return ERROR;
+  return game->interface_data[game->turn]->last_status;
 }
 
 int game_get_finished(Game *game)
@@ -328,7 +370,7 @@ void game_print(Game *game)
   for (i = 0; i < game->n_spaces; i++)
     space_print(game->spaces[i]);
 
-  player_print(game->player);
+  player_print(game->players[game->turn]);
 
   for (i = 0; i < MAX_OBJECTS; i++)
   {
@@ -342,11 +384,13 @@ void game_print(Game *game)
       character_print(game->characters[i]);
   }
 
-    fprintf(stdout, "---> Links:\n");
-  for (i = 0; i < MAX_LINKS; i++) {
-      if (game->link[i] != NULL) {
-          fprintf(stdout, "     - Link %d: Id %ld\n", i, link_get_id(game->link[i]));
-      }
+  fprintf(stdout, "---> Links:\n");
+  for (i = 0; i < MAX_LINKS; i++)
+  {
+    if (game->link[i] != NULL)
+    {
+      fprintf(stdout, "     - Link %d: Id %ld\n", i, link_get_id(game->link[i]));
+    }
   }
 }
 
@@ -354,7 +398,7 @@ void game_print(Game *game)
 
 Player *game_get_player(Game *game)
 {
-  return (!game) ? NULL : game->player;
+  return (!game) ? NULL : game->players[game->turn];
 }
 
 Object *game_get_object(Game *game, Id id)
@@ -451,15 +495,14 @@ Status game_set_chat_message(Game *game, char *message)
 {
   if (!game || !message)
     return ERROR;
-  strcpy(game->chat_message, message);
+  strcpy(game->interface_data[game->turn]->chat_message, message);
   return OK;
 }
 
 char *game_get_chat_message(Game *game)
 {
-  return (!game) ? NULL : game->chat_message;
+  return (!game) ? NULL : game->interface_data[game->turn]->chat_message;
 }
-
 
 BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
 {
@@ -491,7 +534,6 @@ BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
   return link_get_open(l);
 }
 
-
 /*---Funciones enlaces---*/
 Id game_get_link(Game *game, Id link_id)
 {
@@ -511,7 +553,8 @@ Id game_get_link(Game *game, Id link_id)
 
 Id game_get_connection(Game *game, Id space_id, Direction dir)
 {
-if (!game||space_id == NULL||dir == desconocido){
+  if (!game || space_id == NULL || dir == desconocido)
+  {
     return NO_ID;
   }
 
@@ -527,9 +570,10 @@ if (!game||space_id == NULL||dir == desconocido){
 
 BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
 {
-  Link * l = NULL;
+  Link *l = NULL;
 
-  if (!game||space_id == NULL||dir == desconocido){
+  if (!game || space_id == NULL || dir == desconocido)
+  {
     return NO_ID;
   }
 
@@ -541,57 +585,90 @@ BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
       break;
     }
   }
-  
+
   return link_get_open(l);
 }
 
 Status game_add_link(Game *game, Link *link)
 {
-    int i;
+  int i;
 
-    if (!game || !link) {
-        return ERROR;
+  if (!game || !link)
+  {
+    return ERROR;
+  }
+
+  /* Recorremos el array buscando el primer hueco disponible (NULL) */
+  for (i = 0; i < MAX_LINKS; i++)
+  {
+    if (game->link[i] == NULL)
+    {
+      game->link[i] = link;
+      return OK; /* Enlace añadido correctamente */
     }
+  }
 
-    /* Recorremos el array buscando el primer hueco disponible (NULL) */
-    for (i = 0; i < MAX_LINKS; i++) {
-        if (game->link[i] == NULL) {
-            game->link[i] = link;
-            return OK; /* Enlace añadido correctamente */
-        }
-    }
-
-    /* Si llegamos aquí, es que el array está lleno y no hay espacio */
-    return ERROR; 
+  /* Si llegamos aquí, es que el array está lleno y no hay espacio */
+  return ERROR;
 }
 
-Link* game_get_link(Game* game, Id link_id) 
+Link *game_get_link(Game *game, Id link_id)
 {
-    int i;
+  int i;
 
-    if (!game || link_id == NO_ID) {
-        return NULL;
+  if (!game || link_id == NO_ID)
+  {
+    return NULL;
+  }
+
+  /* Buscamos el enlace por su ID dentro de los que no sean nulos */
+  for (i = 0; i < MAX_LINKS; i++)
+  {
+    if (game->link[i] != NULL && link_get_id(game->link[i]) == link_id)
+    {
+      return game->link[i];
     }
+  }
 
-    /* Buscamos el enlace por su ID dentro de los que no sean nulos */
-    for (i = 0; i < MAX_LINKS; i++) {
-        if (game->link[i] != NULL && link_get_id(game->link[i]) == link_id) {
-            return game->link[i];
-        }
-    }
-
-    return NULL; /* No se encontró el enlace */
+  return NULL; /* No se encontró el enlace */
 }
 
-int game_get_number_of_links(Game *game){
-  int i,cont;
-  if(!game){
+int game_get_number_of_links(Game *game)
+{
+  int i, cont;
+  if (!game)
+  {
     return -1;
   }
-  for(i=0,cont=0;i<MAX_LINKS;i++){
-    if(game->link[i]!=NULL){
+  for (i = 0, cont = 0; i < MAX_LINKS; i++)
+  {
+    if (game->link[i] != NULL)
+    {
       cont++;
     }
   }
   return cont;
+}
+
+int game_get_turn(Game *game)
+{
+  if(!game)
+  {
+    return -1;
+  }
+  return game->turn;
+}
+
+int game_next_turn(Game *game)
+{
+  int i;
+  if(!game)
+  {
+    return -1;
+  }
+  for (size_t i = 0; game->players[i] != NULL; i++);
+  
+  game->turn = game->turn+1 % i;
+  
+  return game->turn;
 }

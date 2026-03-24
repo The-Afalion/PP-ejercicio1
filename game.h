@@ -28,6 +28,10 @@
 typedef struct _Game Game;
 
 /**
+ * @brief Estructura de datos para la interfaz de cada jugador
+ */
+typedef struct _InterfaceData InterfaceData;
+/**
  * @brief Inicializa las variables del juego.
  * @author Unai
  * @param game Puntero al juego.
@@ -141,6 +145,23 @@ Command* game_get_last_command(Game *game);
  * @return OK si se guarda con éxito, ERROR en caso contrario.
  */
 Status game_set_last_command(Game *game, Command *command);
+
+/**
+ * @brief Obtiene el estado del último comando ejecutado.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return Estado del último comando.
+ */
+Status game_get_last_command_status(Game *game);
+
+/**
+ * @brief Establece el estado del último comando ejecutado.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param status Estado a establecer.
+ * @return OK si se establece con éxito, ERROR en caso contrario.
+ */
+Status game_set_last_command_status(Game *game, Status status);
 
 /**
  * @brief Comprueba si el juego ha terminado.
@@ -270,4 +291,20 @@ int game_get_number_of_links(Game *game);
  * @return OK si se añade con éxito, ERROR si no hay espacio o hay fallo.
  */
 Status game_add_link(Game *game, Link *link);
+
+/**
+ * @brief Obtiene el turno actual del juego.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return Número del turno actual, o -1 si hay error.
+ */
+int game_get_turn(Game *game);
+
+/**
+ * @brief Avanza al siguiente turno del juego.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return Número del nuevo turno, o -1 si hay error.
+ */
+int game_next_turn(Game *game);
 #endif

@@ -331,7 +331,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   game_set_chat_message(game, ""); /* ELIMINACIÓN: Limpiamos el mensaje tras dibujarlo */
 
   /* --- 3. Pintado del BANNER, AYUDA y FEEDBACK --- */
-  screen_area_puts(ge->banner, "  The haunted castle game ");
+  screen_area_puts(ge->banner, ("  Turn Player :%d " , game_get_turn(game) + 1));
 
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
@@ -343,6 +343,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   screen_area_puts(ge->feedback, str);
 
   /* Pintamos pantalla */
-  screen_paint();
+  screen_paint(RED);
   printf("prompt:> ");
 }
