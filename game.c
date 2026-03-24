@@ -88,11 +88,13 @@ Status game_create_from_file(Game **game, char *filename)
     return ERROR;
   if (game_reader_load_objects(*game, filename) == ERROR)
     return ERROR;
+  if (game_reader_load_players(*game, filename) == ERROR)
+    return ERROR;
   if (game_reader_load_characters(*game, filename) == ERROR)
     return ERROR;
+  if (game_reader_load_links(*game, filename) == ERROR)
+    return ERROR;
 
-  /* Posicionamiento inicial del jugador */
-  game_set_player_location(*game, game_get_space_id_at(*game, FIRST_POSITION));
 
   return OK;
 }
@@ -355,6 +357,16 @@ void game_print(Game *game)
 Player *game_get_player(Game *game)
 {
   return (!game) ? NULL : game->player;
+}
+
+Status game_set_player(Game *game, Player *player)
+{
+  if (!game || !player)
+    return ERROR;
+  if (game->player)
+    player_destroy(game->player);
+  game->player = player;
+  return OK;
 }
 
 Object *game_get_object(Game *game, Id id)

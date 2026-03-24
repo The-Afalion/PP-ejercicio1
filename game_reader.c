@@ -14,6 +14,8 @@
 #include "space.h"
 #include "character.h"
 #include "object.h"
+#include "player.h"
+#include "link.h"
 
 /**
  * @brief Carga los espacios desde un archivo de datos
@@ -24,7 +26,7 @@ Status game_reader_load_spaces(Game *game, char *filename) {
     char line[WORD_SIZE] = "";
     char name[WORD_SIZE] = "";
     char *toks = NULL;
-    Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
+    Id id = NO_ID;
     Space *space = NULL;
     Status status = OK;
     char *endptr;
@@ -43,14 +45,6 @@ Status game_reader_load_spaces(Game *game, char *filename) {
             id = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             strcpy(name, toks);
-            toks = strtok(NULL, "|");
-            north = strtol(toks, &endptr, 10);
-            toks = strtok(NULL, "|");
-            east = strtol(toks, &endptr, 10);
-            toks = strtok(NULL, "|");
-            south = strtol(toks, &endptr, 10);
-            toks = strtok(NULL, "|");
-            west = strtol(toks, &endptr, 10);
 
             for (i = 0, des = OK; i < GDESC_ROWS; i++) {
                 toks = strtok(NULL, "|");
@@ -65,10 +59,6 @@ Status game_reader_load_spaces(Game *game, char *filename) {
             space = space_create(id);
             if (space != NULL) {
                 space_set_name(space, name);
-                space_set_north(space, north);
-                space_set_east(space, east);
-                space_set_south(space, south);
-                space_set_west(space, west);
                 if (des != ERROR) space_set_gdesc(space, gdesc);
                 
                 /* ASIGNACIÓN: Añadimos el objeto de tipo espacio a la lista general del juego */
@@ -160,11 +150,11 @@ Status game_reader_load_characters(Game *game, char *filename) {
             toks = strtok(NULL, "|");
             strcpy(gdesc, toks);
             toks = strtok(NULL, "|");
+            location_id = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
             health = (int) strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             friendly = (int) strtol(toks, &endptr, 10);
-            toks = strtok(NULL, "|");
-            location_id = strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             strcpy(message, toks);
 
@@ -181,6 +171,113 @@ Status game_reader_load_characters(Game *game, char *filename) {
                 
                 /* ASIGNACIÓN : Vinculamos el ID del personaje al campo 'character' del espacio correspondiente */
                 game_set_character_location(game, location_id, id);
+            }
+        }
+    }
+
+    if (ferror(file)) status = ERROR;
+    fclose(file);
+    return status;
+}
+
+/**
+ * @brief Carga los jugadores desde un archivo de datos
+ * @author Unai
+ */
+Status game_reader_load_players(Game *game, char *filename) {
+    FILE *file = NULL;
+    char line[WORD_SIZE] = "";
+    char name[WORD_SIZE] = "";
+    char gdesc[WORD_SIZE] = "";
+    char *toks = NULL;
+    Id id = NO_ID, location_id = NO_ID;
+    int health = 0, max_objs = 0;
+    Player *player = NULL;
+    Status status = OK;
+    char *endptr;
+
+    if (!filename) return ERROR;
+
+    file = fopen(filename, "r");
+    if (file == NULL) return ERROR;
+
+    while (fgets(line, WORD_SIZE, file)) {
+        if (strncmp("#p:", line, 3) == 0) {
+            toks = strtok(line + 3, "|");
+            id = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            strcpy(name, toks);
+            toks = strtok(NULL, "|");
+            strcpy(gdesc, toks);
+            toks = strtok(NULL, "|");
+            location_id = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            health = (int) strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            max_objs = (int) strtol(toks, &endptr, 10);
+
+            player = player_create(id);
+            if (player != NULL) {
+                player_set_name(player, name);
+                player_set_gdesc(player, gdesc);
+                player_set_location(player, location_id);
+                player_set_heatlh(player, health);
+                inventory_set_max_objs(player_get_backpack(player), max_objs);
+                
+                game_set_player(game, player);
+            }
+        }
+    }
+
+    if (ferror(file)) status = ERROR;
+    fclose(file);
+    return status;
+}
+
+/**
+ * @brief Carga los enlaces desde un archivo de datos
+ * @author Unai
+ */
+Status game_reader_load_links(Game *game, char *filename) {
+    FILE *file = NULL;
+    char line[WORD_SIZE] = "";
+    char name[WORD_SIZE] = "";
+    char *toks = NULL;
+    Id id = NO_ID, origin = NO_ID, destination = NO_ID;
+    int dir_int = 0, open_int = 0;
+    Link *link = NULL;
+    Status status = OK;
+    char *endptr;
+
+    if (!filename) return ERROR;
+
+    file = fopen(filename, "r");
+    if (file == NULL) return ERROR;
+
+    while (fgets(line, WORD_SIZE, file)) {
+        if (strncmp("#l:", line, 3) == 0) {
+            toks = strtok(line + 3, "|");
+            id = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            strcpy(name, toks);
+            toks = strtok(NULL, "|");
+            origin = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            destination = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            dir_int = (int) strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            open_int = (int) strtol(toks, &endptr, 10);
+
+            link = link_create(id);
+            if (link != NULL) {
+                link_set_name(link, name);
+                link_set_origin(link, origin);
+                link_set_destination(link, destination);
+                link_set_direction(link, (Direction)dir_int);
+                link_set_open(link, open_int ? TRUE : FALSE);
+
+                game_add_link(game, link);
             }
         }
     }
