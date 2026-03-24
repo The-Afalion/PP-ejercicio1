@@ -175,6 +175,15 @@ void game_print(Game *game);
 Player* game_get_player(Game* game);
 
 /**
+ * @brief Establece el puntero al jugador.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param player Puntero al jugador a establecer.
+ * @return OK si se establece con éxito, ERROR en caso contrario.
+ */
+Status game_set_player(Game *game, Player *player);
+
+/**
  * @brief Obtiene el puntero a un objeto específico.
  * @author Unai
  * @param game Puntero al juego.

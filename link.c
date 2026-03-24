@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#define SINGLE_ELEM 1
 struct _Link {
     Id id;
     char nom[WORD_SIZE];
@@ -54,7 +54,7 @@ Status link_set_name(Link* link, char* name) {
 Status link_set_origin(Link* link, Id origin) {
     if (!link) {
         return ERROR;
-    }const
+    }
     link->origin = origin;
     return OK;
 }
@@ -75,7 +75,7 @@ Status link_set_direction(Link* link, Direction direction) {
     return OK;
 }
 
-Status link_set_open(Link* link, Bool open) {
+Status link_set_open(Link* link, BOOL open) {
     if (!link) {
         return ERROR;
     }
@@ -118,7 +118,7 @@ Direction link_get_direction(Link* link) {
     return link->direction;
 }
 
-Bool link_get_open(Link* link) {
+BOOL link_get_open(Link* link) {
     if (!link) {
         return FALSE; 
     }
