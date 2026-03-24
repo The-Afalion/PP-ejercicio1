@@ -150,4 +150,20 @@ char(* space_get_gdesc(Space* space))[GDESC_COLS];
  */
 Status space_print(Space* space);
 int space_get_number_of_links(Space *space);
+
+/**
+ * @brief Establece si el espacio ha sido descubierto o no
+ * @param space Puntero al espacio
+ * @param discovered TRUE si fue descubierto, FALSE si no
+ * @return OK si se establece con éxito, ERROR en caso contrario
+ */
+Status space_set_discovered(Space* space, BOOL discovered);
+
+/**
+ * @brief Comprueba si el espacio ha sido descubierto
+ * @param space Puntero al espacio
+ * @return TRUE si fue descubierto, FALSE si no
+ */
+BOOL space_get_discovered(Space* space);
+
 #endif

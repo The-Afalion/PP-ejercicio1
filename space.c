@@ -30,6 +30,7 @@ struct Space
   Set *objects;                              /*!< Conjunto de objetos en el espacio */
   Id character;                              /*!< ID del personaje en el espacio */
   char gdesc[GDESC_ROWS][GDESC_COLS];        /*!< Descripción gráfica */
+  BOOL discovered;                           /*!< Indica si el espacio ha sido descubierto */
 };
 
 Space *space_create(Id id)
@@ -53,6 +54,7 @@ Space *space_create(Id id)
   newSpace->name[FIRST_CHAR] = '\0';
   newSpace->objects = set_create(NO_ID);
   newSpace->character = NO_ID;
+  newSpace->discovered = FALSE;
 
 
   /* Inicialización de la descripción gráfica con espacios en blanco */
@@ -214,9 +216,28 @@ char (*space_get_gdesc(Space* space))[GDESC_COLS] {
   return space->gdesc;
 }
 
+Status space_set_discovered(Space* space, BOOL discovered)
+{
+  if (!space)
+  {
+    return ERROR;
+  }
+  space->discovered = discovered;
+  return OK;
+}
+
+BOOL space_get_discovered(Space* space)
+{
+  if (!space)
+  {
+    return FALSE;
+  }
+  return space->discovered;
+}
+
 Status space_print(Space *space)
 {
-  int i, num_objs,num_link;
+  int i, num_objs;
   Id *objs = NULL;
 
   if (!space)
@@ -226,32 +247,34 @@ Status space_print(Space *space)
 
   fprintf(stdout, "--> Space (Id: %ld; Name: %s)\n", space->id, space->name);
 
-  fprintf(stdout, "---> Character in space: %ld.\n", space->character);
+  if (space->discovered == TRUE) {
+    fprintf(stdout, "---> Character in space: %ld.\n", space->character);
 
-  fprintf(stdout, "---> Graphic description:\n");
-  for (i = 0; i < GDESC_ROWS; i++) {
-    fprintf(stdout, "%s\n", space->gdesc[i]);
-  }
+    fprintf(stdout, "---> Graphic description:\n");
+    for (i = 0; i < GDESC_ROWS; i++) {
+      fprintf(stdout, "%s\n", space->gdesc[i]);
+    }
 
-  num_objs = space_get_number_of_objects(space);
-  if (num_objs > 0)
-  {
-    objs = space_get_objects(space);
-    fprintf(stdout, "---> Objects in the space (Id: ");
-    for (i = 0; i < num_objs; i++)
+    num_objs = space_get_number_of_objects(space);
+    if (num_objs > 0)
     {
-      fprintf(stdout, "%d ", (int) objs[i]);
+      objs = space_get_objects(space);
+      fprintf(stdout, "---> Objects in the space (Id: ");
+      for (i = 0; i < num_objs; i++)
+      {
+        fprintf(stdout, "%d ", (int) objs[i]);
+      }
+      fprintf(stdout, ")\n");
+
+      if (objs)
+      {
+        free(objs);
+      }
     }
-    fprintf(stdout, ")\n");
-    
-    if (objs)
+    else
     {
-      free(objs);
+      fprintf(stdout, "---> No object in the space.\n");
     }
-  }
-  else
-  {
-    fprintf(stdout, "---> No object in the space.\n");
   }
 
   return OK;

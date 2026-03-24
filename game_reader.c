@@ -195,6 +195,7 @@ Status game_reader_load_players(Game *game, char *filename) {
     Player *player = NULL;
     Status status = OK;
     char *endptr;
+    Space* starting_space = NULL;
 
     if (!filename) return ERROR;
 
@@ -225,6 +226,12 @@ Status game_reader_load_players(Game *game, char *filename) {
                 inventory_set_max_objs(player_get_backpack(player), max_objs);
                 
                 game_set_player(game, player);
+
+                /* Marcamos el espacio inicial como descubierto */
+                starting_space = game_get_space(game, location_id);
+                if (starting_space != NULL) {
+                    space_set_discovered(starting_space, TRUE);
+                }
             }
         }
     }

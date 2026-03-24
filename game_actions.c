@@ -10,6 +10,7 @@
 
 #include "game_actions.h"
 #include "inventory.h"
+#include "player.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -96,8 +97,9 @@ Status game_actions_move(Game *game)
 {
   Id current_space_id = NO_ID, destination_id = NO_ID;  
   char *arg = NULL;
-  Direction dir = desconocido;
+  Direction dir = UNKNOWN;
   Command *last_cmd = NULL;
+  Space* dest_space = NULL;
 
   if (!game) return ERROR;
 
@@ -107,17 +109,17 @@ Status game_actions_move(Game *game)
   if (!arg || arg[0] == '\0') return ERROR;
 
   /*Traducimos el arg para que lo entinda la dirccion*/
-  if (strcasecmp(arg, "north") == 0 || strcasecmp(arg, "n") == 0 ) dir = norte;
-  else if (strcasecmp(arg, "south") == 0 || strcasecmp(arg, "s") == 0 ) dir = sur;
-  else if (strcasecmp(arg, "west") == 0 || strcasecmp(arg, "w") == 0 ) dir = oeste;
-  else if (strcasecmp(arg, "east") == 0 || strcasecmp(arg, "e") == 0 ) dir = este;
+  if (strcasecmp(arg, "north") == 0 || strcasecmp(arg, "n") == 0 ) dir = N;
+  else if (strcasecmp(arg, "south") == 0 || strcasecmp(arg, "s") == 0 ) dir = S;
+  else if (strcasecmp(arg, "west") == 0 || strcasecmp(arg, "w") == 0 ) dir = W;
+  else if (strcasecmp(arg, "east") == 0 || strcasecmp(arg, "e") == 0 ) dir = E;
 
   /*Obtenemos la unicacion actual del jugador*/
   current_space_id = game_get_player_location(game);
   if (!current_space_id) return ERROR;
 
   /*Verificamos si se puede*/
-  if (dir = desconocido || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
+  if (dir == UNKNOWN || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
 
   destination_id = game_get_connection(game, current_space_id, dir);
 
@@ -125,6 +127,10 @@ Status game_actions_move(Game *game)
   if(destination_id != NO_ID)
   {
     game_set_player_location(game, destination_id);
+    dest_space = game_get_space(game, destination_id);
+    if (dest_space != NULL) {
+      space_set_discovered(dest_space, TRUE);
+    }
     return OK;
   }
 
@@ -226,10 +232,10 @@ Status game_actions_drop(Game *game)
 
   /*Obtenemos el argumento del comando*/
   last_cmd = game_get_last_command(game);
-  if (!last_cmd) return NULL;
+  if (!last_cmd) return ERROR;
 
   arg = command_get_arg(last_cmd);
-  if (!arg || arg[0] == '\0') return NULL;
+  if (!arg || arg[0] == '\0') return ERROR;
 
   /*Bucameos el objeto por el nombre dentro de la mochila*/
   max_objects = inventory_get_max_objs(player_get_backpack(game_get_player(game)));
@@ -304,7 +310,7 @@ Status game_actions_attack(Game *game)
     /* Gana el adversario: el jugador pierde 1 punto de vida */
     player_health = player_get_health(player);
     player_health--;
-    player_set_heatlh(player, player_health); 
+    player_set_health(player, player_health); 
 
     /* Si el jugador se queda sin vida, termina el juego */
     if (player_health <= 0) game_set_finished(game, 1);
