@@ -300,7 +300,6 @@ int game_get_number_of_links(Game *game);
  * @return OK si se añade con éxito, ERROR si no hay espacio o hay fallo.
  */
 Status game_add_link(Game *game, Link *link);
-<<<<<<< HEAD
 
 /**
  * @brief Obtiene el turno actual del juego.
@@ -317,7 +316,6 @@ int game_get_turn(Game *game);
  * @return Número del nuevo turno, o -1 si hay error.
  */
 int game_next_turn(Game *game);
-=======
 /**
  * @brief Establece la descripción de un objeto para su inspección.
  * @author Alejandro Dominguez
@@ -334,5 +332,4 @@ Status game_set_object_desc(Game *game, char *inspection);
  */
 char *game_get_object_desc(Game *game);
 
->>>>>>> 7e29664c264a295da05d2120ed34ab2a20d1c3cf
 #endif

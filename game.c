@@ -76,7 +76,7 @@ Status game_create(Game **game)
     (*game)->link[i] = NULL;
   for (i = 0; i < MAX_PLAYERS; i++)
     (*game)->players[i] = NULL;
-  for (size_t i = 0; i < MAX_PLAYERS; i++)
+  for (i = 0; i < MAX_PLAYERS; i++)
   {
     (*game)->interface_data[i] = (InterfaceData *)calloc(1,sizeof(InterfaceData));
     if (!(*game)->interface_data[i])
@@ -137,14 +137,30 @@ Status game_destroy(Game *game)
   for (i = 0; i < game->n_spaces; i++)
     space_destroy(game->spaces[i]);
 
-  if (game->players)
+  /* Destrucción de jugadores e interfaces */
+  for ( i = 0; i < MAX_PLAYERS; i++)
   {
-    for (i = 0; i < MAX_PLAYERS; i++)
-    {
-      if (game->players[i])
-        player_destroy(game->players[i]);
-    }
+    if (game->players[i])
+      player_destroy(game->players[i]);
+
   }
+
+   for (i = 0; i < MAX_PLAYERS; i++)
+   {
+     if (game->interface_data[i])
+     {
+       if (game->interface_data[i]->last_cmd)
+         command_destroy(game->interface_data[i]->last_cmd);
+       free(game->interface_data[i]);
+     }
+   }
+
+   /* Destrucción de objetos, personajes y enlaces */
+   for (i = 0; i < game->n_links; i++)
+   {
+     if (game->link[i])
+       link_destroy(game->link[i]);
+   }
 
   for (i = 0; i < MAX_OBJECTS; i++)
   {
@@ -158,7 +174,7 @@ Status game_destroy(Game *game)
       character_destroy(game->characters[i]);
   }
 
-  for (size_t i = 0; i < MAX_LINKS; i++)
+  for (i = 0; i < MAX_LINKS; i++)
   {
     if (game->link[i])
       link_destroy(game->link[i]);
@@ -521,30 +537,16 @@ char *game_get_chat_message(Game *game)
 
 
 /*---Funciones enlaces---*/
-Id *game_get_link(Game *game, Id link_id)
-{
-  int i;
-  if (!game || link_id == NO_ID)
-    return NULL;
-
-  for (i = 0; i < MAX_LINKS; i++)
-  {
-    if (game->link[i] != NULL && link_get_id(game->link[i]) == link_id)
-    {
-      return game->link[i];
-    }
-  }
-  return NULL;
-}
 
 Id game_get_connection(Game *game, Id space_id, Direction dir)
 {
-  if (!game || space_id == NULL || dir == desconocido)
+  int i;
+  if (!game || space_id == NO_ID || dir == desconocido)
   {
     return NO_ID;
   }
 
-  for (size_t i = 0; i < game->n_links; i++)
+  for (i = 0; i < game->n_links; i++)
   {
     if (link_get_origin(game->link[i]) == space_id && link_get_direction(game->link[i]) == dir)
     {
@@ -557,13 +559,14 @@ Id game_get_connection(Game *game, Id space_id, Direction dir)
 BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
 {
   Link *l = NULL;
+  int i;
 
-  if (!game || space_id == NULL || dir == desconocido)
+  if (!game || space_id == NO_ID|| dir == desconocido)
   {
     return NO_ID;
   }
 
-  for (size_t i = 0; i < game->n_links; i++)
+  for (i = 0; i < game->n_links; i++)
   {
     if (link_get_origin(game->link[i]) == space_id && link_get_direction(game->link[i]) == dir)
     {
@@ -652,7 +655,7 @@ int game_next_turn(Game *game)
   {
     return -1;
   }
-  for (size_t i = 0; game->players[i] != NULL; i++);
+  for (i = 0; game->players[i] != NULL; i++);
   
   game->turn = game->turn+1 % i;
   
