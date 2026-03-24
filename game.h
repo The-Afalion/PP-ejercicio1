@@ -270,4 +270,20 @@ int game_get_number_of_links(Game *game);
  * @return OK si se añade con éxito, ERROR si no hay espacio o hay fallo.
  */
 Status game_add_link(Game *game, Link *link);
+/**
+ * @brief Establece la descripción de un objeto para su inspección.
+ * @author Alejandro Dominguez
+ * @param game Puntero al juego.
+ * @param inspection Descripción a establecer.
+ * @return OK si se establece con éxito, ERROR en caso contrario.
+ */
+Status game_set_object_desc(Game *game, char *inspection);
+/**
+ * @brief Obtiene la descripción del objeto para su inspección.
+ * @author Alejandro Dominguez
+ * @param game Puntero al juego.
+ * @return Cadena con la descripción del objeto.
+ */
+char *game_get_object_desc(Game *game);
+
 #endif

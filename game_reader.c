@@ -95,6 +95,7 @@ Status game_reader_load_objects(Game *game, char *filename) {
     Object *object = NULL;
     Status status = OK;
     char *endptr;
+    char description[WORD_SIZE] = "";
 
     if (!filename) return ERROR;
 
@@ -109,11 +110,14 @@ Status game_reader_load_objects(Game *game, char *filename) {
             strcpy(name, toks);
             toks = strtok(NULL, "|");
             location_id = strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            if (toks) strcpy(description, toks);
 
             object = object_create(id);
             if (object != NULL) {
                 object_set_name(object, name);
-                
+                object_set_desc(object, description);
+
                 /* ASIGNACIÓN: Guardamos el puntero del objeto en el array global de objetos del juego */
                 game_add_object(game, object);
                 

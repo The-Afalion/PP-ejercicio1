@@ -26,6 +26,7 @@ Status game_actions_take(Game *game);
 Status game_actions_drop(Game *game);
 Status game_actions_attack(Game*game);
 Status game_actions_chat(Game* game);
+Status game_actions_inspect(Game* game);
 
 /**
  * @brief Actualiza el estado del juego según el comando recibido
@@ -65,6 +66,10 @@ Status game_actions_update(Game *game, Command *command)
     break;
   case MOVE:
     status = game_actions_move(game);
+    break;
+  case INSPECT:
+    status = game_actions_inspect(game);
+    break;
   default:
     break;
   }
@@ -117,7 +122,7 @@ Status game_actions_move(Game *game)
   if (!current_space_id) return ERROR;
 
   /*Verificamos si se puede*/
-  if (dir = desconocido || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
+  if (dir == desconocido || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
 
   destination_id = game_get_connection(game, current_space_id, dir);
 
@@ -163,7 +168,6 @@ Status game_actions_take(Game *game)
   if (!arg || arg[0] == '\0') return ERROR;
 
   /* Si el jugador ya lleva un objeto, no puede coger otro */
-  /*MODIFICAR POR LO DE INVENTORY*/
   if (inventory_is_full(player_get_backpack(game_get_player(game))) == TRUE) {
     return ERROR;
   }
@@ -320,7 +324,8 @@ Status game_actions_attack(Game *game)
  * @brief Permite entablar conversación con un personaje amistoso
  * @author Unai
  */
-Status game_actions_chat(Game* game) {
+Status game_actions_chat(Game* game) 
+{
   Id space_id, char_id;
   Space *space;
   Character *character;
@@ -346,4 +351,81 @@ Status game_actions_chat(Game* game) {
   /* Imprimimos en la interfaz el mensaje del personaje */
   game_set_chat_message(game, character_get_message(character));
   return OK;
+}
+
+Status game_actions_inspect(Game *game) 
+{
+  char *arg;
+  int i, max_backpac_obj, num_obj_in_space;
+  Space *space =NULL;
+  Command *last_cmd = NULL;
+  Object *obj = NULL;
+  Id player_loc = NO_ID, obj_id = NO_ID, *objs = NULL;
+  Player *player = NULL;
+  BOOL found = FALSE;
+
+  if (!game) return ERROR;
+
+  /*Obtenemos el argumento del comando*/
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd) return ERROR;
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
+  player = game_get_player(game);
+  if (!player) return ERROR;
+
+  player_loc = game_get_player_location(game);
+  if (player_loc == NO_ID) return ERROR;
+
+  space = game_get_space(game, player_loc);
+  if (!space) return ERROR;
+
+  /*Comprobar si esta en la mochila*/
+  max_backpac_obj = inventory_get_max_objs(player_get_backpack(player));
+  for (i = 0; i < max_backpac_obj; i++)
+  {
+    obj_id = player_get_object(player, i);
+    if (obj_id != NO_ID)
+    {
+      obj = game_get_object(game, obj_id);
+      if (obj == NULL) return ERROR;
+
+      if (strcasecmp(object_get_name(obj), arg) == 0)
+      {
+        found = TRUE;
+        break;
+      }
+    }
+  }
+
+  /*Bucar en el espacio actual*/
+  if (!found && space)
+  {
+    num_obj_in_space = space_get_number_of_objects(space);
+    if (num_obj_in_space == 0) return ERROR;
+
+    objs = space_get_objects(space);
+    if (objs)
+    {
+      for (i = 0; i< num_obj_in_space; i++)
+      {
+        obj = game_get_object(game, objs[i]);
+        if (obj && strcasecmp(object_get_name(obj), arg) == 0)
+        {
+          found = TRUE;
+          break;
+        }
+      }
+    }
+  }
+
+  /*Si lo encontramos, guardamos su desc para enseñarla*/
+  if (obj && found)
+  {
+    game_set_object_desc(game, object_get_desc(obj));
+    return OK;
+  }
+
+  return ERROR;
 }

@@ -22,6 +22,7 @@ struct Object
 {
   Id id;                              /*!< La ID del objeto */
   char name[WORD_SIZE + SINGLE_ELEM]; /*!< Nombre del objeto */
+  char description[WORD_SIZE + SINGLE_ELEM];  /*!< Descripcion del objeto*/
 };
 
 Object *object_create(Id id)
@@ -46,6 +47,7 @@ Object *object_create(Id id)
   /* Inicializamos los campos del objeto nuevo */
   newObject->id = id;
   newObject->name[FIRST_CHAR] = '\0';
+  newObject->description[FIRST_CHAR] = '\0';
 
   return newObject;
 }
@@ -111,4 +113,19 @@ Status object_print(Object *object)
   fprintf(stdout, "--> Object (Id: %ld; Name: %s)\n", object->id, object->name);
 
   return OK;
+}
+
+Status object_set_desc(Object *object, char *desc)
+{
+  if (!object || !desc) return ERROR;
+
+  if (!strcpy(object->description, desc)) return ERROR;
+
+  return OK;
+}
+
+const char *object_get_desc(Object *object)
+{
+  if (!object) return NULL;
+  return object->description;
 }

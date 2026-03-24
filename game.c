@@ -30,6 +30,7 @@ struct _Game
   Command *last_cmd;                     /* Último comando introducido por el usuario */
   int finished;                          /*El juego ha finalizado */
   char chat_message[WORD_SIZE];          /* Último chat */
+  char object_inspection[WORD_SIZE];      /*Descripcion del objeto*/
 };
 
 /* Prototipos de funciones privadas */
@@ -68,6 +69,7 @@ Status game_create(Game **game)
   (*game)->last_cmd = command_create();
   (*game)->finished = 0;
   (*game)->chat_message[0] = '\0';
+  (*game)->object_inspection[0] = '\0';
 
   return OK;
 }
@@ -462,7 +464,7 @@ char *game_get_chat_message(Game *game)
 
 
 /*---Funciones enlaces---*/
-Id game_get_link(Game *game, Id link_id)
+Id *game_get_link(Game *game, Id link_id)
 {
   int i;
   if (!game || link_id == NO_ID)
@@ -563,4 +565,14 @@ int game_get_number_of_links(Game *game){
     }
   }
   return cont;
+}
+
+Status game_set_object_desc(Game *game, char *inspection) {
+  if (!game || !inspection) return ERROR;
+  strcpy(game->object_inspection, inspection);
+  return OK;
+}
+
+char *game_get_object_desc(Game *game) {
+  return (!game) ? NULL : game->object_inspection;
 }

@@ -58,4 +58,19 @@ const char* object_get_name(Object* object);
  */
 Status object_print(Object* object);
 
+/**
+ * @brief Establece la descripcion de un objeto
+ * @param object Puntero a objeto
+ * @param desc descripcion del objeto
+ * @return Ok o ERROR
+ */
+ Status object_set_desc(Object *object, char *desc);
+
+ /**
+ * @brief Obtiene la descripcion de un objeto
+ * @param object Puntero al objeto
+ * @return Puntero a la cadena de descripcion o NULL si hay error
+ */
+ const char* object_get_desc(Object* object);
+
 #endif

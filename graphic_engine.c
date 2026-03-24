@@ -237,7 +237,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   Character *character = NULL;
   Object *obj = NULL;
   int obj_found = 0;
-  int max_backpack_obj = inventory_get_max_objs(player_get_backpack(player));
+  int max_backpack_obj = 0;
 
   if (!game) return;
 
@@ -305,6 +305,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
   /* INFO JUGADOR: Ubicación, salud y objeto equipado */
   player = game_get_player(game);
+  max_backpack_obj = inventory_get_max_objs(player_get_backpack(player));
   sprintf(str, " Player: %d (%d)", (int)player_get_location(player), player_get_health(player));
   screen_area_puts(ge->descript, str);
 
@@ -329,13 +330,21 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   screen_area_puts(ge->descript, " ");
   screen_area_puts(ge->descript, game_get_chat_message(game));
   game_set_chat_message(game, ""); /* ELIMINACIÓN: Limpiamos el mensaje tras dibujarlo */
+  /*MOSTRAMOS LA DESCRIPCION DEL OBJETO EXAMINADO*/
+  screen_area_puts(ge->descript, " ");
+  if (game_get_object_desc(game) != NULL && strlen(game_get_object_desc(game)) > 0)
+  {
+    sprintf(str, "Item description: %s", game_get_object_desc(game));
+    screen_area_puts(ge->descript, str);
+    game_set_object_desc(game, "");
+  }
 
   /* --- 3. Pintado del BANNER, AYUDA y FEEDBACK --- */
   screen_area_puts(ge->banner, "  The haunted castle game ");
 
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
+  screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m, inspect/i");
 
   last_cmd = command_get_code(game_get_last_command(game));
   sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS], last_cmd_status == OK ? "OK" : "ERROR");
