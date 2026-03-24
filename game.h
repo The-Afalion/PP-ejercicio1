@@ -196,6 +196,15 @@ void game_print(Game *game);
 Player* game_get_player(Game* game);
 
 /**
+ * @brief Establece el puntero al jugador.
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param player Puntero al jugador a establecer.
+ * @return OK si se establece con éxito, ERROR en caso contrario.
+ */
+Status game_set_player(Game *game, Player *player);
+
+/**
  * @brief Obtiene el puntero a un objeto específico.
  * @author Unai
  * @param game Puntero al juego.
@@ -291,6 +300,7 @@ int game_get_number_of_links(Game *game);
  * @return OK si se añade con éxito, ERROR si no hay espacio o hay fallo.
  */
 Status game_add_link(Game *game, Link *link);
+<<<<<<< HEAD
 
 /**
  * @brief Obtiene el turno actual del juego.
@@ -307,4 +317,22 @@ int game_get_turn(Game *game);
  * @return Número del nuevo turno, o -1 si hay error.
  */
 int game_next_turn(Game *game);
+=======
+/**
+ * @brief Establece la descripción de un objeto para su inspección.
+ * @author Alejandro Dominguez
+ * @param game Puntero al juego.
+ * @param inspection Descripción a establecer.
+ * @return OK si se establece con éxito, ERROR en caso contrario.
+ */
+Status game_set_object_desc(Game *game, char *inspection);
+/**
+ * @brief Obtiene la descripción del objeto para su inspección.
+ * @author Alejandro Dominguez
+ * @param game Puntero al juego.
+ * @return Cadena con la descripción del objeto.
+ */
+char *game_get_object_desc(Game *game);
+
+>>>>>>> 7e29664c264a295da05d2120ed34ab2a20d1c3cf
 #endif

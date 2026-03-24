@@ -40,4 +40,22 @@ Status game_reader_load_objects(Game *game, char *filename);
  */
 Status game_reader_load_characters(Game *game, char *filename);
 
+/**
+ * @brief Carga los jugadores desde un archivo de texto.
+ * @author Unai
+ * @param game Puntero al juego principal donde se añadirá el jugador.
+ * @param filename Cadena de caracteres con el nombre del archivo.
+ * @return OK si se lee correctamente, ERROR si hay algún fallo.
+ */
+Status game_reader_load_players(Game *game, char *filename);
+
+/**
+ * @brief Carga los enlaces desde un archivo de texto.
+ * @author Unai
+ * @param game Puntero al juego principal donde se añadirán los enlaces.
+ * @param filename Cadena de caracteres con el nombre del archivo.
+ * @return OK si se lee correctamente, ERROR si hay algún fallo.
+ */
+Status game_reader_load_links(Game *game, char *filename);
+
 #endif

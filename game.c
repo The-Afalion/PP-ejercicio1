@@ -21,6 +21,7 @@
  */
 struct _Game
 {
+<<<<<<< HEAD
   Player *players[MAX_PLAYERS];               /*!< Array de punteros a jugadores */
   int turn;                                   /*!< Número de turno actual */
   Object *objects[MAX_OBJECTS];               /*!< Array de punteros a objetos */
@@ -43,6 +44,19 @@ struct _InterfaceData
   char chat_message[WORD_SIZE]; /*!< Último chat */
   Status last_status;           /*!< Último estado */
 
+=======
+  Player *player;                        /* Puntero al jugador */
+  Object *objects[MAX_OBJECTS];          /* Array de punteros a objetos */
+  Character *characters[MAX_CHARACTERS]; /*Array de punteros a personajes */
+  Space *spaces[MAX_SPACES];             /*Array de punteros a espacios */
+  int n_spaces;                          /* Número actual de espacios cargados */
+  Link *link[MAX_LINKS];                  /* Array de punteros a enlaces */
+  int n_links;                           /*!< Número actual de enlaces cargados */
+  Command *last_cmd;                     /* Último comando introducido por el usuario */
+  int finished;                          /*El juego ha finalizado */
+  char chat_message[WORD_SIZE];          /* Último chat */
+  char object_inspection[WORD_SIZE];      /*Descripcion del objeto*/
+>>>>>>> 7e29664c264a295da05d2120ed34ab2a20d1c3cf
 };
 
 /* Prototipos de funciones privadas */
@@ -89,7 +103,12 @@ Status game_create(Game **game)
   (*game)->n_spaces = 0;
   (*game)->n_links = 0;
   (*game)->finished = 0;
+<<<<<<< HEAD
   (*game)->turn = 0;
+=======
+  (*game)->chat_message[0] = '\0';
+  (*game)->object_inspection[0] = '\0';
+>>>>>>> 7e29664c264a295da05d2120ed34ab2a20d1c3cf
 
   return OK;
 }
@@ -110,11 +129,13 @@ Status game_create_from_file(Game **game, char *filename)
     return ERROR;
   if (game_reader_load_objects(*game, filename) == ERROR)
     return ERROR;
+  if (game_reader_load_players(*game, filename) == ERROR)
+    return ERROR;
   if (game_reader_load_characters(*game, filename) == ERROR)
     return ERROR;
+  if (game_reader_load_links(*game, filename) == ERROR)
+    return ERROR;
 
-  /* Posicionamiento inicial del jugador */
-  game_set_player_location(*game, game_get_space_id_at(*game, FIRST_POSITION));
 
   return OK;
 }
@@ -401,6 +422,16 @@ Player *game_get_player(Game *game)
   return (!game) ? NULL : game->players[game->turn];
 }
 
+Status game_set_player(Game *game, Player *player)
+{
+  if (!game || !player)
+    return ERROR;
+  if (game->player)
+    player_destroy(game->player);
+  game->player = player;
+  return OK;
+}
+
 Object *game_get_object(Game *game, Id id)
 {
   int i;
@@ -504,6 +535,7 @@ char *game_get_chat_message(Game *game)
   return (!game) ? NULL : game->interface_data[game->turn]->chat_message;
 }
 
+<<<<<<< HEAD
 BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
 {
   Space *s = NULL;
@@ -533,9 +565,11 @@ BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
 
   return link_get_open(l);
 }
+=======
+>>>>>>> 7e29664c264a295da05d2120ed34ab2a20d1c3cf
 
 /*---Funciones enlaces---*/
-Id game_get_link(Game *game, Id link_id)
+Id *game_get_link(Game *game, Id link_id)
 {
   int i;
   if (!game || link_id == NO_ID)
@@ -650,6 +684,7 @@ int game_get_number_of_links(Game *game)
   return cont;
 }
 
+<<<<<<< HEAD
 int game_get_turn(Game *game)
 {
   if(!game)
@@ -672,3 +707,14 @@ int game_next_turn(Game *game)
   
   return game->turn;
 }
+=======
+Status game_set_object_desc(Game *game, char *inspection) {
+  if (!game || !inspection) return ERROR;
+  strcpy(game->object_inspection, inspection);
+  return OK;
+}
+
+char *game_get_object_desc(Game *game) {
+  return (!game) ? NULL : game->object_inspection;
+}
+>>>>>>> 7e29664c264a295da05d2120ed34ab2a20d1c3cf

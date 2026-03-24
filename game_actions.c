@@ -10,6 +10,7 @@
 
 #include "game_actions.h"
 #include "inventory.h"
+#include "player.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,14 +22,12 @@
 */
 Status game_actions_unknown(Game *game);
 Status game_actions_exit(Game *game);
-Status game_actions_next(Game *game);
-Status game_actions_back(Game *game);
+Status game_actions_move(Game *game);
 Status game_actions_take(Game *game);
 Status game_actions_drop(Game *game);
 Status game_actions_attack(Game*game);
 Status game_actions_chat(Game* game);
-Status game_actions_left(Game *game);
-Status game_actions_right(Game *game);
+Status game_actions_inspect(Game* game);
 
 /**
  * @brief Actualiza el estado del juego según el comando recibido
@@ -54,12 +53,6 @@ Status game_actions_update(Game *game, Command *command)
   case EXIT:
     status = game_actions_exit(game);
     break;
-  case NEXT:
-    status = game_actions_next(game);
-    break;
-  case BACK:
-    status = game_actions_back(game);
-    break;
   case TAKE:
     status = game_actions_take(game);
     break;
@@ -72,11 +65,11 @@ Status game_actions_update(Game *game, Command *command)
   case CHAT:
     status = game_actions_chat(game);
     break;
-  case LEFT:
-    status = game_actions_left(game);
+  case MOVE:
+    status = game_actions_move(game);
     break;
-  case RIGHT:
-    status = game_actions_right(game);
+  case INSPECT:
+    status = game_actions_inspect(game);
     break;
   default:
     break;
@@ -102,46 +95,50 @@ Status game_actions_exit(Game *game) {
 }
 
 /**
- * @brief Mueve al jugador hacia el sur (siguiente espacio)
- * @author Unai
+ * @brief Permite al jugador moverse a cualquier espacio
+ * @author Alejandro Dominguez
  */
-Status game_actions_next(Game *game)
+Status game_actions_move(Game *game)
 {
-  Id current_id = NO_ID;
-  Id space_id = NO_ID;
+  Id current_space_id = NO_ID, destination_id = NO_ID;  
+  char *arg = NULL;
+  Direction dir = UNKNOWN;
+  Command *last_cmd = NULL;
+  Space* dest_space = NULL;
 
-  space_id = game_get_player_location(game);
-  if (space_id == NO_ID) return ERROR;
+  if (!game) return ERROR;
 
-  current_id = space_get_south(game_get_space(game, space_id));
-  if (current_id != NO_ID)
+  /*Obtener la direccion*/
+  last_cmd = game_get_last_command(game);
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
+  /*Traducimos el arg para que lo entinda la dirccion*/
+  if (strcasecmp(arg, "north") == 0 || strcasecmp(arg, "n") == 0 ) dir = N;
+  else if (strcasecmp(arg, "south") == 0 || strcasecmp(arg, "s") == 0 ) dir = S;
+  else if (strcasecmp(arg, "west") == 0 || strcasecmp(arg, "w") == 0 ) dir = W;
+  else if (strcasecmp(arg, "east") == 0 || strcasecmp(arg, "e") == 0 ) dir = E;
+
+  /*Obtenemos la unicacion actual del jugador*/
+  current_space_id = game_get_player_location(game);
+  if (!current_space_id) return ERROR;
+
+  /*Verificamos si se puede*/
+  if (dir == desconocido || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
+
+  destination_id = game_get_connection(game, current_space_id, dir);
+
+  /*Movemos al jugador*/
+  if(destination_id != NO_ID)
   {
-    /* Mueve al jugador a la nueva sala */
-    game_set_player_location(game, current_id);
+    game_set_player_location(game, destination_id);
+    dest_space = game_get_space(game, destination_id);
+    if (dest_space != NULL) {
+      space_set_discovered(dest_space, TRUE);
+    }
     return OK;
   }
-  return ERROR;
-}
 
-/**
- * @brief Mueve al jugador hacia el norte (espacio anterior)
- * @author Unai
- */
-Status game_actions_back(Game *game)
-{
-  Id current_id = NO_ID;
-  Id space_id = NO_ID;
-
-  space_id = game_get_player_location(game);
-  if (NO_ID == space_id) return ERROR;
-
-  current_id = space_get_north(game_get_space(game, space_id));
-  if (current_id != NO_ID)
-  {
-    /* Mueve al jugador a la nueva sala */
-    game_set_player_location(game, current_id);
-    return OK;
-  }
   return ERROR;
 }
 
@@ -177,7 +174,6 @@ Status game_actions_take(Game *game)
   if (!arg || arg[0] == '\0') return ERROR;
 
   /* Si el jugador ya lleva un objeto, no puede coger otro */
-  /*MODIFICAR POR LO DE INVENTORY*/
   if (inventory_is_full(player_get_backpack(game_get_player(game))) == TRUE) {
     return ERROR;
   }
@@ -240,10 +236,10 @@ Status game_actions_drop(Game *game)
 
   /*Obtenemos el argumento del comando*/
   last_cmd = game_get_last_command(game);
-  if (!last_cmd) return NULL;
+  if (!last_cmd) return ERROR;
 
   arg = command_get_arg(last_cmd);
-  if (!arg || arg[0] == '\0') return NULL;
+  if (!arg || arg[0] == '\0') return ERROR;
 
   /*Bucameos el objeto por el nombre dentro de la mochila*/
   max_objects = inventory_get_max_objs(player_get_backpack(game_get_player(game)));
@@ -318,7 +314,7 @@ Status game_actions_attack(Game *game)
     /* Gana el adversario: el jugador pierde 1 punto de vida */
     player_health = player_get_health(player);
     player_health--;
-    player_set_heatlh(player, player_health); 
+    player_set_health(player, player_health); 
 
     /* Si el jugador se queda sin vida, termina el juego */
     if (player_health <= 0) game_set_finished(game, 1);
@@ -334,7 +330,8 @@ Status game_actions_attack(Game *game)
  * @brief Permite entablar conversación con un personaje amistoso
  * @author Unai
  */
-Status game_actions_chat(Game* game) {
+Status game_actions_chat(Game* game) 
+{
   Id space_id, char_id;
   Space *space;
   Character *character;
@@ -362,44 +359,79 @@ Status game_actions_chat(Game* game) {
   return OK;
 }
 
-/**
- * @brief Mueve al jugador hacia el oeste (izquierda)
- * @author Rodrigo
- */
-Status game_actions_left(Game *game)
+Status game_actions_inspect(Game *game) 
 {
-    Id current_id = NO_ID, space_id = NO_ID;
-    
-    space_id = game_get_player_location(game);
-    if (NO_ID == space_id) return ERROR;
+  char *arg;
+  int i, max_backpac_obj, num_obj_in_space;
+  Space *space =NULL;
+  Command *last_cmd = NULL;
+  Object *obj = NULL;
+  Id player_loc = NO_ID, obj_id = NO_ID, *objs = NULL;
+  Player *player = NULL;
+  BOOL found = FALSE;
 
-    current_id = space_get_west(game_get_space(game, space_id));
-    if (current_id != NO_ID)
+  if (!game) return ERROR;
+
+  /*Obtenemos el argumento del comando*/
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd) return ERROR;
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
+  player = game_get_player(game);
+  if (!player) return ERROR;
+
+  player_loc = game_get_player_location(game);
+  if (player_loc == NO_ID) return ERROR;
+
+  space = game_get_space(game, player_loc);
+  if (!space) return ERROR;
+
+  /*Comprobar si esta en la mochila*/
+  max_backpac_obj = inventory_get_max_objs(player_get_backpack(player));
+  for (i = 0; i < max_backpac_obj; i++)
+  {
+    obj_id = player_get_object(player, i);
+    if (obj_id != NO_ID)
     {
-        /* Mueve al jugador a la nueva sala */
-        game_set_player_location(game, current_id);
-        return OK;
+      obj = game_get_object(game, obj_id);
+      if (obj == NULL) return ERROR;
+
+      if (strcasecmp(object_get_name(obj), arg) == 0)
+      {
+        found = TRUE;
+        break;
+      }
     }
-    return ERROR;
-}
+  }
 
-/**
- * @brief Mueve al jugador hacia el este (derecha)
- * @author Rodrigo
- */
-Status game_actions_right(Game *game)
-{
-    Id current_id = NO_ID, space_id = NO_ID;
-    
-    space_id = game_get_player_location(game);
-    if (NO_ID == space_id) return ERROR;
+  /*Bucar en el espacio actual*/
+  if (!found && space)
+  {
+    num_obj_in_space = space_get_number_of_objects(space);
+    if (num_obj_in_space == 0) return ERROR;
 
-    current_id = space_get_east(game_get_space(game, space_id));
-    if (current_id != NO_ID)
+    objs = space_get_objects(space);
+    if (objs)
     {
-        /* Mueve al jugador a la nueva sala */
-        game_set_player_location(game, current_id);
-        return OK;
+      for (i = 0; i< num_obj_in_space; i++)
+      {
+        obj = game_get_object(game, objs[i]);
+        if (obj && strcasecmp(object_get_name(obj), arg) == 0)
+        {
+          found = TRUE;
+          break;
+        }
+      }
     }
-    return ERROR;
+  }
+
+  /*Si lo encontramos, guardamos su desc para enseñarla*/
+  if (obj && found)
+  {
+    game_set_object_desc(game, object_get_desc(obj));
+    return OK;
+  }
+
+  return ERROR;
 }
