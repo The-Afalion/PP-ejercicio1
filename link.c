@@ -8,7 +8,7 @@ struct _Link {
     char nom[WORD_SIZE];
     Id origin;
     Id destination;
-    Direction direction;
+    Direccion direction;
     BOOL open;
 };
 
@@ -67,7 +67,7 @@ Status link_set_destination(Link* link, Id destination) {
     return OK;
 }
 
-Status link_set_direction(Link* link, Direction direction) {
+Status link_set_direction(Link* link, Direccion direction) {
     if (!link) {
         return ERROR;
     }
@@ -111,7 +111,7 @@ Id link_get_destination(Link* link) {
     return link->destination;
 }
 
-Direction link_get_direction(Link* link) {
+Direccion link_get_direction(Link* link) {
     if (!link) {
         return desconocido; 
     }

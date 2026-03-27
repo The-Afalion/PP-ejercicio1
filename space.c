@@ -195,14 +195,10 @@ Status space_set_gdesc(Space* space, char gdesc[GDESC_ROWS][GDESC_COLS]) {
     return ERROR;
   }
 
-  for (i = 0; i < GDESC_ROWS; i++) {
-    if (strlen(gdesc[i]) == GDESC_COLS - 1) {
-     if( !strcpy(space->gdesc[i],gdesc[i])){
-      return ERROR;
-     }
-    } else {
-      strcpy(space->gdesc[i], "         ");
-    }
+  for (i = 0; i < GDESC_ROWS; i++)
+  {
+    strncpy(space->gdesc[i], gdesc[i], GDESC_COLS - 1);
+    space->gdesc[i][GDESC_COLS - 1] = '\0'; /*asegura fin de la cadena*/
   }
 
   return OK;
