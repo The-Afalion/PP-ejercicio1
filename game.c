@@ -661,7 +661,7 @@ int game_next_turn(Game *game)
   
   return game->turn;
 }
-Status game_set_object_desc(Game *game, char *inspection) {
+Status game_set_object_desc(Game *game,const char *inspection) {
   if (!game || !inspection) return ERROR;
   strcpy(game->object_inspection, inspection);
   return OK;

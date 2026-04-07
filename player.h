@@ -87,7 +87,7 @@ Id player_get_location(Player* player);
  * @param object el id del objeto que se añade al inventario del jugador
  * @return OK si todo ha ido bien, o ERROR si ha habido algún problema
  */
-Status player_set_object(Player* player, Id object);
+Status player_add_object(Player* player, Id object);
 
 /**
  * @brief Obtiene el id de un objeto del inventario del jugador
@@ -131,7 +131,7 @@ Status player_print(Player* player);
  * @param h valor entero que representa la salud
  * @return OK si tiene éxito, ERROR en caso contrario
  */
-Status player_set_heatlh(Player *player, int h);
+Status player_set_health(Player *player, int h);
 
 /**
  * @brief Obtiene los puntos de salud actuales del jugador

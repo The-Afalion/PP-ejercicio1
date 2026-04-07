@@ -2,7 +2,7 @@
 #Author:Unai
 CC=gcc
 CFLAGS= -g -Wall -pedantic -ansi -I.
-OBJS = command.o game_actions.o game_loop.o game_reader.o game.o graphic_engine.o object.o player.o space.o
+OBJS = command.o game_actions.o game_loop.o game_reader.o game.o graphic_engine.o object.o player.o space.o inventory.o character.o set.o link.o
 
 
 # Crea el ejecutable.
@@ -43,6 +43,14 @@ character.o: character.c character.h types.h
 
 set.o: set.c set.h types.h
 	$(CC) $(CFLAGS) -c set.c
+
+inventory.o: inventory.c inventory.h types.h set.h
+	$(CC) $(CFLAGS) -c inventory.c
+
+link.o: link.c link.h types.h
+	$(CC) $(CFLAGS) -c link.c
+
+	
 
 run: 
 	./castle castle.dat

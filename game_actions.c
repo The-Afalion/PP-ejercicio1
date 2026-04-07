@@ -157,7 +157,6 @@ Status game_actions_take(Game *game)
   Command *last_cmd = NULL;
   char *arg = NULL;
   Object *obj = NULL;
-  Inventory *inv = NULL;
 
   if (!game) return ERROR;
 

@@ -323,7 +323,7 @@ int game_next_turn(Game *game);
  * @param inspection Descripción a establecer.
  * @return OK si se establece con éxito, ERROR en caso contrario.
  */
-Status game_set_object_desc(Game *game, char *inspection);
+Status game_set_object_desc(Game *game,const char *inspection);
 /**
  * @brief Obtiene la descripción del objeto para su inspección.
  * @author Alejandro Dominguez

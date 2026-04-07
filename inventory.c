@@ -35,7 +35,7 @@ Inventory *inventory_create(int max_objs) {
     return NULL;
   }
 
-  inventory->objs = set_create();
+  inventory->objs = set_create(1);
   if (inventory->objs == NULL) {
     free(inventory);
     return NULL;
@@ -122,7 +122,7 @@ BOOL inventory_is_full(Inventory *inventory) {
     return TRUE;
   }
 
-  if (set_get_n_ids(inventory->objs) >= inventory->max_objs) {
+  if (set_get_numberid(inventory->objs) >= inventory->max_objs) {
     return TRUE;
   }
 
