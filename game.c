@@ -560,12 +560,12 @@ BOOL game_connection_is_open(Game *game, Id space_id, Directions dir)
 
   if (!game || space_id == NO_ID|| dir == U)
   {
-    return NO_ID;
+    return FALSE;
   }
 
   for (i = 0; i < game->n_links; i++)
   {
-    if (link_get_origin(game->link[i]) == space_id && link_get_direction(game->link[i]) == dir)
+    if ((link_get_origin(game->link[i]) == space_id) && (link_get_direction(game->link[i]) == dir))
     {
       l = game->link[i];
       break;
@@ -590,6 +590,7 @@ Status game_add_link(Game *game, Link *link)
     if (game->link[i] == NULL)
     {
       game->link[i] = link;
+      game->n_links++;
       return OK;
     }
   }
@@ -619,19 +620,12 @@ Link *game_get_link(Game *game, Id link_id)
 
 int game_get_number_of_links(Game *game)
 {
-  int i, cont;
   if (!game)
   {
     return -1;
   }
-  for (i = 0, cont = 0; i < MAX_LINKS; i++)
-  {
-    if (game->link[i] != NULL)
-    {
-      cont++;
-    }
-  }
-  return cont;
+
+  return game->n_links;
 }
 
 int game_get_turn(Game *game)

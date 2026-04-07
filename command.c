@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "string_utils.h"
 
 #define CMD_LENGHT 30
 #define SINGLE_ELEM 1
@@ -105,7 +104,7 @@ char* command_get_last_input(Command* command)
   return command->last_input;
 }
 
-Status get_user_input(Command *command)
+Status command_get_user_input(Command *command)
 {
   char input[CMD_LENGHT] = "", *token = NULL, *arg = NULL;
   int i = UNKNOWN - NO_CMD + 1;
@@ -136,7 +135,7 @@ Status get_user_input(Command *command)
 
     while (cmd == UNKNOWN && i < N_CMD)
     {
-      if (!strcasecmp_custom(token, cmd_to_str[i][CMDS]) || !strcasecmp_custom(token, cmd_to_str[i][CMDL]))
+      if (!strcmp(token, cmd_to_str[i][CMDS]) || !strcmp(token, cmd_to_str[i][CMDL]))
       {
         cmd = i + NO_CMD;
       }
