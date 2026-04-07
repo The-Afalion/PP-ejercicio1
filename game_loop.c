@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     if (log_file)
     {
       char* last_input = command_get_last_input(command);
-      // Remove newline character from last_input
+      /* Remove newline character from last_input *\
       last_input[strcspn(last_input, "\n")] = 0;
       fprintf(log_file, "%s: %s\n", last_input, game_get_last_command_status(game) == OK ? "OK" : "ERROR");
     }
