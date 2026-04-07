@@ -35,7 +35,11 @@ Inventory *inventory_create(int max_objs) {
     return NULL;
   }
 
+<<<<<<< HEAD
   inventory->objs = set_create(1);
+=======
+  inventory->objs = set_create(NO_ID);
+>>>>>>> 27fe3ab62e547d3bd143fd7a0080e5c56c75256e
   if (inventory->objs == NULL) {
     free(inventory);
     return NULL;

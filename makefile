@@ -58,13 +58,19 @@ run:
 # Reglas para tests
 #
 test:
-	$(CC) -o space_test space_test.c space.c set.c $(CFLAGS)
+	$(CC) -o space_test space_test.c space.c set.c link.c $(CFLAGS)
 	./space_test
 	$(CC) -o set_test set_test.c set.c $(CFLAGS)
 	./set_test
 	$(CC) -o character_test character_test.c character.c $(CFLAGS)
 	./character_test
+	$(CC) -o link_test link_test.c link.c $(CFLAGS)
+	./link_test
+	$(CC) -o inventory_test inventory_test.c inventory.c set.c $(CFLAGS)
+	./inventory_test
+	$(CC) -o player_test player_test.c player.c set.c inventory.c $(CFLAGS)
+	./player_test
 
 #Elimina los compilados
 clean:
-	rm -rf *.o castle space_test set_test character_test
+	rm -rf *.o castle space_test set_test character_test link_test inventory_test

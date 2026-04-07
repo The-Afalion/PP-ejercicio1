@@ -165,7 +165,7 @@ Id player_get_object(Player *player, int index)
     return NO_ID;
   }
   /* Devuelve el objeto en la posición dada */
-  return set_get_id_at(inventory_get_objs(player->backpack), index);
+  return set_get_id(inventory_get_objs(player->backpack), index);
 }
 
 BOOL player_has_object(Player *player, Id object)
@@ -176,7 +176,10 @@ BOOL player_has_object(Player *player, Id object)
     return FALSE;
   }
 
-  return inventory_has_object(player->backpack, object);
+  if (set_find(inventory_get_objs(player->backpack), object) == OK) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 Status player_del_object(Player *player, Id object)
@@ -210,7 +213,7 @@ Status player_print(Player *player)
 
   return OK;
 }
-Status player_set_heatlh(Player *player, int h)
+Status player_set_health(Player *player, int h)
 { /*Cambia salud del jugador,si la salud es <= 0 devielve error*/
   if (!player || h <= 0)
   {

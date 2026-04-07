@@ -1,0 +1,120 @@
+gcc -o space_test space_test.c space.c set.c link.c -g -Wall -pedantic -ansi -I.
+./space_test
+Running all test for module Space:
+[33mspace_test.c[0m line 92 [36mtest1_space_create[0m: [32mPASS[0m
+[33mspace_test.c[0m line 99 [36mtest2_space_create[0m: [32mPASS[0m
+[33mspace_test.c[0m line 274 [36mtest1_space_destroy[0m: [32mPASS[0m
+[33mspace_test.c[0m line 280 [36mtest2_space_destroy[0m: [32mPASS[0m
+[33mspace_test.c[0m line 106 [36mtest1_space_set_name[0m: [32mPASS[0m
+[33mspace_test.c[0m line 112 [36mtest2_space_set_name[0m: [32mPASS[0m
+[33mspace_test.c[0m line 118 [36mtest3_space_set_name[0m: [32mPASS[0m
+[33mspace_test.c[0m line 138 [36mtest1_space_get_id[0m: [32mPASS[0m
+[33mspace_test.c[0m line 144 [36mtest2_space_get_id[0m: [32mPASS[0m
+[33mspace_test.c[0m line 126 [36mtest1_space_get_name[0m: [32mPASS[0m
+[33mspace_test.c[0m line 132 [36mtest2_space_get_name[0m: [32mPASS[0m
+[33mspace_test.c[0m line 150 [36mtest1_space_add_object[0m: [32mPASS[0m
+[33mspace_test.c[0m line 156 [36mtest2_space_add_object[0m: [32mPASS[0m
+[33mspace_test.c[0m line 163 [36mtest1_space_get_objects[0m: [32mPASS[0m
+[33mspace_test.c[0m line 170 [36mtest2_space_get_objects[0m: [32mPASS[0m
+[33mspace_test.c[0m line 178 [36mtest1_space_get_number_of_objects[0m: [32mPASS[0m
+[33mspace_test.c[0m line 185 [36mtest2_space_get_number_of_objects[0m: [32mPASS[0m
+[33mspace_test.c[0m line 193 [36mtest1_space_remove_object[0m: [32mPASS[0m
+[33mspace_test.c[0m line 200 [36mtest2_space_remove_object[0m: [32mPASS[0m
+[33mspace_test.c[0m line 208 [36mtest1_space_contains_object[0m: [32mPASS[0m
+[33mspace_test.c[0m line 215 [36mtest2_space_contains_object[0m: [32mPASS[0m
+[33mspace_test.c[0m line 222 [36mtest1_space_set_character[0m: [32mPASS[0m
+[33mspace_test.c[0m line 228 [36mtest2_space_set_character[0m: [32mPASS[0m
+[33mspace_test.c[0m line 235 [36mtest1_space_get_character[0m: [32mPASS[0m
+[33mspace_test.c[0m line 242 [36mtest2_space_get_character[0m: [32mPASS[0m
+[33mspace_test.c[0m line 250 [36mtest1_space_set_discovered[0m: [32mPASS[0m
+[33mspace_test.c[0m line 256 [36mtest2_space_set_discovered[0m: [32mPASS[0m
+[33mspace_test.c[0m line 262 [36mtest1_space_get_discovered[0m: [32mPASS[0m
+[33mspace_test.c[0m line 268 [36mtest2_space_get_discovered[0m: [32mPASS[0m
+[33mspace_test.c[0m line 288 [36mtest1_space_set_gdesc[0m: [32mPASS[0m
+[33mspace_test.c[0m line 301 [36mtest2_space_set_gdesc[0m: [32mPASS[0m
+[33mspace_test.c[0m line 316 [36mtest1_space_get_gdesc[0m: [31mNOT PASS[0m
+[33mspace_test.c[0m line 322 [36mtest2_space_get_gdesc[0m: [32mPASS[0m
+Tests passed 96%
+gcc -o set_test set_test.c set.c -g -Wall -pedantic -ansi -I.
+./set_test
+Running all test for module Set:
+[33mset_test.c[0m line 72 [36mtest1_set_create[0m: [32mPASS[0m
+[33mset_test.c[0m line 79 [36mtest2_set_create[0m: [32mPASS[0m
+[33mset_test.c[0m line 86 [36mtest1_set_add[0m: [32mPASS[0m
+[33mset_test.c[0m line 92 [36mtest2_set_add[0m: [32mPASS[0m
+[33mset_test.c[0m line 99 [36mtest1_set_del[0m: [32mPASS[0m
+[33mset_test.c[0m line 106 [36mtest2_set_del[0m: [32mPASS[0m
+[33mset_test.c[0m line 114 [36mtest1_set_find[0m: [32mPASS[0m
+[33mset_test.c[0m line 121 [36mtest2_set_find[0m: [32mPASS[0m
+[33mset_test.c[0m line 129 [36mtest1_set_get_id[0m: [32mPASS[0m
+[33mset_test.c[0m line 136 [36mtest2_set_get_id[0m: [32mPASS[0m
+[33mset_test.c[0m line 144 [36mtest1_set_get_numberid[0m: [32mPASS[0m
+[33mset_test.c[0m line 151 [36mtest2_set_get_numberid[0m: [32mPASS[0m
+[33mset_test.c[0m line 159 [36mtest1_set_get_ids[0m: [32mPASS[0m
+[33mset_test.c[0m line 166 [36mtest2_set_get_ids[0m: [32mPASS[0m
+[33mset_test.c[0m line 173 [36mtest1_set_destroy[0m: [32mPASS[0m
+[33mset_test.c[0m line 178 [36mtest2_set_destroy[0m: [32mPASS[0m
+Tests passed 100%
+gcc -o character_test character_test.c character.c -g -Wall -pedantic -ansi -I.
+./character_test
+Running all test for module Character:
+[33mcharacter_test.c[0m line 83 [36mtest1_character_create[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 90 [36mtest2_character_create[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 97 [36mtest1_character_destroy[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 102 [36mtest2_character_destroy[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 109 [36mtest1_character_get_id[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 115 [36mtest2_character_get_id[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 122 [36mtest1_character_get_name[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 128 [36mtest2_character_get_name[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 134 [36mtest1_character_set_name[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 140 [36mtest2_character_set_name[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 147 [36mtest1_character_get_gdesc[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 153 [36mtest2_character_get_gdesc[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 159 [36mtest1_character_set_gdesc[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 165 [36mtest2_character_set_gdesc[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 172 [36mtest1_character_get_health[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 178 [36mtest2_character_get_health[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 184 [36mtest1_character_set_health[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 190 [36mtest2_character_set_health[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 197 [36mtest1_character_get_friendly[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 203 [36mtest2_character_get_friendly[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 209 [36mtest1_character_set_friendly[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 215 [36mtest2_character_set_friendly[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 222 [36mtest1_character_get_message[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 228 [36mtest2_character_get_message[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 233 [36mtest1_character_set_message[0m: [32mPASS[0m
+[33mcharacter_test.c[0m line 238 [36mtest2_character_set_message[0m: [32mPASS[0m
+Tests passed 100%
+gcc -o link_test link_test.c link.c -g -Wall -pedantic -ansi -I.
+./link_test
+[33mlink_test.c[0m line 52 [36mtest1_link_create[0m: [32mPASS[0m
+[33mlink_test.c[0m line 57 [36mtest2_link_create[0m: [32mPASS[0m
+[33mlink_test.c[0m line 62 [36mtest1_link_set_name[0m: [32mPASS[0m
+[33mlink_test.c[0m line 68 [36mtest2_link_set_name[0m: [32mPASS[0m
+[33mlink_test.c[0m line 74 [36mtest1_link_set_origin[0m: [32mPASS[0m
+[33mlink_test.c[0m line 80 [36mtest2_link_set_origin[0m: [32mPASS[0m
+[33mlink_test.c[0m line 85 [36mtest1_link_set_destination[0m: [32mPASS[0m
+[33mlink_test.c[0m line 91 [36mtest2_link_set_destination[0m: [32mPASS[0m
+[33mlink_test.c[0m line 96 [36mtest1_link_set_direction[0m: [32mPASS[0m
+[33mlink_test.c[0m line 102 [36mtest2_link_set_direction[0m: [32mPASS[0m
+[33mlink_test.c[0m line 107 [36mtest1_link_set_open[0m: [32mPASS[0m
+[33mlink_test.c[0m line 113 [36mtest2_link_set_open[0m: [32mPASS[0m
+[33mlink_test.c[0m line 118 [36mtest1_link_set_id[0m: [32mPASS[0m
+[33mlink_test.c[0m line 124 [36mtest2_link_set_id[0m: [32mPASS[0m
+[33mlink_test.c[0m line 130 [36mtest1_link_destroy[0m: [32mPASS[0m
+[33mlink_test.c[0m line 135 [36mtest2_link_destroy[0m: [32mPASS[0m
+[33mlink_test.c[0m line 140 [36mtest1_link_get_id[0m: [32mPASS[0m
+[33mlink_test.c[0m line 145 [36mtest2_link_get_id[0m: [32mPASS[0m
+[33mlink_test.c[0m line 151 [36mtest1_link_get_name[0m: [32mPASS[0m
+[33mlink_test.c[0m line 156 [36mtest2_link_get_name[0m: [32mPASS[0m
+[33mlink_test.c[0m line 162 [36mtest1_link_get_origin[0m: [32mPASS[0m
+[33mlink_test.c[0m line 167 [36mtest2_link_get_origin[0m: [32mPASS[0m
+[33mlink_test.c[0m line 173 [36mtest1_link_get_destination[0m: [32mPASS[0m
+[33mlink_test.c[0m line 178 [36mtest2_link_get_destination[0m: [32mPASS[0m
+[33mlink_test.c[0m line 184 [36mtest1_link_get_direction[0m: [32mPASS[0m
+[33mlink_test.c[0m line 189 [36mtest2_link_get_direction[0m: [32mPASS[0m
+[33mlink_test.c[0m line 195 [36mtest1_link_get_open[0m: [32mPASS[0m
+[33mlink_test.c[0m line 200 [36mtest2_link_get_open[0m: [32mPASS[0m
+Tests passed 100%
+gcc -o inventory_test inventory_test.c inventory.c set.c -g -Wall -pedantic -ansi -I.
+./inventory_test
