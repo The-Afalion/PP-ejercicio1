@@ -27,6 +27,7 @@ struct _Command
 {
   CommandCode code; 
   char arg[CMD_LENGHT];
+  char last_input[CMD_LENGHT]; /* New field to store the last input */
 };
 
 Command *command_create()
@@ -45,6 +46,7 @@ Command *command_create()
 
   newCommand->code = NO_CMD;
   newCommand->arg[0] = '\0';
+  newCommand->last_input[0] = '\0';
 
   return newCommand;
 }
@@ -94,6 +96,15 @@ char* command_get_arg(Command *command)
   return command->arg;
 }
 
+char* command_get_last_input(Command* command)
+{
+  if (!command)
+  {
+    return NULL;
+  }
+  return command->last_input;
+}
+
 Status command_get_user_input(Command *command)
 {
   char input[CMD_LENGHT] = "", *token = NULL, *arg = NULL;
@@ -109,6 +120,8 @@ Status command_get_user_input(Command *command)
   /* Leemos la entrada del usuario desde el teclado */
   if (fgets(input, CMD_LENGHT, stdin))
   {
+    strncpy(command->last_input, input, CMD_LENGHT - 1); /* Store the full input */
+    command->last_input[CMD_LENGHT - 1] = '\0';
 
     /* Separamos la primera palabra introducida */
     token = strtok(input, " \n");
@@ -149,7 +162,8 @@ Status command_get_user_input(Command *command)
   }
   else
   {
-
+    strncpy(command->last_input, "exit", CMD_LENGHT - 1); /* Store "exit" if EOF */
+    command->last_input[CMD_LENGHT - 1] = '\0';
     return command_set_code(command, EXIT);
   }
 }

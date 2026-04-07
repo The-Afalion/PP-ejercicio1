@@ -72,6 +72,14 @@ CommandCode command_get_code(Command* command);
 char* command_get_arg(Command* command);
 
 /**
+ * @brief Obtiene el comando introducido por el usuario desde teclado.
+ * @author Unai
+ * @param command Puntero al comando.
+ * @return El comando introducido o NULL si hay error.
+ */
+char* command_get_last_input(Command* command);
+
+/**
  * @brief Lee el comando introducido por el usuario desde teclado.
  * @author Unai
  * @param command Puntero al comando donde se guardará la entrada.
