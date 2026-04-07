@@ -1,5 +1,5 @@
 /**
- * @brief Implementa el intérprete de comandos
+ * @brief Implementa el interprete de comandos
  *
  * @file command.c
  * @author Unai
@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
+#include "string_utils.h"
 
 #define CMD_LENGHT 30
 #define SINGLE_ELEM 1
@@ -21,7 +21,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "E
 
 /**
  * @brief Command
- * Almacena toda la información relacionada con un comando.
+ * Almacena toda la informacion relacionada con un comando.
  */
 struct _Command
 {
@@ -105,7 +105,7 @@ char* command_get_last_input(Command* command)
   return command->last_input;
 }
 
-Status command_get_user_input(Command *command)
+Status get_user_input(Command *command)
 {
   char input[CMD_LENGHT] = "", *token = NULL, *arg = NULL;
   int i = UNKNOWN - NO_CMD + 1;
@@ -136,7 +136,7 @@ Status command_get_user_input(Command *command)
 
     while (cmd == UNKNOWN && i < N_CMD)
     {
-      if (!strcasecmp(token, cmd_to_str[i][CMDS]) || !strcasecmp(token, cmd_to_str[i][CMDL]))
+      if (!strcasecmp_custom(token, cmd_to_str[i][CMDS]) || !strcasecmp_custom(token, cmd_to_str[i][CMDL]))
       {
         cmd = i + NO_CMD;
       }
