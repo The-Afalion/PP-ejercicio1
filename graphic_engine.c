@@ -86,8 +86,8 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     if (!area || !middle) return;
 
     /* Obtenemos los espacios adyacentes horizontalmente */
-    west = game_get_space(game, space_get_west(middle));
-    east = game_get_space(game, space_get_east(middle));    
+    west = game_get_space(game, game_get_connection(game, space_get_id(middle), W));
+    east = game_get_space(game, game_get_connection(game, space_get_id(middle), E)); 
 
     /* 1. Dibujado de las líneas superiores de los cuadros */
     sprintf(str, "%s  +---------------+  %s",
@@ -227,7 +227,7 @@ void graphic_engine_destroy(Graphic_engine *ge)
  * @author Unai
  */
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status) {
-  Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, obj_loc = NO_ID, object_in_backpack = NULL;
+  Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, obj_loc = NO_ID, object_in_backpack = NO_ID;
   Space *act = NULL;
   char str[255];
   CommandCode last_cmd = UNKNOWN;
@@ -245,12 +245,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   screen_area_clear(ge->map);
   if ((id_act = game_get_player_location(game)) != NO_ID) {
     act = game_get_space(game, id_act);
-    id_back = space_get_north(act);
-    id_next = space_get_south(act);
+    id_back = game_get_connection(game, space_get_id(act), N);
+    id_next = game_get_connection(game, space_get_id(act), S);
 
     /* Lógica para dibujar hasta 3 filas (Norte, Actual, Sur) */
-    if (id_next == NO_ID) {
-        id_top = space_get_north(game_get_space(game, id_back));
+    if (game_get_connection(game, space_get_id(act), N) != NO_ID) {
+        id_top = game_get_connection(game, id_back, N);
         if (id_top != NO_ID) {
             graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_top), FALSE);
             screen_area_puts(ge->map, " ");
@@ -313,7 +313,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   for (i = 0; i < max_backpack_obj; i++)
   {
     object_in_backpack = player_get_object(player, i);
-    if (object_in_backpack!=NULL)
+    if (object_in_backpack != NO_ID)
     {
         obj = game_get_object(game, object_in_backpack);
         sprintf(str, "  - %s", obj ? object_get_name(obj) : "Unknown");
@@ -340,7 +340,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
   }
 
   /* --- 3. Pintado del BANNER, AYUDA y FEEDBACK --- */
-  screen_area_puts(ge->banner, ("  Turn Player :%d " , game_get_turn(game) + 1));
+sprintf(str, "  Turn Player :%d ", game_get_turn(game) + 1);
+screen_area_puts(ge->banner, str);
 
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");

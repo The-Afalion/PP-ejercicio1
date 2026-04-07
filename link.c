@@ -8,7 +8,7 @@ struct _Link {
     char nom[WORD_SIZE];
     Id origin;
     Id destination;
-    Direccion direction;
+    Directions direction;
     BOOL open;
 };
 
@@ -27,7 +27,7 @@ Link* link_create(Id id) {
     new_link->nom[0] = '\0';
     new_link->origin = NO_ID;
     new_link->destination = NO_ID;
-    new_link->direction = desconocido; 
+    new_link->direction = U; 
     new_link->open = FALSE;          
 
     return new_link;
@@ -67,7 +67,7 @@ Status link_set_destination(Link* link, Id destination) {
     return OK;
 }
 
-Status link_set_direction(Link* link, Direccion direction) {
+Status link_set_direction(Link* link, Directions direction) {
     if (!link) {
         return ERROR;
     }
@@ -111,9 +111,9 @@ Id link_get_destination(Link* link) {
     return link->destination;
 }
 
-Direccion link_get_direction(Link* link) {
+Directions link_get_direction(Link* link) {
     if (!link) {
-        return desconocido; 
+        return U; 
     }
     return link->direction;
 }

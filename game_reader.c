@@ -226,7 +226,7 @@ Status game_reader_load_players(Game *game, char *filename) {
                 player_set_name(player, name);
                 player_set_gdesc(player, gdesc);
                 player_set_location(player, location_id);
-                player_set_heatlh(player, health);
+                player_set_health(player, health);
                 inventory_set_max_objs(player_get_backpack(player), max_objs);
                 
                 game_set_player(game, player);
@@ -285,7 +285,7 @@ Status game_reader_load_links(Game *game, char *filename) {
                 link_set_name(link, name);
                 link_set_origin(link, origin);
                 link_set_destination(link, destination);
-                link_set_direction(link, (Direction)dir_int);
+                link_set_direction(link, (Directions)dir_int);
                 link_set_open(link, open_int ? TRUE : FALSE);
 
                 game_add_link(game, link);

@@ -102,7 +102,7 @@ Status game_actions_move(Game *game)
 {
   Id current_space_id = NO_ID, destination_id = NO_ID;  
   char *arg = NULL;
-  Direction dir = UNKNOWN;
+  Directions dir = UNKNOWN;
   Command *last_cmd = NULL;
   Space* dest_space = NULL;
 
@@ -124,7 +124,7 @@ Status game_actions_move(Game *game)
   if (!current_space_id) return ERROR;
 
   /*Verificamos si se puede*/
-  if (dir == desconocido || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
+  if (dir == U || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
 
   destination_id = game_get_connection(game, current_space_id, dir);
 

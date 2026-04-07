@@ -265,7 +265,7 @@ char *game_get_chat_message(Game *game);
  * @param dir Dirección de la conexión.
  * @return ID del espacio conectado, o NO_ID si no hay conexión.
  */
-Id game_get_connection(Game *game, Id space_id, Direction dir);
+Id game_get_connection(Game *game, Id space_id, Directions dir);
 
 /**
  * @brief Comprueba si la conexión en una dirección desde un espacio dado está abierta.
@@ -275,7 +275,7 @@ Id game_get_connection(Game *game, Id space_id, Direction dir);
  * @param dir Dirección de la conexión.
  * @return TRUE si la conexión está abierta, FALSE si está cerrada o hay error.
  */
-BOOL game_connection_is_open(Game *game, Id space_id, Direction dir);
+BOOL game_connection_is_open(Game *game, Id space_id, Directions dir);
 
 /**
  * @brief Añade un nuevo enlace a la lista general del juego.

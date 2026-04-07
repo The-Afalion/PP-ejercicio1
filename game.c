@@ -205,7 +205,6 @@ Space *game_get_space(Game *game, Id id)
   return NULL;
 }
 
-/* --- Gestión de Localización de Jugador --- */
 
 Id game_get_player_location(Game *game)
 {
@@ -334,8 +333,6 @@ Status game_set_character_location(Game *game, Id space_id, Id character_id)
   return OK;
 }
 
-/* --- Getters/Setters de estado del juego --- */
-
 Command *game_get_last_command(Game *game)
 {
   return (!game) ? NULL : game->interface_data[game->turn]->last_cmd;
@@ -366,7 +363,10 @@ Status game_get_last_command_status(Game *game){
 
 int game_get_finished(Game *game)
 {
-  return (!game) ? 0 : game->finished;
+ if(!game){
+  return 0;
+ }
+ return game->finished;
 }
 
 Status game_set_finished(Game *game, int finished)
@@ -464,7 +464,6 @@ Character *game_get_character(Game *game, Id id)
   return NULL;
 }
 
-/* --- Funciones de inserción --- */
 
 Status game_add_object(Game *game, Object *obj)
 {
@@ -520,7 +519,6 @@ Id game_get_space_id_at(Game *game, int position)
   return space_get_id(game->spaces[position]);
 }
 
-/* --- Gestión del Chat --- */
 
 Status game_set_chat_message(Game *game, char *message)
 {
@@ -536,12 +534,11 @@ char *game_get_chat_message(Game *game)
 }
 
 
-/*---Funciones enlaces---*/
 
-Id game_get_connection(Game *game, Id space_id, Direction dir)
+Id game_get_connection(Game *game, Id space_id, Directions dir)
 {
   int i;
-  if (!game || space_id == NO_ID || dir == desconocido)
+  if (!game || space_id == NO_ID || dir == U)
   {
     return NO_ID;
   }
@@ -556,12 +553,12 @@ Id game_get_connection(Game *game, Id space_id, Direction dir)
   return NO_ID;
 }
 
-BOOL game_connection_is_open(Game *game, Id space_id, Direction dir)
+BOOL game_connection_is_open(Game *game, Id space_id, Directions dir)
 {
   Link *l = NULL;
   int i;
 
-  if (!game || space_id == NO_ID|| dir == desconocido)
+  if (!game || space_id == NO_ID|| dir == U)
   {
     return NO_ID;
   }
@@ -587,17 +584,16 @@ Status game_add_link(Game *game, Link *link)
     return ERROR;
   }
 
-  /* Recorremos el array buscando el primer hueco disponible (NULL) */
+
   for (i = 0; i < MAX_LINKS; i++)
   {
     if (game->link[i] == NULL)
     {
       game->link[i] = link;
-      return OK; /* Enlace añadido correctamente */
+      return OK;
     }
   }
 
-  /* Si llegamos aquí, es que el array está lleno y no hay espacio */
   return ERROR;
 }
 
@@ -610,7 +606,6 @@ Link *game_get_link(Game *game, Id link_id)
     return NULL;
   }
 
-  /* Buscamos el enlace por su ID dentro de los que no sean nulos */
   for (i = 0; i < MAX_LINKS; i++)
   {
     if (game->link[i] != NULL && link_get_id(game->link[i]) == link_id)
@@ -619,7 +614,7 @@ Link *game_get_link(Game *game, Id link_id)
     }
   }
 
-  return NULL; /* No se encontró el enlace */
+  return NULL;
 }
 
 int game_get_number_of_links(Game *game)
@@ -668,5 +663,8 @@ Status game_set_object_desc(Game *game,const char *inspection) {
 }
 
 char *game_get_object_desc(Game *game) {
-  return (!game) ? NULL : game->object_inspection;
+  if(!game){
+    return NULL;
+  } 
+  return game->object_inspection;
 }
