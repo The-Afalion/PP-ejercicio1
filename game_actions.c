@@ -1,5 +1,5 @@
 /**
- * @brief Implementa la actualización del juego a través de las acciones del usuario
+ * @brief Implementa la actualizacion del juego a traves de las acciones del usuario
  *
  * @file game_actions.c
  * @author Unai&Rodrigo
@@ -14,8 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <time.h>
+#include "string_utils.h"
 
 /**
    Funciones privadas
@@ -30,11 +30,11 @@ Status game_actions_chat(Game* game);
 Status game_actions_inspect(Game* game);
 
 /**
- * @brief Actualiza el estado del juego según el comando recibido
+ * @brief Actualiza el estado del juego segun el comando recibido
  * @author Unai
  * @param game Puntero al juego
  * @param command Puntero al comando a ejecutar
- * @return OK si la acción se realiza con éxito, ERROR en caso contrario
+ * @return OK si la accion se realiza con exito, ERROR en caso contrario
  */
 Status game_actions_update(Game *game, Command *command)
 {
@@ -44,7 +44,7 @@ Status game_actions_update(Game *game, Command *command)
   game_set_last_command(game, command);
   cmd = command_get_code(command);
 
-  /* Distribuidor de acciones: Llama a la función correspondiente según el comando */
+  /* Distribuidor de acciones: Llama a la funcion correspondiente segun el comando */
   switch (cmd)
   {
   case UNKNOWN:
@@ -114,17 +114,17 @@ Status game_actions_move(Game *game)
   if (!arg || arg[0] == '\0') return ERROR;
 
   /*Traducimos el arg para que lo entinda la dirccion*/
-  if (strcasecmp(arg, "north") == 0 || strcasecmp(arg, "n") == 0 ) dir = N;
-  else if (strcasecmp(arg, "south") == 0 || strcasecmp(arg, "s") == 0 ) dir = S;
-  else if (strcasecmp(arg, "west") == 0 || strcasecmp(arg, "w") == 0 ) dir = W;
-  else if (strcasecmp(arg, "east") == 0 || strcasecmp(arg, "e") == 0 ) dir = E;
+  if (strcasecmp_custom(arg, "north") == 0 || strcasecmp_custom(arg, "n") == 0 ) dir = N;
+  else if (strcasecmp_custom(arg, "south") == 0 || strcasecmp_custom(arg, "s") == 0 ) dir = S;
+  else if (strcasecmp_custom(arg, "west") == 0 || strcasecmp_custom(arg, "w") == 0 ) dir = W;
+  else if (strcasecmp_custom(arg, "east") == 0 || strcasecmp_custom(arg, "e") == 0 ) dir = E;
 
   /*Obtenemos la unicacion actual del jugador*/
   current_space_id = game_get_player_location(game);
   if (!current_space_id) return ERROR;
 
   /*Verificamos si se puede*/
-  if (dir == U || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
+  if (dir == UNKNOWN || game_connection_is_open(game, current_space_id, dir) == FALSE) return ERROR;
 
   destination_id = game_get_connection(game, current_space_id, dir);
 
@@ -188,9 +188,9 @@ Status game_actions_take(Game *game)
       for (i = 0; i < num_objs; i++) {
         obj = game_get_object(game, objs[i]);
 
-        /* Protección: Verificamos que el objeto exista y tenga nombre válido */
+        /* Proteccion: Verificamos que el objeto exista y tenga nombre valido */
         if (obj != NULL && object_get_name(obj) != NULL) {
-          if (strcasecmp(object_get_name(obj), arg) == 0) {
+          if (strcasecmp_custom(object_get_name(obj), arg) == 0) {
             obj_id = objs[i];
             break;
           }
@@ -201,10 +201,10 @@ Status game_actions_take(Game *game)
 
       /* Si hemos encontrado el objeto, hacemos el intercambio */
       if (obj_id != NO_ID) {
-        /* ASIGNACIÓN: Se lo damos al jugador */
+        /* ASIGNACION: Se lo damos al jugador */
         player_add_object(game_get_player(game), obj_id);
         
-        /* EXTRACCIÓN: Lo quitamos del mapa (asignándolo a NO_ID) */
+        /* EXTRACCION: Lo quitamos del mapa (asignandolo a NO_ID) */
         game_set_object_location(game, NO_ID, obj_id);
         return OK;
       }
@@ -215,7 +215,7 @@ Status game_actions_take(Game *game)
 }
 
 /**
- * @brief Permite al jugador soltar automáticamente el objeto que lleva encima
+ * @brief Permite al jugador soltar automaticamente el objeto que lleva encima
  * @author Unai
  */
 Status game_actions_drop(Game *game)
@@ -229,7 +229,7 @@ Status game_actions_drop(Game *game)
 
   if (!game) return ERROR;
 
-  /* Ubicación actual para saber dónde caerá el objeto */
+  /* Ubicacion actual para saber donde caera el objeto */
   player_loc = game_get_player_location(game);
   if (player_loc == NO_ID) return ERROR;
 
@@ -252,7 +252,7 @@ Status game_actions_drop(Game *game)
       /*si coincide el nombre del objeto con el argumento introducido*/
       if (obj != NULL && object_get_name(obj) != NULL)
       {
-        if (strcasecmp(object_get_name(obj), arg) == 0)
+        if (strcasecmp_custom(object_get_name(obj), arg) == 0)
         {
           /*Lo borramos del inventario*/
           player_del_object(game_get_player(game), obj_id);
@@ -303,7 +303,7 @@ Status game_actions_attack(Game *game)
   if (character_get_friendly(character)) return ERROR;
 
   char_health = character_get_health(character);
-  /* Si la salud es 0 o menos, ya está muerto, no se le ataca */
+  /* Si la salud es 0 o menos, ya esta muerto, no se le ataca */
   if (char_health <= 0) return ERROR;
 
   /* Tirada de dados: de 0 a 9 */
@@ -326,7 +326,7 @@ Status game_actions_attack(Game *game)
 }
 
 /**
- * @brief Permite entablar conversación con un personaje amistoso
+ * @brief Permite entablar conversacion con un personaje amistoso
  * @author Unai
  */
 Status game_actions_chat(Game* game) 
@@ -349,7 +349,7 @@ Status game_actions_chat(Game* game)
   character = game_get_character(game, char_id);
   if (!character) return ERROR;
 
-  /* Verificamos que el NPC sea amistoso y esté vivo */
+  /* Verificamos que el NPC sea amistoso y este vivo */
   if (character_get_friendly(character) == 0) return ERROR;
   if (character_get_health(character) <= 0) return ERROR;
 
@@ -396,7 +396,7 @@ Status game_actions_inspect(Game *game)
       obj = game_get_object(game, obj_id);
       if (obj == NULL) return ERROR;
 
-      if (strcasecmp(object_get_name(obj), arg) == 0)
+      if (strcasecmp_custom(object_get_name(obj), arg) == 0)
       {
         found = TRUE;
         break;
@@ -416,7 +416,7 @@ Status game_actions_inspect(Game *game)
       for (i = 0; i< num_obj_in_space; i++)
       {
         obj = game_get_object(game, objs[i]);
-        if (obj && strcasecmp(object_get_name(obj), arg) == 0)
+        if (obj && strcasecmp_custom(object_get_name(obj), arg) == 0)
         {
           found = TRUE;
           break;
@@ -425,7 +425,7 @@ Status game_actions_inspect(Game *game)
     }
   }
 
-  /*Si lo encontramos, guardamos su desc para enseñarla*/
+  /*Si lo encontramos, guardamos su desc para ensenarla*/
   if (obj && found)
   {
     game_set_object_desc(game, object_get_desc(obj));
