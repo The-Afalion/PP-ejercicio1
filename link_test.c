@@ -93,13 +93,13 @@ void test2_link_set_destination() {
 
 void test1_link_set_direction() {
     Link *l = link_create(1);
-    PRINT_TEST_RESULT(link_set_direction(l, norte) == OK);
+    PRINT_TEST_RESULT(link_set_direction(l, N) == OK); /* Cambiado 'norte' por 'N' */
     link_destroy(l);
 }
 
 void test2_link_set_direction() {
     Link *l = NULL;
-    PRINT_TEST_RESULT(link_set_direction(l, sur) == ERROR);
+    PRINT_TEST_RESULT(link_set_direction(l, S) == ERROR); /* Cambiado 'sur' por 'S' */
 }
 
 void test1_link_set_open() {
@@ -180,13 +180,13 @@ void test2_link_get_destination() {
 
 void test1_link_get_direction() {
     Link *l = link_create(1);
-    link_set_direction(l, este);
-    PRINT_TEST_RESULT(link_get_direction(l) == este);
+    link_set_direction(l, E); /* Cambiado 'este' por 'E' */
+    PRINT_TEST_RESULT(link_get_direction(l) == E); /* Cambiado 'este' por 'E' */
     link_destroy(l);
 }
 
 void test2_link_get_direction() {
-    PRINT_TEST_RESULT(link_get_direction(NULL) == desconocido);
+    PRINT_TEST_RESULT(link_get_direction(NULL) == U); /* Cambiado 'desconocido' por 'U' */
 }
 
 void test1_link_get_open() {

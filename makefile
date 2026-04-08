@@ -73,4 +73,4 @@ test:
 
 #Elimina los compilados
 clean:
-	rm -rf *.o castle space_test set_test character_test link_test inventory_test
+	rm -rf *.o castle space_test set_test character_test link_test inventory_test player_test
