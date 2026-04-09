@@ -39,6 +39,6 @@ void graphic_engine_destroy(Graphic_engine* ge);
  * @param game Puntero a la instancia del juego
  * @param last_cmd_status Estado de ejecución del último comando (OK/ERROR)
  */
-void graphic_engine_paint_game(Graphic_engine* ge, Game* game, Status last_cmd_status);
+void graphic_engine_paint_game(Graphic_engine* ge, Game* game, Status last_cmd_status, BOOL paint_cmd);
 
 #endif

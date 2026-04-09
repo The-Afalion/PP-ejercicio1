@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
   command = game_get_last_command(game);
   while ((command_get_code(command) != EXIT) && !game_get_finished(game)) {
-    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game));
+    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), FALSE);
     command_get_user_input(command);
     game_set_last_command_status(game, game_actions_update(game, command));
 
@@ -66,13 +66,13 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game));
+    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
     sleep(3);
     game_next_turn(game);
   }
 
   /* Paint the last state */
-  graphic_engine_paint_game(gengine, game, game_get_last_command_status(game));
+  graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
 
   game_destroy(game);
   graphic_engine_destroy(gengine);

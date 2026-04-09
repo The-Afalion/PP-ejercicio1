@@ -315,9 +315,9 @@ int game_get_turn(Game *game);
  * @brief Avanza al siguiente turno del juego.
  * @author Unai
  * @param game Puntero al juego.
- * @return Número del nuevo turno, o -1 si hay error.
  */
-int game_next_turn(Game *game);
+void game_next_turn(Game *game);
+
 /**
  * @brief Establece la descripción de un objeto para su inspección.
  * @author Alejandro Dominguez

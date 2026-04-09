@@ -32,7 +32,9 @@ struct _Game
   int n_links;                                /*!< Número actual de enlaces cargados */
   int finished;                               /*!< El juego ha finalizado */
   char object_inspection[WORD_SIZE];      /*Descripcion del objeto*/
-  InterfaceData *interface_data[MAX_PLAYERS]; /*!< Datos de la interfaz para cada jugador */
+  char messages[MAX_PLAYERS][WORD_SIZE];
+  Command *last_command;
+  Status last_status;
   int n_characters;
   int n_objects;
 };
@@ -40,15 +42,6 @@ struct _Game
  * @brief Estructura de datos para la interfaz de cada jugador
  * Almacena el último comando y su estado, mensaje de chat.
  */
-struct _InterfaceData
-{
-
-  Command *last_cmd;            /*!< Último comando introducido por el usuario*/
-  char chat_message[WORD_SIZE]; /*!< Último chat */
-  Status last_status;           /*!< Último estado */
-
-
-};
 
 /* Prototipos de funciones privadas */
 Status game_add_space(Game *game, Space *space);
@@ -78,9 +71,9 @@ Status game_create(Game **game)
   for (i = 0; i < MAX_LINKS; i++)
     (*game)->link[i] = NULL;
   for (i = 0; i < MAX_PLAYERS; i++){
-    (*game)->players[i] = NULL;
-    (*game)->interface_data[i]= NULL;
-    }
+  (*game)->players[i] = NULL;
+  (*game)->messages[i][0] = '\0'; 
+  }
 
   /* Inicialización de estado y componentes básicos */
   (*game)->n_spaces = 0;
@@ -91,6 +84,8 @@ Status game_create(Game **game)
   (*game)->n_players=0;
   (*game)->n_objects=0;
   (*game)->n_characters=0;
+  (*game)->last_command=command_create();
+  (*game)->last_status=OK;
 
   return OK;
 }
@@ -143,16 +138,6 @@ Status game_destroy(Game *game)
 
   }
 
-   for (i = 0; i < game->n_players; i++)
-   {
-     if (game->interface_data[i])
-     {
-       if (game->interface_data[i]->last_cmd)
-         command_destroy(game->interface_data[i]->last_cmd);
-       free(game->interface_data[i]);
-     }
-   }
-
    /* Destrucción de objetos, personajes y enlaces */
    for (i = 0; i < game->n_links; i++)
    {
@@ -170,6 +155,10 @@ Status game_destroy(Game *game)
   {
     if (game->characters[i])
       character_destroy(game->characters[i]);
+  }
+
+  if (game->last_command) {
+    command_destroy(game->last_command);
   }
 
   free(game);
@@ -324,32 +313,31 @@ Status game_set_character_location(Game *game, Id space_id, Id character_id)
 
 Command *game_get_last_command(Game *game)
 {
-  return (!game) ? NULL : game->interface_data[game->turn]->last_cmd;
+  return (!game) ? NULL : game->last_command;
 }
 
 Status game_set_last_command(Game *game, Command *command)
 {
   if (!game || !command) game_set_last_command_status(game, ERROR);
 
-  game->interface_data[game->turn]->last_cmd = command;
-  game_set_last_command_status(game, OK);
+  game->last_command= command;
 
-  return game->interface_data[game->turn]->last_status;
+  return game->last_status;
 
 }
 
 Status game_set_last_command_status(Game *game, Status status){
   if (!game)
     return ERROR;
-  game->interface_data[game->turn]->last_status = status;
-  return status;
+  game->last_status = status;
+  return OK;
 }
 
 
 Status game_get_last_command_status(Game *game){
   if (!game)
     return ERROR;
-  return game->interface_data[game->turn]->last_status;
+  return game->last_status;
 }
 
 int game_get_finished(Game *game)
@@ -421,13 +409,6 @@ Status game_set_player(Game *game, Player *player)
   }
   
   game->players[game->n_players]=player;
-  game->interface_data[game->n_players] = (InterfaceData *)calloc(1,sizeof(InterfaceData));
-    if (!game->interface_data[game->n_players])
-      return ERROR;
-    
-game->interface_data[game->n_players]->last_cmd = command_create();
-    game->interface_data[game->n_players]->chat_message[0] = '\0';
-    game->interface_data[game->n_players]->last_status = ERROR;
   game->n_players++;
   return OK;
 }
@@ -465,25 +446,18 @@ Character *game_get_character(Game *game, Id id)
 }
 
 
-Status game_add_object(Game *game, Object *obj)
-{
-  if (!game || !obj || game->n_objects >= MAX_OBJECTS)
-    return ERROR;
-
+Status game_add_object(Game *game, Object *obj) {
+  if (!game || !obj || game->n_objects >= MAX_OBJECTS) return ERROR;
   game->objects[game->n_objects] = obj;
   game->n_objects++;
-
-  return ERROR;
+  return OK; /* Cambiado de ERROR a OK */
 }
 
-Status game_add_character(Game *game, Character *character)
-{
-  if (!game || !character)
-    return ERROR;
-
+Status game_add_character(Game *game, Character *character) {
+  if (!game || !character || game->n_characters >= MAX_CHARACTERS) return ERROR;
   game->characters[game->n_characters] = character;
   game->n_characters++;
-  return ERROR;
+  return OK; /* Cambiado de ERROR a OK */
 }
 
 Status game_add_space(Game *game, Space *space)
@@ -511,13 +485,13 @@ Status game_set_chat_message(Game *game, char *message)
 {
   if (!game || !message)
     return ERROR;
-  strcpy(game->interface_data[game->turn]->chat_message, message);
+  strcpy(game->messages[game->turn], message);
   return OK;
 }
 
 char *game_get_chat_message(Game *game)
 {
-  return (!game) ? NULL : game->interface_data[game->turn]->chat_message;
+  return (!game) ? NULL : game->messages[game->turn];
 }
 
 
@@ -624,17 +598,12 @@ int game_get_turn(Game *game)
   return game->turn;
 }
 
-int game_next_turn(Game *game)
-{
-  if(!game)
-  {
-    return -1;
-  }
-  
-  game->turn = (game->turn+1) % game->n_players;
-  
-  return game->turn;
+void game_next_turn(Game *game) {
+  if(!game || game->n_players <= 0) return;
+
+  game->turn = (game->turn + 1) % game->n_players;
 }
+
 Status game_set_object_desc(Game *game,const char *inspection) {
   if (!game || !inspection) return ERROR;
   strcpy(game->object_inspection, inspection);

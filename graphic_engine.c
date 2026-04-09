@@ -226,7 +226,7 @@ void graphic_engine_destroy(Graphic_engine *ge)
  * @brief Función principal que coordina el pintado de toda la interfaz del juego
  * @author Unai
  */
-void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status) {
+void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status, BOOL paint_cmd) {
   Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, obj_loc = NO_ID, object_in_backpack = NO_ID;
   Space *act = NULL;
   char str[255];
@@ -347,11 +347,13 @@ screen_area_puts(ge->banner, str);
   screen_area_puts(ge->help, " The commands you can use are:");
   screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m, inspect/i");
 
-  last_cmd = command_get_code(game_get_last_command(game));
-  sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS], last_cmd_status == OK ? "OK" : "ERROR");
-  screen_area_puts(ge->feedback, str);
+  if (paint_cmd ==  TRUE) {
+    last_cmd = command_get_code(game_get_last_command(game));
+    sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS], last_cmd_status == OK ? "OK" : "ERROR");
+    screen_area_puts(ge->feedback, str);
+  }
 
   /* Pintamos pantalla */
-  screen_paint(RED);
+  screen_paint(game_get_turn(game));
   printf("prompt:> ");
 }

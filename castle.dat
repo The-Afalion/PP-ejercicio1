@@ -2,10 +2,10 @@
 #p:2|Prince|^P>|11|6|3|
 #c:31|Malo|enemig|121|2|0|Grrr!|
 #c:32|Bueno|amigos|12|20|1|Hola|
-#o:21|Sword|11|A sharp and heavy iron sword.
-#o:22|Candelabra|12|An old dusty candelabra.
-#o:23|Armor|121|A rusty set of knight armor.
-#o:24|Tapestry|13|A beautiful wall tapestry.
+#o:21|Sword|11|A sharp and heavy iron sword.|
+#o:22|Candelabra|12|An old dusty candelabra.|
+#o:23|Armor|121|A rusty set of knight armor.|
+#o:24|Tapestry|13|A beautiful wall tapestry.|
 #s:11|Entrada| _   !#  |[_]--'---|!'!""`""!|! ! /^\ !|!_!_!I!_!|
 #s:12|Pasillo|!-------!|! . . !  |! . . !  |! . . !  |!-------!|
 #s:121|Mazmorra|. -=== -.|! . . !  |! .'. !  |()_____()|II_____II|
