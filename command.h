@@ -37,7 +37,7 @@ typedef struct _Command Command;
  * @return Puntero al comando creado o NULL en caso de error.
  */
 Command* command_create();
-
+Status command_copy(Command *dest, Command *src);
 /**
  * @brief Libera la memoria de un comando.
  * @author Unai

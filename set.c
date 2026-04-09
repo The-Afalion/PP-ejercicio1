@@ -27,10 +27,9 @@ struct Set {
 /**
  * @brief Crea un nuevo conjunto vacío
  * @author Unai
- * @param id Se ignora en esta implementación, pero se mantiene por compatibilidad
  * @return Puntero al nuevo conjunto o NULL si hay error
  */
-Set *set_create(Id id) {
+Set *set_create() {
     Set *s = NULL;
     int i;
 

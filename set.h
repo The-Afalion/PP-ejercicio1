@@ -20,10 +20,9 @@ typedef struct Set Set;
 
 /**
  * @brief Crea un nuevo conjunto e inicializa sus parámetros.
- * @param id Identificador único para el nuevo conjunto.
  * @return Puntero al nuevo conjunto o NULL en caso de error.
  */
-Set* set_create(Id id);
+Set* set_create();
 
 /**
  * @brief Libera la memoria reservada para un conjunto.

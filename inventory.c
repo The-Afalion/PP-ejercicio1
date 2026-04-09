@@ -34,7 +34,7 @@ Inventory *inventory_create(int max_objs) {
   if (inventory == NULL) {
     return NULL;
   }
-  inventory->objs = set_create(1);
+  inventory->objs = set_create();
   if (inventory->objs == NULL) {
     free(inventory);
     return NULL;

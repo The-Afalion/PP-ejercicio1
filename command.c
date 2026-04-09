@@ -156,7 +156,6 @@ Status command_get_user_input(Command *command)
       command->arg[0] = '\0';
     }
 
-
     return command_set_code(command, cmd);
   }
   else
@@ -165,4 +164,27 @@ Status command_get_user_input(Command *command)
     command->last_input[CMD_LENGHT - 1] = '\0';
     return command_set_code(command, EXIT);
   }
+}
+/**
+ * @brief Copia los datos de un comando a otro
+ * @author Gemini
+ */
+Status command_copy(Command *dest, Command *src) {
+  /* Comprobamos que ambos punteros sean validos */
+  if (!dest || !src) {
+    return ERROR;
+  }
+
+  /* Copiamos el codigo del comando */
+  dest->code = src->code;
+
+  /* Copiamos el argumento asegurando el terminador nulo */
+  strncpy(dest->arg, src->arg, CMD_LENGHT - 1);
+  dest->arg[CMD_LENGHT - 1] = '\0';
+
+  /* Copiamos el ultimo input */
+  strncpy(dest->last_input, src->last_input, CMD_LENGHT - 1);
+  dest->last_input[CMD_LENGHT - 1] = '\0';
+
+  return OK;
 }

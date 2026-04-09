@@ -55,6 +55,8 @@ Status game_create_from_file(Game **game, char *filename);
  * @return OK si se destruye con éxito, ERROR en caso contrario.
  */
 Status game_destroy(Game *game);
+Status game_get_last_command_status(Game *game);
+Status game_set_last_command_status(Game *game, Status status);
 
 /**
  * @brief Añade un nuevo espacio al array del juego.

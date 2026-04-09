@@ -78,7 +78,7 @@ Status player_destroy(Player *player)
   }
   if (player->backpack)
   {
-    free(player->backpack);
+    inventory_destroy(player->backpack);
   }
   free(player);
   return OK;

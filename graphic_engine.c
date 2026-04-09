@@ -108,7 +108,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     character = game_get_character(game, space_get_character(middle));
     character_gdesc = !character ? "      " : character_get_gdesc(character);
     /* INDICADOR: Si es el espacio actual, pintamos ^C> para señalar al jugador */
-    sprintf(middle_str, "  | %s %s %3d|  ",is_act == TRUE ? "^C>" : "   " , character_gdesc, (int) space_get_id(middle));
+    sprintf(middle_str, "  | %s %s %3d|  ",is_act == TRUE ? player_get_gdesc(game_get_player(game)) : "   " , character_gdesc, (int) space_get_id(middle));
 
     if (!east) {
         sprintf(east_str, "                 ");

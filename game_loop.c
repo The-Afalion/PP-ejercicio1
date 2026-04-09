@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "graphic_engine.h"
 #include "game.h"
 #include "command.h"
@@ -64,6 +65,10 @@ int main(int argc, char *argv[]) {
         fprintf(log_file, "%s: %s\\n", last_input, game_get_last_command_status(game) == OK ? "OK" : "ERROR");
       }
     }
+
+    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game));
+    sleep(3);
+    game_next_turn(game);
   }
 
   /* Paint the last state */

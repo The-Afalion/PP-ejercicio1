@@ -52,7 +52,7 @@ Space *space_create(Id id)
 
   newSpace->id = id;
   newSpace->name[FIRST_CHAR] = '\0';
-  newSpace->objects = set_create(NO_ID);
+  newSpace->objects = set_create();
   newSpace->character = NO_ID;
   newSpace->discovered = FALSE;
 
