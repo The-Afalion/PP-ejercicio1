@@ -14,20 +14,20 @@
 #s:14|Cocina|+-------+|! K K K !|!       !|! K K K !|+-------+|
 #s:15|Patio|+-------+|! P P P !|!       !|! P P P !|+-------+|
 #s:16|Jardin|+-------+|! J J J !|!       !|! J J J !|+-------+|
-#l:101|L_Entrada_Pasillo|11|12|2|1|
-#l:102|L_Pasillo_Entrada|12|11|0|1|
-#l:103|L_Pasillo_Comedor|12|13|2|1|
-#l:104|L_Comedor_Pasillo|13|12|0|1|
-#l:105|L_Pasillo_Mazmorra|12|121|3|0|
-#l:106|L_Mazmorra_Pasillo|121|12|1|1|
-#l:107|L_Comedor_Habitacion|13|131|1|1|
-#l:108|L_Habitacion_Comedor|131|13|3|1|
-#l:109|L_Habitacion_Bano|131|132|1|1|
-#l:110|L_Bano_Habitacion|132|131|3|1|
-#l:111|L_Comedor_Cocina|13|14|2|1|
-#l:112|L_Cocina_Comedor|14|13|0|1|
-#l:113|L_Cocina_Patio|14|15|2|1|
-#l:114|L_Patio_Cocina|15|14|0|1|
-#l:115|L_Patio_Jardin|15|16|2|1|
-#l:116|L_Jardin_Patio|16|15|0|1|
-#l:117|L_Atajo_Jardin|121|16|4|1|
+#l:01|Entry|11|12|1|1|
+#l:02|CorridorUp|12|11|0|1|
+#l:03|CorridorDown|12|13|1|1|
+#l:04|CorridorLeft|12|121|3|1|
+#l:05|DungeonRight|121|12|2|0|
+#l:06|DungeonGarden|121|16|1|1|
+#l:07|LunchRoomUp|13|12|0|1|
+#l:08|LunchRoomDown|13|14|1|1|
+#l:09|LunchRoomEast|13|131|2|1|
+#l:10|RoomLeft|131|13|3|1|
+#l:11|RoomRight|131|132|2|1|
+#l:12|Bathroom|132|131|3|1|
+#l:13|KitchenUp|14|13|0|1|
+#l:14|KitchenDown|14|15|1|1|
+#l:15|CourtyardUp|15|14|0|1|
+#l:16|CourtyardDown|15|16|1|1|
+#l:17|Garden|16|15|0|1|
