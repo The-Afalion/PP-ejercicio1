@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     }
 
     graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
-    sleep(3);
+    sleep(1);
     game_next_turn(game);
   }
 
