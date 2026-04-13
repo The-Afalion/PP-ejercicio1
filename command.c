@@ -1,13 +1,3 @@
-/**
- * @brief Implementa el interprete de comandos
- *
- * @file command.c
- * @author Unai
- * @version 1.0
- * @date 15-02-2026
- * @copyright GNU Public License
- */
-
 #include "command.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,33 +6,28 @@
 #define CMD_LENGHT 30
 #define SINGLE_ELEM 1
 
-char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "exit"}, {"t", "Take"}, {"d", "drop"}, {"a", "attack"}, {"c", "chat"}, {"m", "move"}, {"i", "inspect"} };
+char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "exit"}, {"t", "Take"}, {"d", "drop"}, {"a", "attack"}, {"c", "chat"}, {"m", "move"}, {"i", "inspect"}};
 
-/**
- * @brief Command
- * Almacena toda la informacion relacionada con un comando.
- */
 struct _Command
 {
-  CommandCode code; 
-  char arg[CMD_LENGHT];
-  char last_input[CMD_LENGHT]; /* New field to store the last input */
+  CommandCode code;            /* Codigo del comando enumerado */
+  char arg[CMD_LENGHT];        /* Argumento del comando introducido */
+  char last_input[CMD_LENGHT]; /* Almacena la ultima entrada completa del usuario */
 };
 
 Command *command_create()
 {
   Command *newCommand = NULL;
 
-
   newCommand = (Command *)calloc(SINGLE_ELEM, sizeof(Command));
 
-
+  /* Comprueba si falla la reserva de memoria */
   if (newCommand == NULL)
   {
     return NULL;
   }
 
-
+  /* Inicializacion de los campos por defecto */
   newCommand->code = NO_CMD;
   newCommand->arg[0] = '\0';
   newCommand->last_input[0] = '\0';
@@ -52,12 +37,11 @@ Command *command_create()
 
 Status command_destroy(Command *command)
 {
-
+  /* Comprueba que el comando no sea NULL antes de liberar */
   if (!command)
   {
     return ERROR;
   }
-
 
   free(command);
   command = NULL;
@@ -66,18 +50,19 @@ Status command_destroy(Command *command)
 
 Status command_set_code(Command *command, CommandCode code)
 {
+  /* Comprueba la validez del puntero */
   if (!command)
   {
     return ERROR;
   }
 
   command->code = code;
-
   return OK;
 }
 
 CommandCode command_get_code(Command *command)
 {
+  /* Comprueba la validez del puntero y devuelve el codigo */
   if (!command)
   {
     return NO_CMD;
@@ -85,9 +70,9 @@ CommandCode command_get_code(Command *command)
   return command->code;
 }
 
-char* command_get_arg(Command *command)
+char *command_get_arg(Command *command)
 {
-  /* Comprobamos que el comando exista */
+  /* Comprueba la validez del puntero y devuelve el argumento */
   if (!command)
   {
     return NULL;
@@ -95,8 +80,9 @@ char* command_get_arg(Command *command)
   return command->arg;
 }
 
-char* command_get_last_input(Command* command)
+char *command_get_last_input(Command *command)
 {
+  /* Comprueba la validez del puntero y devuelve la entrada cruda */
   if (!command)
   {
     return NULL;
@@ -110,22 +96,22 @@ Status command_get_user_input(Command *command)
   int i = UNKNOWN - NO_CMD + 1;
   CommandCode cmd;
 
-
+  /* Comprueba la validez del comando */
   if (!command)
   {
     return ERROR;
   }
 
-  /* Leemos la entrada del usuario desde el teclado */
+  /* Lee la entrada del usuario desde el flujo estándar */
   if (fgets(input, CMD_LENGHT, stdin))
   {
-    strncpy(command->last_input, input, CMD_LENGHT - 1); /* Store the full input */
+    strncpy(command->last_input, input, CMD_LENGHT - 1);
     command->last_input[CMD_LENGHT - 1] = '\0';
 
-    /* Separamos la primera palabra introducida */
+    /* Extrae el primer token correspondiente al comando */
     token = strtok(input, " \n");
 
-    /* Si no hay texto, lo marcamos como desconocido */
+    /* Si la entrada esta vacia, asigna codigo desconocido */
     if (!token)
     {
       return command_set_code(command, UNKNOWN);
@@ -133,6 +119,7 @@ Status command_get_user_input(Command *command)
 
     cmd = UNKNOWN;
 
+    /* Busca coincidencia del token con los comandos validos */
     while (cmd == UNKNOWN && i < N_CMD)
     {
       if (!strcmp(token, cmd_to_str[i][CMDS]) || !strcmp(token, cmd_to_str[i][CMDL]))
@@ -145,6 +132,7 @@ Status command_get_user_input(Command *command)
       }
     }
 
+    /* Extrae el segundo token correspondiente al argumento */
     arg = strtok(NULL, " \n");
     if (arg)
     {
@@ -160,12 +148,9 @@ Status command_get_user_input(Command *command)
   }
   else
   {
-    strncpy(command->last_input, "exit", CMD_LENGHT - 1); /* Store "exit" if EOF */
+    /* Asigna comando de salida en caso de fin de archivo (EOF) */
+    strncpy(command->last_input, "exit", CMD_LENGHT - 1);
     command->last_input[CMD_LENGHT - 1] = '\0';
     return command_set_code(command, EXIT);
   }
 }
-/**
- * @brief Copia los datos de un comando a otro
- * @author Gemini
-*/

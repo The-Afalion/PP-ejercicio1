@@ -1,7 +1,3 @@
-/**
- * Módulo de espacio (space.c)
- * Aquí gestionamos las habitaciones/casillas por las que te mueves en el juego.
- */
 
 #include "space.h"
 #include <stdio.h>
@@ -15,12 +11,12 @@
 
 struct Space
 {
-  Id id;                                /*identificador de espacio*/     
-  char name[WORD_SIZE + SINGLE_ELEM];    /*nombre del espacio*/    
-  Set *objects;                             /*array de los id que contiene*/ 
-  Id character;                              /*id del character si lo contiene*/
-  char gdesc[GDESC_ROWS][GDESC_COLS];        /*Lo que hay que pintar el espacio*/
-  BOOL discovered;                           /*Si esta descubierto o no*/
+  Id id;                              /*identificador de espacio*/
+  char name[WORD_SIZE + SINGLE_ELEM]; /*nombre del espacio*/
+  Set *objects;                       /*array de los id que contiene*/
+  Id character;                       /*id del character si lo contiene*/
+  char gdesc[GDESC_ROWS][GDESC_COLS]; /*Lo que hay que pintar el espacio*/
+  BOOL discovered;                    /*Si esta descubierto o no*/
 };
 
 Space *space_create(Id id)
@@ -50,8 +46,10 @@ Space *space_create(Id id)
   newSpace->discovered = FALSE;
 
   /* Limpiamos el dibujo del espacio dejándolo en blanco para empezar de cero */
-  for (i = 0; i < GDESC_ROWS; i++) {
-    for (j = 0; j < GDESC_COLS - 1; j++) {
+  for (i = 0; i < GDESC_ROWS; i++)
+  {
+    for (j = 0; j < GDESC_COLS - 1; j++)
+    {
       newSpace->gdesc[i][j] = ' ';
     }
     newSpace->gdesc[i][GDESC_COLS - 1] = '\0';
@@ -73,7 +71,7 @@ Status space_destroy(Space *space)
     set_destroy(space->objects);
   }
 
-/*Liberamos el espacio*/
+  /*Liberamos el espacio*/
   free(space);
   return OK;
 }
@@ -112,7 +110,6 @@ const char *space_get_name(Space *space)
   return space->name;
 }
 
-
 Status space_add_object(Space *space, Id object_id)
 {
   /* Revisa que haya sala y mete el objeto  */
@@ -133,7 +130,7 @@ Status space_remove_object(Space *space, Id object_id)
   return set_del(space->objects, object_id);
 }
 
-Id* space_get_objects(Space *space)
+Id *space_get_objects(Space *space)
 {
   /* Te devuelve la lista entera con las IDs  */
   if (!space)
@@ -153,7 +150,7 @@ int space_get_number_of_objects(Space *space)
   return set_get_numberid(space->objects);
 }
 
-Status space_contains_object(Space* space, Id id)
+Status space_contains_object(Space *space, Id id)
 {
   /* Revisa si un objeto  está en el espacio */
   if (!space || id == NO_ID)
@@ -188,11 +185,13 @@ Id space_get_character(Space *space)
   return space->character;
 }
 
-Status space_set_gdesc(Space* space, char gdesc[GDESC_ROWS][GDESC_COLS]) {
+Status space_set_gdesc(Space *space, char gdesc[GDESC_ROWS][GDESC_COLS])
+{
   int i;
 
   /* Comprueba que todo no sea NULL */
-  if (!space || !gdesc) {
+  if (!space || !gdesc)
+  {
     return ERROR;
   }
 
@@ -206,16 +205,18 @@ Status space_set_gdesc(Space* space, char gdesc[GDESC_ROWS][GDESC_COLS]) {
   return OK;
 }
 
-char (*space_get_gdesc(Space* space))[GDESC_COLS] {
+char (*space_get_gdesc(Space *space)) [GDESC_COLS]
+{
   /* Te devuelve el dibujo del espacio */
-  if (!space) {
+  if (!space)
+  {
     return NULL;
   }
 
   return space->gdesc;
 }
 
-Status space_set_discovered(Space* space, BOOL discovered)
+Status space_set_discovered(Space *space, BOOL discovered)
 {
   /* la marca como visitado o no el espacio */
   if (!space)
@@ -226,7 +227,7 @@ Status space_set_discovered(Space* space, BOOL discovered)
   return OK;
 }
 
-BOOL space_get_discovered(Space* space)
+BOOL space_get_discovered(Space *space)
 {
   /* Comprueba el estado del espacio */
   if (!space)
@@ -241,7 +242,6 @@ Status space_print(Space *space)
   int i, num_objs;
   Id *objs = NULL;
 
-
   if (!space)
   {
     return ERROR;
@@ -250,11 +250,13 @@ Status space_print(Space *space)
   fprintf(stdout, "--> Space (Id: %ld; Name: %s)\n", space->id, space->name);
 
   /* Solo imprimimos los detalles internos si la sala ya fue descubierta */
-  if (space->discovered == TRUE) {
+  if (space->discovered == TRUE)
+  {
     fprintf(stdout, "---> Character in space: %ld.\n", space->character);
 
     fprintf(stdout, "---> Graphic description:\n");
-    for (i = 0; i < GDESC_ROWS; i++) {
+    for (i = 0; i < GDESC_ROWS; i++)
+    {
       fprintf(stdout, "%s\n", space->gdesc[i]);
     }
 
@@ -266,7 +268,7 @@ Status space_print(Space *space)
       fprintf(stdout, "---> Objects in the space (Id: ");
       for (i = 0; i < num_objs; i++)
       {
-        fprintf(stdout, "%d ", (int) objs[i]);
+        fprintf(stdout, "%d ", (int)objs[i]);
       }
       fprintf(stdout, ")\n");
 

@@ -20,9 +20,9 @@
  */
 struct Object
 {
-  Id id;                              /*!< La ID del objeto */
-  char name[WORD_SIZE + SINGLE_ELEM]; /*!< Nombre del objeto */
-  char description[WORD_SIZE + SINGLE_ELEM];  /*!< Descripcion del objeto*/
+  Id id;                                     /*!< La ID del objeto */
+  char name[WORD_SIZE + SINGLE_ELEM];        /*!< Nombre del objeto */
+  char description[WORD_SIZE + SINGLE_ELEM]; /*!< Descripcion del objeto*/
 };
 
 Object *object_create(Id id)
@@ -117,15 +117,21 @@ Status object_print(Object *object)
 
 Status object_set_desc(Object *object, char *desc)
 {
-  if (!object || !desc) return ERROR;
-
-  if (!strcpy(object->description, desc)) return ERROR;
+  /*Compruebo que no sean NULL*/
+  if (!object || !desc)
+    return ERROR;
+  /*Copio las descripcion*/
+  if (!strcpy(object->description, desc))
+    return ERROR;
 
   return OK;
 }
 
 const char *object_get_desc(Object *object)
-{
-  if (!object) return NULL;
+{ /*compruebo que no sea NULL*/
+  if (!object)
+  {
+    return NULL;
+  } /*Devuelco la descripcion*/
   return object->description;
 }
