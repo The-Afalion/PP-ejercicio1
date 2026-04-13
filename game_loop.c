@@ -17,13 +17,14 @@
 #include "game.h"
 #include "command.h"
 #include "game_actions.h"
-
+#include <time.h>
 int main(int argc, char *argv[]) {
   Game *game = NULL;
   Command *command = NULL;
   Graphic_engine *gengine;
   FILE *log_file = NULL;
   char *log_filename = NULL;
+  srand(time(NULL));
 
   if (argc < 2) {
     fprintf(stderr, "Uso: %s <game_data_file> [-l <log_file>]\\n", argv[0]);

@@ -144,8 +144,8 @@ Id player_get_location(Player *player)
 
 Status player_add_object(Player *player, Id object)
 {
-  /* Comprueba validez del puntero */
-  if (!player)
+  /* Comprueba validez del puntero y del id */
+  if (!player||object==NO_ID)
   {
     return ERROR;
   }
@@ -159,7 +159,7 @@ Status player_add_object(Player *player, Id object)
 
 Id player_get_object(Player *player, int index)
 {
-  /* Comprueba validez del puntero */
+  /* Comprueba validez del puntero  y index */
   if (!player || index < 0 || index >= inventory_get_max_objs(player->backpack))
   {
     return NO_ID;
@@ -171,7 +171,7 @@ Id player_get_object(Player *player, int index)
 BOOL player_has_object(Player *player, Id object)
 {
   /* Comprueba validez del puntero y verifica si el objeto está en el inventario */
-  if (!player)
+  if (!player||object==NO_ID)
   {
     return FALSE;
   }
@@ -249,7 +249,7 @@ Status player_set_gdesc(Player *player, char *des)
   return OK;
 }
 char *player_get_gdesc(Player *player)
-{ /*Devuelve la descripcion */
+{ /*Devuelve la descripcion, comprueba puntero */
   if (!player)
   {
     return NULL;
@@ -258,7 +258,7 @@ char *player_get_gdesc(Player *player)
 }
 
 Inventory *player_get_backpack(Player *player)
-{
+{/*Devuelve mochila del jugador, comprueba puntero*/
   if (!player)
   {
     return NULL;

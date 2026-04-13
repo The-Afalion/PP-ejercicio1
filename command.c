@@ -16,7 +16,7 @@
 #define CMD_LENGHT 30
 #define SINGLE_ELEM 1
 
-char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "Exit"}, {"t", "Take"}, {"d", "Drop"}, {"a", "Attack"}, {"c", "Chat"}, {"m", "Move"}, {"i", "Inspect"} };
+char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "exit"}, {"t", "Take"}, {"d", "drop"}, {"a", "attack"}, {"c", "chat"}, {"m", "move"}, {"i", "inspect"} };
 
 /**
  * @brief Command
