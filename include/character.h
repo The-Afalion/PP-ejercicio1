@@ -147,5 +147,17 @@ Status character_set_message(Character *character, char *message);
   * @param character Un puntero al personaje
   */
 void character_print( Character *character);
+/**
+  * @brief Devuelve el id del personaje que sigue
+  * @author Unai Amondarain
+  * @param character Un puntero al personaje
+  */
+Id character_get_following(Character* character);
+/**
+  * @brief Cmabia el id del personaje que sigue
+  * @author Unai Amondarain
+  * @param character Un puntero al personaje,Id del personaje que sigue
+  */
 
+Status character_set_following(Character* character,Id id);
 #endif
