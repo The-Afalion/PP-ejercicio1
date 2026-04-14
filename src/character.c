@@ -21,6 +21,7 @@ struct _Character
     int health;                        /*!< Puntos de salud */
     int friendly;                      /*!< Indica si es amistoso */
     char message[100];                 /*!< Mensaje asociado al personaje */
+    Id following;                       /*!< Id del jugador que sigue>*/
 };
 
 Character *character_create(Id id)
@@ -47,6 +48,7 @@ Character *character_create(Id id)
     newCharacter->health = 0;
     newCharacter->friendly = 0;
     newCharacter->message[0] = '\0';
+    newCharacter->following=NO_ID;
 
     return newCharacter;
 }
@@ -188,16 +190,29 @@ Status character_set_message(Character *character, char *message)
 
     /* Copia el mensaje del personaje */
     strcpy(character->message, message);
-
     return OK;
 }
-
+Id character_get_following(Character* character){
+   /*Compruebo que no sea NULL y devuelvo el id del que sigue*/
+    if(!character){
+        return NULL;
+    }
+    return character->following;
+}
+Status character_set_following(Character* character,Id id){
+   /*Compruebo que no sea NULL y cambio el id del personaje que sigue*/
+    if(!character){
+        return ERROR;
+    }
+    character->following=id;
+    return OK;
+}
 void character_print(Character *character)
 {
     /* Muestra toda la información del personaje */
     if (character != NULL)
     {
-        printf("--> Character (Id: %ld; Name: %s; Gdesc: %s; Health: %d; Friendly: %d; Message: %s)\n",
-               character->id, character->name, character->gdesc, character->health, character->friendly, character->message);
+        printf("--> Character (Id: %ld; Name: %s; Gdesc: %s; Health: %d; Friendly: %d; Message: %s; Following:%d)\n",
+               character->id, character->name, character->gdesc, character->health, character->friendly, character->message,character->id);
     }
 }
