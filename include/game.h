@@ -55,8 +55,6 @@ Status game_create_from_file(Game **game, char *filename);
  * @return OK si se destruye con éxito, ERROR en caso contrario.
  */
 Status game_destroy(Game *game);
-Status game_get_last_command_status(Game *game);
-Status game_set_last_command_status(Game *game, Status status);
 
 /**
  * @brief Añade un nuevo espacio al array del juego.
@@ -280,12 +278,12 @@ Id game_get_connection(Game *game, Id space_id, Directions dir);
 BOOL game_connection_is_open(Game *game, Id space_id, Directions dir);
 
 /**
- * @brief Añade un nuevo enlace a la lista general del juego.
+ * @brief Obtiene un enlace concreto del juego a partir de su identificador.
  * @author Unai
  * @param game Puntero al juego.
- * @param link Puntero al enlace a añadir.
- * @return OK si se añade con éxito, ERROR si no hay espacio o hay fallo.
-  */
+ * @param link_id ID del enlace a buscar.
+ * @return Puntero al enlace encontrado o NULL si no existe o hay error.
+ */
 Link* game_get_link(Game* game, Id link_id);
 /**
  * @brief Obtiene el número de enlaces actualmente cargados en el juego.

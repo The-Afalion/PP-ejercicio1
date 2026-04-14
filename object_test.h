@@ -15,5 +15,7 @@ void test1_object_get_desc();
 void test2_object_get_desc();
 void test1_object_destroy();
 void test2_object_destroy();
+void test1_object_print();
+void test2_object_print();
 
 #endif

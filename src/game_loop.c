@@ -1,3 +1,13 @@
+/**
+ * @brief Contiene el bucle principal de ejecución del juego
+ *
+ * @file game_loop.c
+ * @author Unai
+ * @version 1.0
+ * @date 15-03-2026
+ * @copyright GNU Public License
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

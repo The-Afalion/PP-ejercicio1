@@ -149,6 +149,12 @@ char(* space_get_gdesc(Space* space))[GDESC_COLS];
  * @return OK si se imprime con éxito, ERROR en caso contrario
  */
 Status space_print(Space* space);
+
+/**
+ * @brief Obtiene el número total de enlaces asociados a un espacio
+ * @param space Puntero al espacio
+ * @return Número de enlaces del espacio o -1 en caso de error
+ */
 int space_get_number_of_links(Space *space);
 
 /**

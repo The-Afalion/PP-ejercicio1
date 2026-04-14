@@ -16,7 +16,7 @@
 
 /**
  * @brief Object
- * This struct stores all the information of an object.
+ * Estructura de datos que representa un objeto.
  */
 struct Object
 {

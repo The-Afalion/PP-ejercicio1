@@ -1,3 +1,13 @@
+/**
+ * @brief Implementa el intérprete de comandos
+ *
+ * @file command.c
+ * @author Unai
+ * @version 1.0
+ * @date 15-2-26
+ * @copyright GNU Public License
+ */
+
 #include "command.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,9 +20,9 @@ char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "e
 
 struct _Command
 {
-  CommandCode code;            /* Codigo del comando enumerado */
-  char arg[CMD_LENGHT];        /* Argumento del comando introducido */
-  char last_input[CMD_LENGHT]; /* Almacena la ultima entrada completa del usuario */
+  CommandCode code;            /*!<  Codigo del comando enumerado */
+  char arg[CMD_LENGHT];        /*!< Argumento del comando introducido */
+  char last_input[CMD_LENGHT]; /*!< Almacena la ultima entrada completa del usuario */
 };
 
 Command *command_create()

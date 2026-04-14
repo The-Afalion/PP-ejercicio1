@@ -1,3 +1,13 @@
+/**
+ * @brief Implementa el módulo de enlaces
+ *
+ * @file link.c
+ * @author Unai
+ * @version 1.0
+ * @date 13-04-2026
+ * @copyright GNU Public License
+ */
+
 #include "link.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,12 +17,12 @@
 
 struct _Link
 {
-    Id id;                /* Identificador del enlace */
-    char nom[WORD_SIZE];  /* Nombre del enlace */
-    Id origin;            /* Id del espacio de origen */
-    Id destination;       /* Id del espacio de destino */
-    Directions direction; /* Dirección del enlace */
-    BOOL open;            /* Indica si el enlace está abierto o cerrado */
+    Id id;                /*!<  Identificador del enlace */
+    char nom[WORD_SIZE];  /*!< Nombre del enlace */
+    Id origin;            /*!< Id del espacio de origen */
+    Id destination;       /*!< Id del espacio de destino */
+    Directions direction; /*!< Dirección del enlace */
+    BOOL open;            /*!< Indica si el enlace está abierto o cerrado */
 };
 
 Link *link_create(Id id)

@@ -1,3 +1,12 @@
+/**
+ * @brief Implementa el módulo de espacios
+ *
+ * @file space.c
+ * @author Unai
+ * @version 3.0
+ * @date 16-03-2026
+ * @copyright GNU Public License
+ */
 
 #include "space.h"
 #include <stdio.h>
@@ -9,14 +18,18 @@
 #define MAX_SPACES 100
 #define MAX_LINKS 4
 
+/**
+ * @brief Space
+ * Estructura de datos que representa un espacio en el juego.
+ */
 struct Space
 {
-  Id id;                              /*identificador de espacio*/
-  char name[WORD_SIZE + SINGLE_ELEM]; /*nombre del espacio*/
-  Set *objects;                       /*array de los id que contiene*/
-  Id character;                       /*id del character si lo contiene*/
-  char gdesc[GDESC_ROWS][GDESC_COLS]; /*Lo que hay que pintar el espacio*/
-  BOOL discovered;                    /*Si esta descubierto o no*/
+  Id id;                              /*!< identificador de espacio*/
+  char name[WORD_SIZE + SINGLE_ELEM]; /*!< nombre del espacio*/
+  Set *objects;                       /*!< array de los id que contiene*/
+  Id character;                       /*!< id del character si lo contiene*/
+  char gdesc[GDESC_ROWS][GDESC_COLS]; /*!< Lo que hay que pintar el espacio*/
+  BOOL discovered;                    /*!< Si esta descubierto o no*/
 };
 
 Space *space_create(Id id)

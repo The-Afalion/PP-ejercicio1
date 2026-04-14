@@ -1,3 +1,13 @@
+/**
+ * @brief Implementa las acciones del juego
+ *
+ * @file game_actions.c
+ * @author Unai&Rodrigo
+ * @version 1.0
+ * @date 15-03-2026
+ * @copyright GNU Public License
+ */
+
 #include "game_actions.h"
 #include "inventory.h"
 #include "player.h"

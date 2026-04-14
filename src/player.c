@@ -18,18 +18,18 @@
 #define INVENTORY_SIZE 3
 
 /**
- * @brief Estructura de Jugador
- * Contiene el ID, nombre, ubicación actual e ID del objeto que transporta.
+ * @brief Player
+ * Estructura de Jugador que contiene el ID, nombre, ubicación actual e ID del objeto que transporta.
  */
 struct Player
 {
-  Id id;                              /*Id del jugador*/
-  char name[WORD_SIZE + SINGLE_ELEM]; /*Nombre del jugador*/
-  Id location;                        /*Ubicación actual del jugador*/
-  Inventory *backpack;                /*Inventario del jugador*/
-  int nobj;                           /*Número de objetos en el inventario*/
-  int health;                         /*Puntos de salud del jugador*/
-  char *gdesc;                        /*Descripción gráfica del jugador*/
+  Id id;                              /*!< Id del jugador*/
+  char name[WORD_SIZE + SINGLE_ELEM]; /*!< Nombre del jugador*/
+  Id location;                        /*!< Ubicación actual del jugador*/
+  Inventory *backpack;                /*!< Inventario del jugador*/
+  int nobj;                           /*!< Número de objetos en el inventario*/
+  int health;                         /*!< Puntos de salud del jugador*/
+  char *gdesc;                        /*!< Descripción gráfica del jugador*/
 };
 
 Player *player_create(Id id)
@@ -50,7 +50,6 @@ Player *player_create(Id id)
   {
     return NULL;
   }
-
 
   /* Inicializa los valores por defecto del jugador */
   newPlayer->id = id;
@@ -145,7 +144,7 @@ Id player_get_location(Player *player)
 Status player_add_object(Player *player, Id object)
 {
   /* Comprueba validez del puntero y del id */
-  if (!player||object==NO_ID)
+  if (!player || object == NO_ID)
   {
     return ERROR;
   }
@@ -171,12 +170,13 @@ Id player_get_object(Player *player, int index)
 BOOL player_has_object(Player *player, Id object)
 {
   /* Comprueba validez del puntero y verifica si el objeto está en el inventario */
-  if (!player||object==NO_ID)
+  if (!player || object == NO_ID)
   {
     return FALSE;
   }
 
-  if (set_find(inventory_get_objs(player->backpack), object) == OK) {
+  if (set_find(inventory_get_objs(player->backpack), object) == OK)
+  {
     return TRUE;
   }
   return FALSE;
@@ -185,7 +185,7 @@ BOOL player_has_object(Player *player, Id object)
 Status player_del_object(Player *player, Id object)
 {
   /* Comprueba validez del puntero */
-  if (!player||player_has_object(player, object) == FALSE)
+  if (!player || player_has_object(player, object) == FALSE)
   {
     return ERROR;
   }
@@ -258,7 +258,7 @@ char *player_get_gdesc(Player *player)
 }
 
 Inventory *player_get_backpack(Player *player)
-{/*Devuelve mochila del jugador, comprueba puntero*/
+{ /*Devuelve mochila del jugador, comprueba puntero*/
   if (!player)
   {
     return NULL;

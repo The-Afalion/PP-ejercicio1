@@ -1,14 +1,27 @@
+/**
+ * @brief Implementa el módulo de conjuntos
+ *
+ * @file set.c
+ * @author Unai
+ * @version 1.0
+ * @date 15-03-2026
+ * @copyright GNU Public License
+ */
+
 #include "set.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_IDS 100
-
+/**
+ * @brief Set
+ * Estructura de datos que representa un conjunto de identificadores.
+ */
 struct Set
 {
-    Id ids[MAX_IDS]; /* Array interno de identificadores */
-    int n_ids;       /* Número actual de identificadores almacenados */
+    Id ids[MAX_IDS]; /*!<  Array interno de identificadores */
+    int n_ids;       /*!< Número actual de identificadores almacenados */
 };
 
 Set *set_create()

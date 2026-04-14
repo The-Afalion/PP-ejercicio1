@@ -10,10 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "object.h"
-#include "test.h"
 #include "object_test.h"
+#include "test.h"
 
-#define MAX_TESTS 20
+#define MAX_TESTS 16
 
 /**
  * @brief Función principal de pruebas para el módulo Space.
