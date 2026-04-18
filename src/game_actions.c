@@ -25,6 +25,17 @@ Status game_actions_attack(Game *game);
 Status game_actions_chat(Game *game);
 Status game_actions_inspect(Game *game);
 
+/**
+ * @brief Cuenta los aliados vivos que siguen al jugador activo en su misma sala.
+ * @author Rodrigo
+ *
+ * @param game Puntero al juego.
+ * @param attackers_ids Array de ids donde registrar a jugador y followers atacantes.
+ * @param max_attackers Tamaño máximo del array attackers_ids.
+ * @return Número total de atacantes válidos, incluyendo al jugador.
+ */
+static int game_actions_collect_attackers(Game *game, Id *attackers_ids, int max_attackers);
+
 Status game_actions_update(Game *game, Command *command)
 {
   CommandCode cmd;
@@ -301,7 +312,9 @@ Status game_actions_attack(Game *game)
   Character *character;
   Player *player;
   int random_num;
-  int player_health, char_health;
+  int player_health, char_health, n_attackers, damaged_index;
+  Character *ally;
+  Id attackers_ids[MAX_CHARACTERS + 1];
 
   /* Verificaciones de estado del juego y jugador */
   if (!game)
@@ -353,25 +366,108 @@ Status game_actions_attack(Game *game)
 
   /* Evaluacion matematica del resultado del ataque */
   random_num = rand() % 10;
+  n_attackers = game_actions_collect_attackers(game, attackers_ids, MAX_CHARACTERS + 1);
+  if (n_attackers <= 0)
+  {
+    return ERROR;
+  }
 
   if (random_num <= 4)
   {
-    player_health = player_get_health(player);
-    player_health--;
-    player_set_health(player, player_health);
+    damaged_index = rand() % n_attackers;
 
-    if (player_health <= 0)
+    if (attackers_ids[damaged_index] == player_get_id(player))
     {
-      game_set_finished(game, 1);
+      player_health = player_get_health(player);
+      player_health--;
+      player_set_health(player, player_health);
+
+      if (player_health <= 0)
+      {
+        game_set_finished(game, 1);
+      }
+    }
+    else
+    {
+      ally = game_get_character(game, attackers_ids[damaged_index]);
+      if (!ally)
+      {
+        return ERROR;
+      }
+
+      char_health = character_get_health(ally);
+      char_health--;
+      character_set_health(ally, char_health);
     }
   }
   else
   {
-    char_health--;
+    char_health -= n_attackers;
     character_set_health(character, char_health);
   }
 
   return OK;
+}
+
+static int game_actions_collect_attackers(Game *game, Id *attackers_ids, int max_attackers)
+{
+  int i, n_attackers;
+  Id player_id, player_location;
+  Player *player;
+  Character *ally;
+
+  /* Comprueba que haya almacenamiento y juego válidos */
+  if (!game || !attackers_ids || max_attackers <= 0)
+  {
+    return 0;
+  }
+
+  player = game_get_player(game);
+  if (!player)
+  {
+    return 0;
+  }
+
+  player_id = player_get_id(player);
+  player_location = game_get_player_location(game);
+  if (player_id == NO_ID || player_location == NO_ID)
+  {
+    return 0;
+  }
+
+  /* El jugador siempre participa en su propio ataque */
+  attackers_ids[0] = player_id;
+  n_attackers = 1;
+
+  /* Añade los aliados vivos que siguen al jugador y están en la misma sala */
+  for (i = 0; i < MAX_CHARACTERS && n_attackers < max_attackers; i++)
+  {
+    ally = game_get_character_at(game, i);
+    if (!ally)
+    {
+      continue;
+    }
+
+    if (character_get_friendly(ally) == 0 || character_get_health(ally) <= 0)
+    {
+      continue;
+    }
+
+    if (character_get_following(ally) != player_id)
+    {
+      continue;
+    }
+
+    if (game_get_character_location(game, character_get_id(ally)) != player_location)
+    {
+      continue;
+    }
+
+    attackers_ids[n_attackers] = character_get_id(ally);
+    n_attackers++;
+  }
+
+  return n_attackers;
 }
 
 Status game_actions_chat(Game *game)

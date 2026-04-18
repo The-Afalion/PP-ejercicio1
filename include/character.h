@@ -150,13 +150,18 @@ void character_print( Character *character);
 /**
   * @brief Devuelve el id del personaje que sigue
   * @author Unai Amondarain
+  *
   * @param character Un puntero al personaje
+  * @return El id de la entidad seguida o NO_ID si hay error
   */
 Id character_get_following(Character* character);
 /**
-  * @brief Cmabia el id del personaje que sigue
+  * @brief Cambia el id de la entidad a la que sigue el personaje
   * @author Unai Amondarain
-  * @param character Un puntero al personaje,Id del personaje que sigue
+  *
+  * @param character Un puntero al personaje
+  * @param id Id de la entidad a la que seguirá
+  * @return OK si todo fue bien, o ERROR si hubo algún error
   */
 
 Status character_set_following(Character* character,Id id);
