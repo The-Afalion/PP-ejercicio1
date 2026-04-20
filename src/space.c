@@ -9,6 +9,7 @@
  */
 
 #include "space.h"
+#include "character.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,8 +27,8 @@ struct Space
 {
   Id id;                              /*!< identificador de espacio*/
   char name[WORD_SIZE + SINGLE_ELEM]; /*!< nombre del espacio*/
-  Set *objects;                       /*!< array de los id que contiene*/
-  Id character;                       /*!< id del character si lo contiene*/
+  Set *objects;                       /*!< conjunto de los id de los objetos que contiene*/
+  Set *characters;                   /*!< conjunto de los id de los caracteres*/
   char gdesc[GDESC_ROWS][GDESC_COLS]; /*!< Lo que hay que pintar el espacio*/
   BOOL discovered;                    /*!< Si esta descubierto o no*/
 };
@@ -55,7 +56,7 @@ Space *space_create(Id id)
   newSpace->id = id;
   newSpace->name[FIRST_CHAR] = '\0';
   newSpace->objects = set_create();
-  newSpace->character = NO_ID;
+  newSpace->characters = set_create();
   newSpace->discovered = FALSE;
 
   /* Limpiamos el dibujo del espacio dejándolo en blanco para empezar de cero */
@@ -184,18 +185,21 @@ Status space_set_character(Space *space, Id id)
   {
     return ERROR;
   }
-  space->character = id;
+  if (set_add(space->characters, id) == ERROR)
+  {
+    return ERROR;
+  }
   return OK;
 }
 
-Id space_get_character(Space *space)
+Id space_get_character(Space *space, int index)
 {
   /* devuelve id del personaje de la sala o NO_ID si no hay*/
-  if (!space)
+  if (!space || index < 0 || index >= set_get_numberid(space->characters))
   {
     return NO_ID;
   }
-  return space->character;
+  return set_get_id(space->characters, index);
 }
 
 Status space_set_gdesc(Space *space, char gdesc[GDESC_ROWS][GDESC_COLS])
@@ -265,7 +269,12 @@ Status space_print(Space *space)
   /* Solo imprimimos los detalles internos si la sala ya fue descubierta */
   if (space->discovered == TRUE)
   {
-    fprintf(stdout, "---> Character in space: %ld.\n", space->character);
+    fprintf(stdout, "---> Characters in space: ");
+    set_print(space->characters);
+    fprintf(stdout, "\n");
+
+
+   
 
     fprintf(stdout, "---> Graphic description:\n");
     for (i = 0; i < GDESC_ROWS; i++)
@@ -297,4 +306,13 @@ Status space_print(Space *space)
   }
 
   return OK;
+}
+
+int space_get_n_characters(Space *space)
+{
+  if (!space)
+  {
+    return -1;
+  }
+  return set_get_numberid(space->characters);
 }

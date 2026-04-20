@@ -12,7 +12,6 @@
 #define CHARACTER_H
 
 #include "types.h"
-
 #define MAX_CHARACTERS 100
 #define CHARACTER_NAME_LEN 30
 

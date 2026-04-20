@@ -311,21 +311,33 @@ Status game_actions_drop(Game *game)
 
 Status game_actions_attack(Game *game)
 {
-  Id space_id, char_id;
+  Id space_id, enemy_id;
   Space *space;
-  Character *character;
+  char * enemy_name = NULL;
+  Character *enemy;
   Player *player;
   int random_num;
-  int player_health, char_health, n_attackers, damaged_index;
+  int player_health, char_health, n_attackers = 0, damaged_index, n_characters,i;
   Character *ally;
-  Id attackers_ids[MAX_CHARACTERS + 1];
+  Id *attackers_ids[MAX_CHARACTERS+1];
+  Command *last_cmd = NULL;
 
   /* Verificaciones de estado del juego y jugador */
   if (!game)
   {
     return ERROR;
   }
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  enemy_name = command_get_arg(last_cmd);
 
+  if (enemy_name = NULL)
+  {
+    return ERROR;
+  }
+  
   player = game_get_player(game);
   if (!player)
   {
@@ -344,38 +356,50 @@ Status game_actions_attack(Game *game)
     return ERROR;
   }
 
-  char_id = space_get_character(space);
-  if (char_id == NO_ID)
+  for ( i = 0; i < space_get_n_characters(space); i++)
+  {
+    if (space_get_character(space, i) != NO_ID)
+    {
+      enemy = game_get_character(game, space_get_character(space, i));
+      if (enemy && strcmp(enemy_get_name(enemy), enemy_name) == 0 && character_get_friendly(enemy) == FALSE)
+      {
+        enemy_id = space_get_character(space, i);
+        break;
+      }
+    }
+  }
+  if (enemy_id == NO_ID)
   {
     return ERROR;
   }
-
-  character = game_get_character(game, char_id);
-  if (!character)
-  {
-    return ERROR;
-  }
-
   /* Evalua el estatus hostil y vital del NPC */
-  if (character_get_friendly(character))
+  if (character_get_friendly(enemy))
   {
     return ERROR;
   }
 
-  char_health = character_get_health(character);
+  char_health = character_get_health(enemy);
   if (char_health <= 0)
   {
     return ERROR;
   }
-
-  /* Evaluacion matematica del resultado del ataque */
-  random_num = rand() % 10;
-  n_attackers = game_actions_collect_attackers(game, attackers_ids, MAX_CHARACTERS + 1);
-  if (n_attackers <= 0)
+  if ((n_characters = game_get_number_of_characters(game)) == -1)
   {
     return ERROR;
   }
+  if ((*attackers_ids = game_get_players_followers(game)) == NULL)
+  {
+    return ERROR;
+  }
+  if ((n_attackers = game_get_number_of_followers_of_player(game)) == -1)
+  {
+    return ERROR;
+  }
+  attackers_ids[n_attackers++] = player_get_id(game_get_player(game));
+  
+  random_num = rand() % 10;
 
+  /* >4 haces daño al enemigo*/
   if (random_num <= 4)
   {
     damaged_index = rand() % n_attackers;
@@ -407,71 +431,10 @@ Status game_actions_attack(Game *game)
   else
   {
     char_health -= n_attackers;
-    character_set_health(character, char_health);
+    character_set_health(enemy, char_health);
   }
 
   return OK;
-}
-
-static int game_actions_collect_attackers(Game *game, Id *attackers_ids, int max_attackers)
-{
-  int i, n_attackers;
-  Id player_id, player_location;
-  Player *player;
-  Character *ally;
-
-  /* Comprueba que haya almacenamiento y juego válidos */
-  if (!game || !attackers_ids || max_attackers <= 0)
-  {
-    return 0;
-  }
-
-  player = game_get_player(game);
-  if (!player)
-  {
-    return 0;
-  }
-
-  player_id = player_get_id(player);
-  player_location = game_get_player_location(game);
-  if (player_id == NO_ID || player_location == NO_ID)
-  {
-    return 0;
-  }
-
-  /* El jugador siempre participa en su propio ataque */
-  attackers_ids[0] = player_id;
-  n_attackers = 1;
-
-  /* Añade los aliados vivos que siguen al jugador y están en la misma sala */
-  for (i = 0; i < MAX_CHARACTERS && n_attackers < max_attackers; i++)
-  {
-    ally = game_get_character_at(game, i);
-    if (!ally)
-    {
-      continue;
-    }
-
-    if (character_get_friendly(ally) == 0 || character_get_health(ally) <= 0)
-    {
-      continue;
-    }
-
-    if (character_get_following(ally) != player_id)
-    {
-      continue;
-    }
-
-    if (game_get_character_location(game, character_get_id(ally)) != player_location)
-    {
-      continue;
-    }
-
-    attackers_ids[n_attackers] = character_get_id(ally);
-    n_attackers++;
-  }
-
-  return n_attackers;
 }
 
 Status game_actions_chat(Game *game)
@@ -479,6 +442,7 @@ Status game_actions_chat(Game *game)
   Id space_id, char_id;
   Space *space;
   Character *character;
+  
 
   /* Comprobaciones de integridad en la ubicacion actual */
   if (!game)
@@ -685,11 +649,11 @@ Status game_actions_recruit(Game *game)
     return ERROR;
   }
 
-  if (character_set_following(character, player_get_id (game_get_player(game)))== ERROR)
+  if (character_set_following(character, player_get_id(game_get_player(game))) == ERROR)
   {
 
     return ERROR;
   }
-  
+
   return OK;
 }

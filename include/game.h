@@ -356,5 +356,18 @@ Character *game_get_character_from_index(Game *game, int index);
  * @return Número de personajes, o -1 si hay error.
  */
 int game_get_number_of_characters(Game *game);
-
+/**
+ * @brief Obtiene el número de personajes que siguen al jugador.
+ * @author Unai.G
+ * @param game Puntero al juego.
+ * @return Número de personajes, o -1 si hay error.
+ */
+int game_get_number_of_followers_of_player(Game*game);
+/**
+ * @brief Obtiene el array de id de personajes que siguen al jugador.
+ * @author Unai.G
+ * @param game Puntero al juego.
+ * @return Array de id, o NULL si hay error.
+ */
+Id * game_get_players_followers(Game*game);
 #endif

@@ -124,9 +124,10 @@ Status space_set_character(Space* space, Id id);
 /**
  * @brief Obtiene el personaje presente en el espacio
  * @param space Puntero al espacio
+ * @param index Indice del personaje a obtener
  * @return ID del personaje o NO_ID en caso de error
  */
-Id space_get_character(Space* space);
+Id space_get_character(Space* space, int index);
 
 /**
  * @brief Establece la descripción gráfica del espacio (gdesc)
@@ -171,5 +172,11 @@ Status space_set_discovered(Space* space, BOOL discovered);
  * @return TRUE si fue descubierto, FALSE si no
  */
 BOOL space_get_discovered(Space* space);
+/**
+ * @brief Obtiene el número de personajes presentes en el espacio
+ * @param space Puntero al espacio
+ * @return Número de personajes en el espacio o -1 en caso de error
+ */
+int space_get_n_characters(Space* space);
 
 #endif
