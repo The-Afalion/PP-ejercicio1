@@ -25,6 +25,7 @@ Status game_actions_attack(Game *game);
 Status game_actions_chat(Game *game);
 Status game_actions_inspect(Game *game);
 Status game_actions_recruit(Game *game);
+Status game_actions_abandon(Game *game);
 
 /**
  * @brief Cuenta los aliados vivos que siguen al jugador activo en su misma sala.
@@ -74,6 +75,9 @@ Status game_actions_update(Game *game, Command *command)
     break;
   case RECRUIT:
     status = game_actions_recruit(game);
+    break;
+  case ABANDON:
+    status=game_actions_abandon(game);
     break;
   default:
     break;
@@ -674,4 +678,41 @@ Status game_actions_recruit(Game *game)
   }
 
   return OK;
+}
+Status game_actions_abandon(Game *game){
+   Id *id;
+  char *arg = NULL;
+  Command *last_cmd = NULL;
+  int n_player,i;
+  if (!game)
+  {
+    return ERROR;
+  }
+  /*Comprueba la validez del comando */
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  /*Comprueba que haya argumento (personaje a abandonar)*/
+  if (!(arg = command_get_arg(last_cmd)))
+  {
+    return ERROR;
+  }
+
+  if((n_player=game_get_number_of_characters(game))<=0){
+    return ERROR;
+  }
+if(!(id=game_get_players_followers(game))){
+  return ERROR;
+  }
+for(i=0;i<n_player;i++){
+  if(!strcmp(arg,character_get_name(id[i]))){
+    if(!character_set_following(id[i],NO_ID)){
+      return ERROR;
+    }
+    return OK;
+}
+  
+}
+return ERROR;
 }
