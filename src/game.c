@@ -318,12 +318,12 @@ Id game_get_character_location(Game *game, Id character_id)
   {
     for (j = 0; j < space_get_n_characters(game->spaces[i]); j++)
     {
-    
-    if (space_get_character(game->spaces[i], j) == character_id)
-    {
-      return space_get_id(game->spaces[i]);
+
+      if (space_get_character(game->spaces[i], j) == character_id)
+      {
+        return space_get_id(game->spaces[i]);
+      }
     }
-  }
   }
   return NO_ID;
 }
@@ -797,31 +797,39 @@ int game_get_number_of_characters(Game *game)
 
   return game->n_characters;
 }
-int game_get_number_of_followers_of_player(Game*game){
+int game_get_number_of_followers_of_player(Game *game)
+{
   Id id;
-  int cont,i;
-  if(!game){
+  int cont, i;
+  if (!game)
+  {
     return -1;
   }
- id= player_get_id(game->players[game->turn]);
- for(i=0,cont =0;i<game->n_characters;i++){
-  if(id==character_get_following(game->characters[i])){
-    cont++;
+  id = player_get_id(game->players[game->turn]);
+  for (i = 0, cont = 0; i < game->n_characters; i++)
+  {
+    if (id == character_get_following(game->characters[i]))
+    {
+      cont++;
+    }
   }
- }
- return cont;
+  return cont;
 }
-Id * game_get_players_followers(Game*game){
-  Id id[MAX_CHARACTERS];
-  int i,cont;
-  if(!game){
+Id *game_get_players_followers(Game *game)
+{
+  Id *id[MAX_CHARACTERS];
+  int i, cont;
+  if (!game)
+  {
     return NULL;
   }
-   for(i=0,cont =0;i<game->n_characters;i++){
-  if(id == character_get_following(game->characters[i])){
-    id[cont]=character_get_id(game->characters[i]);
-    cont++;
+  for (i = 0, cont = 0; i < game->n_characters; i++)
+  {
+    if (player_get_id(game_get_player(game)) == character_get_following(game->characters[i]))
+    {
+      *id[cont] = character_get_id(game->characters[i]);
+      cont++;
+    }
   }
- }
- return id;
+  return *id;
 }
