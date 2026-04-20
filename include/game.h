@@ -331,5 +331,21 @@ Status game_set_object_desc(Game *game,const char *inspection);
  * @return Cadena con la descripción del objeto.
  */
 char *game_get_object_desc(Game *game);
+/**
+ * @brief Obtiene un personaje concreto del juego a partir de su índice en el array.
+ * @author Unai.G
+ * @param game Puntero al juego.
+ * @param index Índice del personaje a obtener.
+ * @return Puntero al personaje encontrado o NULL si el índice es inválido o hay error.
+ */
+Character *game_get_character_from_index(Game *game, int index);
+
+/**
+ * @brief Obtiene el número de personajes actualmente cargados en el juego.
+ * @author Unai.G
+ * @param game Puntero al juego.
+ * @return Número de personajes, o -1 si hay error.
+ */
+int game_get_number_of_characters(Game *game);
 
 #endif

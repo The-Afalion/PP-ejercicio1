@@ -760,3 +760,25 @@ char *game_get_object_desc(Game *game)
 
   return game->object_inspection;
 }
+
+Character *game_get_character_from_index(Game *game, int index)
+{
+  /* Comprueba la validez de los parametros */
+  if (!game || index < 0 || index >= game->n_characters)
+  {
+    return NULL;
+  }
+
+  return game->characters[index];
+}
+
+int game_get_number_of_characters(Game *game)
+{
+  /* Comprueba la validez del juego */
+  if (!game)
+  {
+    return -1;
+  }
+
+  return game->n_characters;
+}

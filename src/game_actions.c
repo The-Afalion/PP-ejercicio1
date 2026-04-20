@@ -24,6 +24,7 @@ Status game_actions_drop(Game *game);
 Status game_actions_attack(Game *game);
 Status game_actions_chat(Game *game);
 Status game_actions_inspect(Game *game);
+Status game_actions_recruit(Game *game);
 
 Status game_actions_update(Game *game, Command *command)
 {
@@ -59,6 +60,9 @@ Status game_actions_update(Game *game, Command *command)
     break;
   case INSPECT:
     status = game_actions_inspect(game);
+    break;
+  case RECRUIT:
+    status = game_actions_recruit(game);
     break;
   default:
     break;
@@ -525,4 +529,71 @@ Status game_actions_inspect(Game *game)
   }
 
   return ERROR;
+}
+
+Status game_actions_recruit(Game *game)
+{
+  Id space_id, char_id;
+  Space *space = NULL;
+  Character *character = NULL;
+  Player *player = NULL;
+  char *arg = NULL, *name = NULL;
+  Command *last_cmd = NULL;
+  int i;
+  BOOL found = FALSE;
+
+  if (!game)
+  {
+    return ERROR;
+  }
+  /*Comprueba la validez del comando */
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  /*Comprueba que haya argumento (personaje a reclutar)*/
+  if (!(arg = command_get_arg(last_cmd)))
+  {
+    return ERROR;
+  }
+
+  if (!(player = game_get_player(game)))
+  {
+    return ERROR;
+  }
+  if (!(space = player_get_space(player)))
+  {
+    return ERROR;
+  }
+
+  /*Busca personajes en el juego y si tiene el mismo nombre que arg[1] entonces se sale del bucle*/
+  for (i = 0; i < game_get_number_of_characters(game); i++)
+  {
+    if (!(character = game_get_character_from_index(game, i)))
+    {
+      return ERROR;
+    }
+    if (!(name = character_get_name(character)))
+    {
+      return ERROR;
+    }
+    if (strcmp(name, arg) == 0)
+    {
+      found = TRUE;
+      break;
+    }
+  }
+  /*Comprueba si se encontró el personaje o si no es amigable*/
+  if (found == FALSE || character_get_friendly(character) == FALSE)
+  {
+    return ERROR;
+  }
+
+  if (character_set_following(character, player_get_id (game_get_player(game)))== ERROR)
+  {
+
+    return ERROR;
+  }
+  
+  return OK;
 }
