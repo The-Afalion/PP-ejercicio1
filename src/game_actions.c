@@ -27,16 +27,6 @@ Status game_actions_inspect(Game *game);
 Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 
-/**
- * @brief Cuenta los aliados vivos que siguen al jugador activo en su misma sala.
- * @author Rodrigo
- *
- * @param game Puntero al juego.
- * @param attackers_ids Array de ids donde registrar a jugador y followers atacantes.
- * @param max_attackers Tamaño máximo del array attackers_ids.
- * @return Número total de atacantes válidos, incluyendo al jugador.
- */
-static int game_actions_collect_attackers(Game *game, Id *attackers_ids, int max_attackers);
 
 Status game_actions_update(Game *game, Command *command)
 {
@@ -337,7 +327,7 @@ Status game_actions_attack(Game *game)
   }
   enemy_name = command_get_arg(last_cmd);
 
-  if (enemy_name = NULL)
+  if (enemy_name == NULL)
   {
     return ERROR;
   }
@@ -365,7 +355,7 @@ Status game_actions_attack(Game *game)
     if (space_get_character(space, i) != NO_ID)
     {
       enemy = game_get_character(game, space_get_character(space, i));
-      if (enemy && strcmp(enemy_get_name(enemy), enemy_name) == 0 && character_get_friendly(enemy) == FALSE)
+      if (enemy && strcmp(character_get_name(enemy), enemy_name) == 0 && character_get_friendly(enemy) == FALSE)
       {
         enemy_id = space_get_character(space, i);
         break;
