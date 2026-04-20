@@ -123,7 +123,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     }
     else
     {
-        character = game_get_character(game, space_get_character(west));
+        character = game_get_character(game, space_get_character(west, 0));
         if (!character)
         {
             character_gdesc = "      ";
@@ -135,7 +135,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
         sprintf(west_str, "|     %s %3d|", character_gdesc, (int)space_get_id(west));
     }
 
-    character = game_get_character(game, space_get_character(middle));
+    character = game_get_character(game, space_get_character(middle, 0));
     if (!character)
     {
         character_gdesc = "      ";
@@ -164,7 +164,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     }
     else
     {
-        character = game_get_character(game, space_get_character(east));
+        character = game_get_character(game, space_get_character(east, 0));
         if (!character)
         {
             character_gdesc = "      ";
@@ -475,10 +475,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     screen_area_puts(ge->descript, " Characters:");
     for (i = 0; i < MAX_CHARACTERS; i++)
     {
-        character = game_get_character(game, i);
+        character = game_get_character_at(game, i);
         if (character)
         {
-            Id char_loc = game_get_character_location(game, i);
+            Id char_loc = game_get_character_location(game, character_get_id(character));
             if (char_loc != NO_ID)
             {
                 int health = character_get_health(character);
@@ -548,7 +548,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
     screen_area_clear(ge->help);
     screen_area_puts(ge->help, " The commands you can use are:");
-    screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m, inspect/i");
+    screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
+    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab");
+    screen_area_puts(ge->help, "     move: north/south/east/west/up/down");
 
     if (paint_cmd == TRUE)
     {

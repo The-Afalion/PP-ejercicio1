@@ -348,7 +348,10 @@ Status game_set_character_location(Game *game, Id space_id, Id character_id)
     {
       if (space_get_id(game->spaces[i]) == loc_actual)
       {
-        space_set_character(game->spaces[i], NO_ID);
+        if (space_remove_character(game->spaces[i], character_id) == ERROR)
+        {
+          return ERROR;
+        }
         break;
       }
     }
@@ -633,7 +636,7 @@ Id game_get_connection(Game *game, Id space_id, Directions dir)
   int i;
 
   /* Comprueba la validez de los parametros */
-  if (!game || space_id == NO_ID || dir == U)
+  if (!game || space_id == NO_ID || dir == NO_DIRECTION)
   {
     return NO_ID;
   }
@@ -655,7 +658,7 @@ BOOL game_connection_is_open(Game *game, Id space_id, Directions dir)
   int i;
 
   /* Comprueba la validez de los parametros */
-  if (!game || space_id == NO_ID || dir == U)
+  if (!game || space_id == NO_ID || dir == NO_DIRECTION)
   {
     return FALSE;
   }
@@ -817,19 +820,24 @@ int game_get_number_of_followers_of_player(Game *game)
 }
 Id *game_get_players_followers(Game *game)
 {
-  Id *id[MAX_CHARACTERS];
+  static Id ids[MAX_CHARACTERS];
   int i, cont;
   if (!game)
   {
     return NULL;
   }
+  for (i = 0; i < MAX_CHARACTERS; i++)
+  {
+    ids[i] = NO_ID;
+  }
+
   for (i = 0, cont = 0; i < game->n_characters; i++)
   {
     if (player_get_id(game_get_player(game)) == character_get_following(game->characters[i]))
     {
-      *id[cont] = character_get_id(game->characters[i]);
+      ids[cont] = character_get_id(game->characters[i]);
       cont++;
     }
   }
-  return *id;
+  return ids;
 }

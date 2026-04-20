@@ -122,6 +122,14 @@ Status space_contains_object(Space* space, Id id);
 Status space_set_character(Space* space, Id id);
 
 /**
+ * @brief Elimina un personaje del espacio
+ * @param space Puntero al espacio
+ * @param id ID del personaje a eliminar
+ * @return OK si se elimina con éxito, ERROR en caso contrario
+ */
+Status space_remove_character(Space* space, Id id);
+
+/**
  * @brief Obtiene el personaje presente en el espacio
  * @param space Puntero al espacio
  * @param index Indice del personaje a obtener

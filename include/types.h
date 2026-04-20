@@ -18,7 +18,7 @@ typedef long Id;
 
 typedef enum { ERROR, OK } Status;
 
-typedef enum { N, S, E, W ,U} Directions;
+typedef enum { NO_DIRECTION = -1, N, S, E, W, U, D } Directions;
 
 typedef enum { FALSE, TRUE } BOOL;
 

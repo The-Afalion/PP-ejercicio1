@@ -186,7 +186,7 @@ void test1_link_get_direction() {
 }
 
 void test2_link_get_direction() {
-    PRINT_TEST_RESULT(link_get_direction(NULL) == U); /* Cambiado 'desconocido' por 'U' */
+    PRINT_TEST_RESULT(link_get_direction(NULL) == NO_DIRECTION);
 }
 
 void test1_link_get_open() {
@@ -199,4 +199,3 @@ void test1_link_get_open() {
 void test2_link_get_open() {
     PRINT_TEST_RESULT(link_get_open(NULL) == FALSE);
 }
-

@@ -48,7 +48,7 @@ Link *link_create(Id id)
     new_link->nom[0] = '\0';
     new_link->origin = NO_ID;
     new_link->destination = NO_ID;
-    new_link->direction = U;
+    new_link->direction = NO_DIRECTION;
     new_link->open = FALSE;
 
     return new_link;
@@ -104,7 +104,7 @@ Status link_set_destination(Link *link, Id destination)
 Status link_set_direction(Link *link, Directions direction)
 {
     /* Comprueba que el enlace exista */
-    if (!link)
+    if (!link || direction < N || direction > D)
     {
         return ERROR;
     }
@@ -168,7 +168,7 @@ Directions link_get_direction(Link *link)
     /* Devuelve la dirección del enlace o la dirección por defecto (U) */
     if (!link)
     {
-        return U;
+        return NO_DIRECTION;
     }
     return link->direction;
 }

@@ -85,6 +85,11 @@ Status space_destroy(Space *space)
     set_destroy(space->objects);
   }
 
+  if (space->characters)
+  {
+    set_destroy(space->characters);
+  }
+
   /*Liberamos el espacio*/
   free(space);
   return OK;
@@ -190,6 +195,17 @@ Status space_set_character(Space *space, Id id)
     return ERROR;
   }
   return OK;
+}
+
+Status space_remove_character(Space *space, Id id)
+{
+  /* Elimina a un personaje del espacio */
+  if (!space)
+  {
+    return ERROR;
+  }
+
+  return set_del(space->characters, id);
 }
 
 Id space_get_character(Space *space, int index)
