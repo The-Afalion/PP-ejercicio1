@@ -442,6 +442,9 @@ Status game_actions_chat(Game *game)
   Id space_id, char_id;
   Space *space;
   Character *character;
+  Command *last_cmd = NULL;
+  int i = 0;
+  char *arg = NULL;
   
 
   /* Comprobaciones de integridad en la ubicacion actual */
@@ -461,8 +464,28 @@ Status game_actions_chat(Game *game)
   {
     return ERROR;
   }
-
-  char_id = space_get_character(space);
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0')
+  {
+    return ERROR;
+  }
+    for ( i = 0; i < space_get_n_characters(space); i++)
+    {
+      if (space_get_character(space, i) != NO_ID)
+      {
+        character = game_get_character(game, space_get_character(space, i));
+        if (character && strcmp(character_get_name(character), arg) == 0 && character_get_friendly(character) == TRUE)
+        {
+          char_id = space_get_character(space, i);
+          break;
+        }
+      }
+    }
+    
   if (char_id == NO_ID)
   {
     return ERROR;
@@ -473,12 +496,7 @@ Status game_actions_chat(Game *game)
   {
     return ERROR;
   }
-
-  /* Verificacion de estatus conversacional */
-  if (character_get_friendly(character) == 0)
-  {
-    return ERROR;
-  }
+  
   if (character_get_health(character) <= 0)
   {
     return ERROR;
