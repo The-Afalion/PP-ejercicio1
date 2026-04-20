@@ -305,7 +305,7 @@ Status game_set_object_location(Game *game, Id space_id, Id object_id)
 
 Id game_get_character_location(Game *game, Id character_id)
 {
-  int i;
+  int i, j;
 
   /* Comprueba la validez de los parametros */
   if (!game || character_id == NO_ID)
@@ -316,10 +316,14 @@ Id game_get_character_location(Game *game, Id character_id)
   /* Itera sobre los espacios para localizar al personaje */
   for (i = 0; i < game->n_spaces; i++)
   {
-    if (space_get_character(game->spaces[i]) == character_id)
+    for (j = 0; j < space_get_n_characters(game->spaces[i]); j++)
+    {
+    
+    if (space_get_character(game->spaces[i], j) == character_id)
     {
       return space_get_id(game->spaces[i]);
     }
+  }
   }
   return NO_ID;
 }
@@ -814,7 +818,7 @@ Id * game_get_players_followers(Game*game){
     return NULL;
   }
    for(i=0,cont =0;i<game->n_characters;i++){
-  if(id==character_get_following(game->characters[i])){
+  if(id == character_get_following(game->characters[i])){
     id[cont]=character_get_id(game->characters[i]);
     cont++;
   }

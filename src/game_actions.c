@@ -27,7 +27,6 @@ Status game_actions_inspect(Game *game);
 Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 
-
 Status game_actions_update(Game *game, Command *command)
 {
   CommandCode cmd;
@@ -67,7 +66,7 @@ Status game_actions_update(Game *game, Command *command)
     status = game_actions_recruit(game);
     break;
   case ABANDON:
-    status=game_actions_abandon(game);
+    status = game_actions_abandon(game);
     break;
   default:
     break;
@@ -307,13 +306,13 @@ Status game_actions_attack(Game *game)
 {
   Id space_id, enemy_id;
   Space *space;
-  char * enemy_name = NULL;
+  char *enemy_name = NULL;
   Character *enemy;
   Player *player;
   int random_num;
-  int player_health, char_health, n_attackers = 0, damaged_index, n_characters,i;
+  int player_health, char_health, n_attackers = 0, damaged_index, n_characters, i;
   Character *ally;
-  Id *attackers_ids[MAX_CHARACTERS+1];
+  Id *attackers_ids[MAX_CHARACTERS + 1];
   Command *last_cmd = NULL;
 
   /* Verificaciones de estado del juego y jugador */
@@ -331,7 +330,7 @@ Status game_actions_attack(Game *game)
   {
     return ERROR;
   }
-  
+
   player = game_get_player(game);
   if (!player)
   {
@@ -350,7 +349,7 @@ Status game_actions_attack(Game *game)
     return ERROR;
   }
 
-  for ( i = 0; i < space_get_n_characters(space); i++)
+  for (i = 0; i < space_get_n_characters(space); i++)
   {
     if (space_get_character(space, i) != NO_ID)
     {
@@ -389,8 +388,8 @@ Status game_actions_attack(Game *game)
   {
     return ERROR;
   }
-  attackers_ids[n_attackers++] = player_get_id(game_get_player(game));
-  
+  *attackers_ids[n_attackers++] = player_get_id(game_get_player(game));
+
   random_num = rand() % 10;
 
   /* >4 haces daño al enemigo*/
@@ -398,7 +397,7 @@ Status game_actions_attack(Game *game)
   {
     damaged_index = rand() % n_attackers;
 
-    if (attackers_ids[damaged_index] == player_get_id(player))
+    if (*attackers_ids[damaged_index] == player_get_id(player))
     {
       player_health = player_get_health(player);
       player_health--;
@@ -411,7 +410,7 @@ Status game_actions_attack(Game *game)
     }
     else
     {
-      ally = game_get_character(game, attackers_ids[damaged_index]);
+      ally = game_get_character(game, *attackers_ids[damaged_index]);
       if (!ally)
       {
         return ERROR;
@@ -439,7 +438,6 @@ Status game_actions_chat(Game *game)
   Command *last_cmd = NULL;
   int i = 0;
   char *arg = NULL;
-  
 
   /* Comprobaciones de integridad en la ubicacion actual */
   if (!game)
@@ -467,19 +465,19 @@ Status game_actions_chat(Game *game)
   {
     return ERROR;
   }
-    for ( i = 0; i < space_get_n_characters(space); i++)
+  for (i = 0; i < space_get_n_characters(space); i++)
+  {
+    if (space_get_character(space, i) != NO_ID)
     {
-      if (space_get_character(space, i) != NO_ID)
+      character = game_get_character(game, space_get_character(space, i));
+      if (character && strcmp(character_get_name(character), arg) == 0 && character_get_friendly(character) == TRUE)
       {
-        character = game_get_character(game, space_get_character(space, i));
-        if (character && strcmp(character_get_name(character), arg) == 0 && character_get_friendly(character) == TRUE)
-        {
-          char_id = space_get_character(space, i);
-          break;
-        }
+        char_id = space_get_character(space, i);
+        break;
       }
     }
-    
+  }
+
   if (char_id == NO_ID)
   {
     return ERROR;
@@ -490,7 +488,7 @@ Status game_actions_chat(Game *game)
   {
     return ERROR;
   }
-  
+
   if (character_get_health(character) <= 0)
   {
     return ERROR;
@@ -605,7 +603,6 @@ Status game_actions_inspect(Game *game)
 
 Status game_actions_recruit(Game *game)
 {
-  Id space_id, char_id;
   Space *space = NULL;
   Character *character = NULL;
   Player *player = NULL;
@@ -633,7 +630,10 @@ Status game_actions_recruit(Game *game)
   {
     return ERROR;
   }
-  if (!(space = player_get_space(player)))
+  if (!(space = game_get_space(game, game_get_player_location(game))))
+  {
+    return ERROR;
+  }
   {
     return ERROR;
   }
@@ -669,11 +669,12 @@ Status game_actions_recruit(Game *game)
 
   return OK;
 }
-Status game_actions_abandon(Game *game){
-   Id *id;
+Status game_actions_abandon(Game *game)
+{
+  Id *id;
   char *arg = NULL;
   Command *last_cmd = NULL;
-  int n_player,i;
+  int n_player, i;
   if (!game)
   {
     return ERROR;
@@ -689,20 +690,24 @@ Status game_actions_abandon(Game *game){
     return ERROR;
   }
 
-  if((n_player=game_get_number_of_characters(game))<=0){
+  if ((n_player = game_get_number_of_characters(game)) <= 0)
+  {
     return ERROR;
   }
-if(!(id=game_get_players_followers(game))){
-  return ERROR;
+  if (!(id = game_get_players_followers(game)))
+  {
+    return ERROR;
   }
-for(i=0;i<n_player;i++){
-  if(!strcmp(arg,character_get_name(id[i]))){
-    if(!character_set_following(id[i],NO_ID)){
-      return ERROR;
+  for (i = 0; i < n_player; i++)
+  {
+    if (!strcmp(arg, character_get_name(game_get_character(game, id[i]))))
+    {
+      if (!character_set_following(game_get_character(game, id[i]), NO_ID))
+      {
+        return ERROR;
+      }
+      return OK;
     }
-    return OK;
-}
-  
-}
-return ERROR;
+  }
+  return ERROR;
 }
