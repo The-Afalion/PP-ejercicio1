@@ -15,7 +15,7 @@
 #include "character_test.h"
 #include "test.h"
 
-#define MAX_TESTS 26
+#define MAX_TESTS 30
 
 /**
  * @brief Main function for CHARACTER unit tests.
@@ -70,6 +70,10 @@ int main(int argc, char** argv) {
   if (all || test == 24) test2_character_get_message();
   if (all || test == 25) test1_character_set_message();
   if (all || test == 26) test2_character_set_message();
+  if (all || test == 27) test1_character_get_following();
+  if (all || test == 28) test2_character_get_following();
+  if (all || test == 29) test1_character_set_following();
+  if (all || test == 30) test2_character_set_following();
 
 
   PRINT_PASSED_PERCENTAGE;
@@ -236,4 +240,29 @@ void test1_character_set_message() {
 void test2_character_set_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_message(c, "message") == ERROR);
+}
+
+void test1_character_get_following() {
+  Character *c;
+  c = character_create(1);
+  character_set_following(c, 7);
+  PRINT_TEST_RESULT(character_get_following(c) == 7);
+  character_destroy(c);
+}
+
+void test2_character_get_following() {
+  Character *c = NULL;
+  PRINT_TEST_RESULT(character_get_following(c) == NO_ID);
+}
+
+void test1_character_set_following() {
+  Character *c;
+  c = character_create(1);
+  PRINT_TEST_RESULT(character_set_following(c, 7) == OK);
+  character_destroy(c);
+}
+
+void test2_character_set_following() {
+  Character *c = NULL;
+  PRINT_TEST_RESULT(character_set_following(c, 7) == ERROR);
 }

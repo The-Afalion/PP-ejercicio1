@@ -27,5 +27,9 @@ void test1_character_get_message();
 void test2_character_get_message();
 void test1_character_set_message();
 void test2_character_set_message();
+void test1_character_get_following();
+void test2_character_get_following();
+void test1_character_set_following();
+void test2_character_set_following();
 
 #endif

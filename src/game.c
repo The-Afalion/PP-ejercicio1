@@ -542,6 +542,17 @@ Character *game_get_character(Game *game, Id id)
   return NULL;
 }
 
+Character *game_get_character_at(Game *game, int position)
+{
+  /* Comprueba que el juego exista y la posición sea válida */
+  if (!game || position < 0 || position >= game->n_characters)
+  {
+    return NULL;
+  }
+
+  return game->characters[position];
+}
+
 Status game_add_object(Game *game, Object *obj)
 {
   /* Comprueba la validez y capacidad de objetos */

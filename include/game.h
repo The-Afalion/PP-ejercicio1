@@ -223,6 +223,15 @@ Object* game_get_object(Game* game, Id id);
 Character* game_get_character(Game* game, Id id);
 
 /**
+ * @brief Obtiene el personaje almacenado en una posición del array interno.
+ * @author Rodrigo
+ * @param game Puntero al juego.
+ * @param position Índice dentro del array de personajes.
+ * @return Puntero al personaje de esa posición, o NULL si no existe.
+ */
+Character *game_get_character_at(Game *game, int position);
+
+/**
  * @brief Añade un nuevo objeto a la lista general del juego.
  * @author Unai
  * @param game Puntero al juego.
