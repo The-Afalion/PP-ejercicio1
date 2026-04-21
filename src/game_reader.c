@@ -109,10 +109,13 @@ Status game_reader_load_objects(Game *game, char *filename)
     char name[WORD_SIZE] = "";
     char *toks = NULL;
     Id id = NO_ID, location_id = NO_ID;
+    Id dependency = NO_ID, open = NO_ID;
     Object *object = NULL;
     Status status = OK;
     char *endptr;
     char description[WORD_SIZE] = "";
+    int health = 0;
+    int movable = 0;
 
     /* Comprueba la validez del nombre de archivo */
     if (!filename)
@@ -143,6 +146,42 @@ Status game_reader_load_objects(Game *game, char *filename)
             {
                 strcpy(description, toks);
             }
+            toks = strtok(NULL, "|");
+            if (toks)
+            {
+                health = (int)strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                health = 0;
+            }
+            toks = strtok(NULL, "|");
+            if (toks)
+            {
+                movable = (int)strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                movable = 0;
+            }
+            toks = strtok(NULL, "|");
+            if (toks)
+            {
+                dependency = strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                dependency = NO_ID;
+            }
+            toks = strtok(NULL, "|");
+            if (toks)
+            {
+                open = strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                open = NO_ID;
+            }
 
             /* Creacion e integracion del objeto en el motor de juego */
             object = object_create(id);
@@ -150,6 +189,10 @@ Status game_reader_load_objects(Game *game, char *filename)
             {
                 object_set_name(object, name);
                 object_set_desc(object, description);
+                object_set_health(object, health);
+                object_set_movable(object, movable ? TRUE : FALSE);
+                object_set_dependency(object, dependency);
+                object_set_open(object, open);
 
                 game_add_object(game, object);
                 game_set_object_location(game, location_id, id);
