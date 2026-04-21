@@ -294,6 +294,7 @@ BOOL game_connection_is_open(Game *game, Id space_id, Directions dir);
  * @return Puntero al enlace encontrado o NULL si no existe o hay error.
  */
 Link* game_get_link(Game* game, Id link_id);
+Link *game_get_link_at(Game *game, int index);
 /**
  * @brief Obtiene el número de enlaces actualmente cargados en el juego.
  * @author Unai
