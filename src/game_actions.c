@@ -191,20 +191,26 @@ Status game_actions_take(Game *game)
 {
   Id player_loc = NO_ID;
   Id obj_id = NO_ID;
+  Id id_2;
   Space *space = NULL;
   int num_objs = 0;
   int i = 0;
+  int player_health;
   Id *objs = NULL;
   Command *last_cmd = NULL;
   char *arg = NULL;
   Object *obj = NULL;
+  Player *player;
+  Inventory*in;
 
   /* Comprueba la validez del puntero */
   if (!game)
   {
     return ERROR;
   }
-
+if(!(player=game_get_player(game))){
+  return ERROR;
+}
   player_loc = game_get_player_location(game);
   if (player_loc == NO_ID)
   {
@@ -258,10 +264,22 @@ Status game_actions_take(Game *game)
         }
       }
 
-      /* Gestion de la transferencia de objeto */
+      
       if (obj_id != NO_ID)
       {
+        if(object_get_movable(obj)==FALSE){
+          return ERROR;
+        }
+        if((id_2=object_get_dependance(obj))!=NO_ID){
+          if(player_has_object(player,id_2)==FALSE){
+            return ERROR;
+          }
+          
+        }
         player_add_object(game_get_player(game), obj_id);
+        player_health = player_get_health(player);
+        player_health=player_health+object_get_health(obj);
+        player_set_health(player,player_health);
         game_set_object_location(game, NO_ID, obj_id);
         return OK;
       }
@@ -279,6 +297,7 @@ Status game_actions_drop(Game *game)
   Object *obj;
   char *arg = NULL;
   int i, max_objects;
+  Id id_2;
 
   /* Comprueba la validez del puntero */
   if (!game)
@@ -321,6 +340,10 @@ Status game_actions_drop(Game *game)
           /* Eliminacion y reubicacion del objeto */
           player_del_object(game_get_player(game), obj_id);
           game_set_object_location(game, player_loc, obj_id);
+          if((id_2=object_get_dependance(obj))!=NO_ID){
+                player_del_object(game_get_player(game), id_2);
+                game_set_object_location(game, player_loc, id_2);
+          }
           return OK;
         }
       }
