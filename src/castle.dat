@@ -6,8 +6,14 @@
 #o:22|Candelabra|12|Un viejo y polvoriento candelabra.|0|1|-1|-1|
 #o:23|Armor|121|Una mellada y oxidada armadura de caballero.|0|0|-1|-1|
 #o:24|Tapestry|13|Un bonito tapete de pared.|0|0|-1|-1|
+#o:25|Chest|112|Un viejo cofre de madera con cerradura.|0|0|-1|-1|
+#o:26|Key|111|Una pequena llave de hierro algo fria al tacto.|0|1|-1|22|
+#o:27|GoldenSword|113|Una espada de oro brillante guardada como un tesoro.|0|1|-1|-1|
 #s:11|Entrada| _   !#  |[_]--'---|!'!""`""!|! ! /^\ !|!_!_!I!_!|
 #s:12|Pasillo|!-------!|! . . !  |! . . !  |! . . !  |!-------!|
+#s:111|Azotea|/////^^^^|///____//|//_KEY_//|/  ___  /|/__====_/|
+#s:112|Sotano|#########|# .   . #|#   C   #|# .   . #|#########|
+#s:113|Tesoro|*********|*  $$$  *|*   //  *|*  /__/ *|*********|
 #s:121|Mazmorra|. -=== -.|! . . !  |! .'. !  |()_____()|II_____II|
 #s:13|Comedor|/\ /\ /\ |//\\/\\/\|//\\/\\/\|II II II |---------|
 #s:131|Habitacion|+-------+|! H H H !|!       !|! H H H !|+-------+|
@@ -32,3 +38,9 @@
 #l:15|CourtyardUp|15|14|0|1|
 #l:16|CourtyardDown|15|16|1|1|
 #l:17|Garden|16|15|0|1|
+#l:18|RoofUp|11|111|4|1|
+#l:19|RoofDown|111|11|5|1|
+#l:20|BasementDown|11|112|5|1|
+#l:21|BasementUp|112|11|4|1|
+#l:22|Chest|112|113|2|0|
+#l:23|ChestExit|113|112|3|1|

@@ -722,6 +722,16 @@ Link *game_get_link(Game *game, Id link_id)
   return NULL;
 }
 
+Link *game_get_link_at(Game *game, int index)
+{
+  if (!game || index < 0 || index >= MAX_LINKS)
+  {
+    return NULL;
+  }
+
+  return game->link[index];
+}
+
 int game_get_number_of_links(Game *game)
 {
   /* Comprueba la validez del juego */

@@ -549,7 +549,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     screen_area_clear(ge->help);
     screen_area_puts(ge->help, " The commands you can use are:");
     screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
-    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab");
+    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, open/o");
     screen_area_puts(ge->help, "     move: north/south/east/west/up/down");
 
     if (paint_cmd == TRUE)

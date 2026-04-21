@@ -201,7 +201,6 @@ Status game_actions_take(Game *game)
   char *arg = NULL;
   Object *obj = NULL;
   Player *player;
-  Inventory*in;
 
   /* Comprueba la validez del puntero */
   if (!game)
@@ -270,7 +269,7 @@ if(!(player=game_get_player(game))){
         if(object_get_movable(obj)==FALSE){
           return ERROR;
         }
-        if((id_2=object_get_dependance(obj))!=NO_ID){
+        if((id_2=object_get_dependency(obj))!=NO_ID){
           if(player_has_object(player,id_2)==FALSE){
             return ERROR;
           }
@@ -340,7 +339,7 @@ Status game_actions_drop(Game *game)
           /* Eliminacion y reubicacion del objeto */
           player_del_object(game_get_player(game), obj_id);
           game_set_object_location(game, player_loc, obj_id);
-          if((id_2=object_get_dependance(obj))!=NO_ID){
+          if((id_2=object_get_dependency(obj))!=NO_ID){
                 player_del_object(game_get_player(game), id_2);
                 game_set_object_location(game, player_loc, id_2);
           }
