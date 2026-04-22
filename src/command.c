@@ -175,10 +175,6 @@ Status command_get_user_input(Command *command)
         strcpy(command->args[i], token);
         command->n_args++;
       }
-      for (i = 0; i < command->n_args; i++)
-      {
-        printf("token %i :%s ", i, command->args[i]);
-      }
     }
 
     return command_set_code(command, cmd);

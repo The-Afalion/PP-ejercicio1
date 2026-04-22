@@ -195,6 +195,7 @@ Status game_actions_take(Game *game)
   Space *space = NULL;
   Id player_loc = NO_ID, obj_id = NO_ID;
   Command *last_cmd = NULL;
+  Object *object = NULL;
   Player *player = NULL;
   char **arg = NULL;
   /* Comprueba la validez del puntero */
@@ -202,9 +203,10 @@ Status game_actions_take(Game *game)
   {
     return ERROR;
   }
-if(!(player=game_get_player(game))){
-  return ERROR;
-}
+  if (!(player = game_get_player(game)))
+  {
+    return ERROR;
+  }
   player_loc = game_get_player_location(game);
   if (player_loc == NO_ID)
   {
@@ -229,7 +231,6 @@ if(!(player=game_get_player(game))){
     return ERROR;
   }
 
-  /* Comprueba la disponibilidad en el inventario */
   if (inventory_is_full(player_get_backpack(game_get_player(game))) == TRUE)
   {
     return ERROR;
@@ -244,8 +245,24 @@ if(!(player=game_get_player(game))){
   {
     return ERROR;
   }
-  
-  if(space_remove_object(space, obj_id) == ERROR)
+  if (!(object = game_get_object(game, obj_id)))
+  {
+    return ERROR;
+  }
+
+  if (object_get_movable(object) == FALSE)
+  {
+    return ERROR;
+  }
+  if (object_get_dependency(object) != NO_ID)
+  {
+
+    if (!player_has_object(player, object_get_dependency(object)))
+    {
+      return ERROR;
+    }
+  }
+  if (space_remove_object(space, obj_id) == ERROR)
   {
     return ERROR;
   }
@@ -309,9 +326,10 @@ Status game_actions_drop(Game *game)
           /* Eliminacion y reubicacion del objeto */
           player_del_object(game_get_player(game), obj_id);
           game_set_object_location(game, player_loc, obj_id);
-          if((id_2=object_get_dependency(obj))!=NO_ID){
-                player_del_object(game_get_player(game), id_2);
-                game_set_object_location(game, player_loc, id_2);
+          if ((id_2 = object_get_dependency(obj)) != NO_ID)
+          {
+            player_del_object(game_get_player(game), id_2);
+            game_set_object_location(game, player_loc, id_2);
           }
           return OK;
         }
