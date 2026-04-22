@@ -23,10 +23,10 @@ struct Object
   Id id;                                     /*!< La ID del objeto */
   char name[WORD_SIZE + SINGLE_ELEM];        /*!< Nombre del objeto */
   char description[WORD_SIZE + SINGLE_ELEM]; /*!< Descripcion del objeto*/
-  int health;                                 /*!<vida queaporta o quita*/
-  BOOL movable;                                 /*Si se puede mover o no*/
-  Id dependency;                                /*Indica el id del que depende*/
-  Id open;                                       /*Indica el id de lo que puede abrir*/
+  int health;                                /*!<vida queaporta o quita*/
+  BOOL movable;                              /*!<Si se puede mover o no*/
+  Id dependency;                             /*!<Indica el id del que depende*/
+  Id open;                                   /*!<Indica el id de lo que puede abrir*/
 };
 
 Object *object_create(Id id)
@@ -52,10 +52,10 @@ Object *object_create(Id id)
   newObject->id = id;
   newObject->name[FIRST_CHAR] = '\0';
   newObject->description[FIRST_CHAR] = '\0';
-  newObject->dependency=NO_ID;
-  newObject->health=0;
-  newObject->open=NO_ID;
-  newObject->movable=FALSE;
+  newObject->dependency = NO_ID;
+  newObject->health = 0;
+  newObject->open = NO_ID;
+  newObject->movable = FALSE;
 
   return newObject;
 }
@@ -146,66 +146,80 @@ const char *object_get_desc(Object *object)
 #include <stdio.h>
 #include <stdlib.h>
 
-/* --- SETTERS --- */
-
-Status object_set_health(Object *obj, int health) {
-    if (obj == NULL) {
-        return ERROR; /* Error: Puntero nulo */
-    }
-    obj->health = health;
-    return OK; /* OK */
+Status object_set_health(Object *obj, int health)
+{
+  if (obj == NULL)
+  {
+    return ERROR;
+  }
+  obj->health = health;
+  return OK;
 }
 
-Status object_set_movable(Object *obj, BOOL movable) {
-    if (obj == NULL) {
-        return ERROR;
-    }
-    obj->movable = movable;
-   return OK;
+Status object_set_movable(Object *obj, BOOL movable)
+{
+  if (obj == NULL)
+  {
+    return ERROR;
+  }
+  obj->movable = movable;
+  return OK;
 }
 
-Status object_set_dependency(Object *obj, Id dependency) {
-    if (obj == NULL) {
-       return ERROR;
-    }
-    obj->dependency = dependency;
-    return OK;
+Status object_set_dependency(Object *obj, Id dependency)
+{
+  if (obj == NULL)
+  {
+    return ERROR;
+  }
+  obj->dependency = dependency;
+  return OK;
 }
 
-Status object_set_open(Object *obj, Id open) {
-    if (obj == NULL) {
-        return ERROR;
-    }
-    obj->open = open;
-    return OK;
+Status object_set_open(Object *obj, Id open)
+{
+  if (obj == NULL)
+  {
+    return ERROR;
+  }
+  obj->open = open;
+  return OK;
 }
 
-/* --- GETTERS --- */
-
-int object_get_health(Object *obj) {
-    if (obj == NULL) {
-        return -1; /* Devuelve un valor que indique error en tu lógica */
-    }
-    return obj->health;
+int object_get_health(Object *obj)
+{
+  if (obj == NULL)
+  {
+    return -1;
+  }
+  return obj->health;
 }
 
-BOOL object_get_movable(Object *obj) {
-    if (obj == NULL) {
-        return FALSE; /* Asumiendo que FALSE está definido en tu tipo BOOL */
-    }
-    return obj->movable;
+BOOL object_get_movable(Object *obj)
+{
+  if (obj == NULL)
+  {
+    return FALSE;
+  }
+  return obj->movable;
 }
 
-Id object_get_dependency(Object *obj) {
-    if (obj == NULL) {
-        return -1; /* Asumiendo que NO_ID o -1 indica la ausencia de dependencia */
-    }
-    return obj->dependency;
+Id object_get_dependency(Object *obj)
+{
+  if (obj == NULL)
+  {
+    return -1;
+  }
+  return obj->dependency;
 }
 
-Id object_get_open(Object *obj) {
-    if (obj == NULL) {
-        return -1; /* Asumiendo que NO_ID o -1 indica la ausencia de Id */
-    }
-    return obj->open;
+Id object_get_open(Object *obj)
+{
+  if (obj == NULL)
+  {
+    return -1;
+  }
+  return obj->open;
 }
+
+

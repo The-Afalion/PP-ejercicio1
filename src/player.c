@@ -15,7 +15,7 @@
 #define SINGLE_ELEM 1
 #define FIRST_CHAR 0
 #define START_HEALTH 3
-#define INVENTORY_SIZE 3
+
 
 /**
  * @brief Player

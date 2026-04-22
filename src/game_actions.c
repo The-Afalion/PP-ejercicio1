@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 
 Status game_actions_unknown(Game *game);
@@ -26,6 +27,7 @@ Status game_actions_chat(Game *game);
 Status game_actions_inspect(Game *game);
 Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
+Status game_actions_use(Game *game);
 
 Status game_actions_update(Game *game, Command *command)
 {
@@ -89,7 +91,7 @@ Status game_actions_move(Game *game)
 {
   Id current_space_id = NO_ID, destination_id = NO_ID;
   Id player_id = NO_ID;
-  char *arg = NULL;
+  char **arg = NULL;
   Directions dir = NO_DIRECTION;
   Command *last_cmd = NULL;
   Space *dest_space = NULL;
@@ -105,33 +107,34 @@ Status game_actions_move(Game *game)
   /* Obtiene la direccion introducida */
   last_cmd = game_get_last_command(game);
   arg = command_get_arg(last_cmd);
-  if (!arg || arg[0] == '\0')
+
+  if (arg == NULL || arg[0][0] == '\0')
   {
     return ERROR;
   }
 
   /* Traduccion del argumento a la direccion enumerada */
-  if (strcmp(arg, "north") == 0 || strcmp(arg, "n") == 0)
+  if (strcasecmp(arg[0], "north") == 0 || strcasecmp(arg[0], "n") == 0)
   {
     dir = N;
   }
-  else if (strcmp(arg, "south") == 0 || strcmp(arg, "s") == 0)
+  else if (strcasecmp(arg[0], "south") == 0 || strcasecmp(arg[0], "s") == 0)
   {
     dir = S;
   }
-  else if (strcmp(arg, "west") == 0 || strcmp(arg, "w") == 0)
+  else if (strcasecmp(arg[0], "west") == 0 || strcasecmp(arg[0], "w") == 0)
   {
     dir = W;
   }
-  else if (strcmp(arg, "east") == 0 || strcmp(arg, "e") == 0)
+  else if (strcasecmp(arg[0], "east") == 0 || strcasecmp(arg[0], "e") == 0)
   {
     dir = E;
   }
-  else if (strcmp(arg, "up") == 0 || strcmp(arg, "u") == 0)
+  else if (strcasecmp(arg[0], "up") == 0 || strcasecmp(arg[0], "u") == 0)
   {
     dir = U;
   }
-  else if (strcmp(arg, "down") == 0 || strcmp(arg, "d") == 0)
+  else if (strcasecmp(arg[0], "down") == 0 || strcasecmp(arg[0], "d") == 0)
   {
     dir = D;
   }
@@ -183,22 +186,16 @@ Status game_actions_move(Game *game)
     }
     return OK;
   }
-
+  printf("No se ha podido mover en esa direccion.\n");
   return ERROR;
 }
 
 Status game_actions_take(Game *game)
 {
-  Id player_loc = NO_ID;
-  Id obj_id = NO_ID;
   Space *space = NULL;
-  int num_objs = 0;
-  int i = 0;
-  Id *objs = NULL;
+  Id player_loc = NO_ID, obj_id = NO_ID;
   Command *last_cmd = NULL;
-  char *arg = NULL;
-  Object *obj = NULL;
-
+  char **arg = NULL;
   /* Comprueba la validez del puntero */
   if (!game)
   {
@@ -224,7 +221,7 @@ Status game_actions_take(Game *game)
   }
 
   arg = command_get_arg(last_cmd);
-  if (!arg || arg[0] == '\0')
+  if (!arg || arg[0][0] == '\0')
   {
     return ERROR;
   }
@@ -235,40 +232,27 @@ Status game_actions_take(Game *game)
     return ERROR;
   }
 
-  num_objs = space_get_number_of_objects(space);
-
-  if (num_objs > 0)
+  obj_id = game_get_object_id_from_name(game, arg[0]);
+  if (obj_id == NO_ID)
   {
-    objs = space_get_objects(space);
-
-    if (objs)
-    {
-      /* Busca el objeto especifico solicitado por nombre */
-      for (i = 0; i < num_objs; i++)
-      {
-        obj = game_get_object(game, objs[i]);
-
-        if (obj != NULL && object_get_name(obj) != NULL)
-        {
-          if (strcmp(object_get_name(obj), arg) == 0)
-          {
-            obj_id = objs[i];
-            break;
-          }
-        }
-      }
-
-      /* Gestion de la transferencia de objeto */
-      if (obj_id != NO_ID)
-      {
-        player_add_object(game_get_player(game), obj_id);
-        game_set_object_location(game, NO_ID, obj_id);
-        return OK;
-      }
-    }
+    return ERROR;
+  }
+  if (!space_contains_object(space, obj_id))
+  {
+    return ERROR;
+  }
+  
+  if(space_remove_object(space, obj_id) == ERROR)
+  {
+    return ERROR;
   }
 
-  return ERROR;
+  if (player_add_object(game_get_player(game), obj_id) == ERROR)
+  {
+    return ERROR;
+  }
+
+  return OK;
 }
 
 Status game_actions_drop(Game *game)
@@ -277,7 +261,7 @@ Status game_actions_drop(Game *game)
   Id obj_id = NO_ID;
   Command *last_cmd = NULL;
   Object *obj;
-  char *arg = NULL;
+  char **arg = NULL;
   int i, max_objects;
 
   /* Comprueba la validez del puntero */
@@ -299,7 +283,7 @@ Status game_actions_drop(Game *game)
   }
 
   arg = command_get_arg(last_cmd);
-  if (!arg || arg[0] == '\0')
+  if (!arg || arg[0][0] == '\0')
   {
     return ERROR;
   }
@@ -316,7 +300,7 @@ Status game_actions_drop(Game *game)
 
       if (obj != NULL && object_get_name(obj) != NULL)
       {
-        if (strcmp(object_get_name(obj), arg) == 0)
+        if (strcasecmp(object_get_name(obj), arg[0]) == 0)
         {
           /* Eliminacion y reubicacion del objeto */
           player_del_object(game_get_player(game), obj_id);
@@ -335,6 +319,7 @@ Status game_actions_attack(Game *game)
   Id space_id = NO_ID, enemy_id = NO_ID;
   Space *space;
   char *enemy_name = NULL;
+  char **arg = NULL;
   Character *enemy = NULL;
   Player *player;
   int random_num;
@@ -353,7 +338,8 @@ Status game_actions_attack(Game *game)
   {
     return ERROR;
   }
-  enemy_name = command_get_arg(last_cmd);
+  arg = command_get_arg(last_cmd);
+  enemy_name = arg[0];
 
   if (enemy_name == NULL)
   {
@@ -383,7 +369,7 @@ Status game_actions_attack(Game *game)
     if (space_get_character(space, i) != NO_ID)
     {
       enemy = game_get_character(game, space_get_character(space, i));
-      if (enemy && strcmp(character_get_name(enemy), enemy_name) == 0 && character_get_friendly(enemy) == FALSE)
+      if (enemy && strcasecmp(character_get_name(enemy), enemy_name) == 0 && character_get_friendly(enemy) == FALSE)
       {
         enemy_id = space_get_character(space, i);
         break;
@@ -472,7 +458,7 @@ Status game_actions_chat(Game *game)
   Character *character;
   Command *last_cmd = NULL;
   int i = 0;
-  char *arg = NULL;
+  char **arg = NULL;
 
   /* Comprobaciones de integridad en la ubicacion actual */
   if (!game)
@@ -496,7 +482,7 @@ Status game_actions_chat(Game *game)
     return ERROR;
   }
   arg = command_get_arg(last_cmd);
-  if (!arg || arg[0] == '\0')
+  if (!arg || arg[0][0] == '\0')
   {
     return ERROR;
   }
@@ -505,7 +491,7 @@ Status game_actions_chat(Game *game)
     if (space_get_character(space, i) != NO_ID)
     {
       character = game_get_character(game, space_get_character(space, i));
-      if (character && strcmp(character_get_name(character), arg) == 0 && character_get_friendly(character) == TRUE)
+      if (character && strcasecmp(character_get_name(character), arg[0]) == 0 && character_get_friendly(character) == TRUE)
       {
         char_id = space_get_character(space, i);
         break;
@@ -536,7 +522,7 @@ Status game_actions_chat(Game *game)
 
 Status game_actions_inspect(Game *game)
 {
-  char *arg;
+  char **arg;
   int i, max_backpac_obj, num_obj_in_space;
   Space *space = NULL;
   Command *last_cmd = NULL;
@@ -558,7 +544,7 @@ Status game_actions_inspect(Game *game)
   }
 
   arg = command_get_arg(last_cmd);
-  if (!arg || arg[0] == '\0')
+  if (!arg || arg[0][0] == '\0')
   {
     return ERROR;
   }
@@ -594,7 +580,7 @@ Status game_actions_inspect(Game *game)
         return ERROR;
       }
 
-      if (strcmp(object_get_name(obj), arg) == 0)
+      if (strcasecmp(object_get_name(obj), arg[0]) == 0)
       {
         found = TRUE;
         break;
@@ -617,7 +603,7 @@ Status game_actions_inspect(Game *game)
       for (i = 0; i < num_obj_in_space; i++)
       {
         obj = game_get_object(game, objs[i]);
-        if (obj && strcmp(object_get_name(obj), arg) == 0)
+        if (obj && strcasecmp(object_get_name(obj), arg[0]) == 0)
         {
           found = TRUE;
           break;
@@ -641,7 +627,7 @@ Status game_actions_recruit(Game *game)
   Space *space = NULL;
   Character *character = NULL;
   Player *player = NULL;
-  char *arg = NULL, *name = NULL;
+  char **arg = NULL, *name = NULL;
   Command *last_cmd = NULL;
   int i;
   BOOL found = FALSE;
@@ -681,7 +667,7 @@ Status game_actions_recruit(Game *game)
     {
       return ERROR;
     }
-    if (strcmp(name, arg) == 0)
+    if (strcasecmp(name, arg[0]) == 0)
     {
       if (game_get_character_location(game, character_get_id(character)) != space_get_id(space))
       {
@@ -709,7 +695,7 @@ Status game_actions_abandon(Game *game)
 {
   Id *id;
   Character *character = NULL;
-  char *arg = NULL;
+  char **arg = NULL;
   Command *last_cmd = NULL;
   int n_player, i;
   if (!game)
@@ -748,7 +734,7 @@ Status game_actions_abandon(Game *game)
       return ERROR;
     }
 
-    if (!strcmp(arg, character_get_name(character)))
+    if (!strcasecmp(arg[0], character_get_name(character)))
     {
       if (character_set_following(character, NO_ID) == ERROR)
       {
@@ -758,4 +744,45 @@ Status game_actions_abandon(Game *game)
     }
   }
   return ERROR;
+}
+
+Status game_actions_use(Game *game)
+{
+  Player *player = NULL;
+  Command *last_cmd = NULL;
+  Inventory *backpack = NULL;
+  Id object_in_backpack = NO_ID;
+  char **arg = NULL;
+
+  if (!game)
+  {
+    return ERROR;
+  }
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  if (!(arg = command_get_arg(last_cmd)))
+  {
+    return ERROR;
+  }
+  if (!(player = game_get_player(game)))
+  {
+    return ERROR;
+  }
+  if (!(backpack = player_get_backpack(player)))
+  {
+    return ERROR;
+  }
+  object_in_backpack = game_get_object_id_from_name(game, arg[0]);
+  if (object_in_backpack == NO_ID)
+  {
+    return ERROR;
+  }
+  if (!player_has_object(player, object_in_backpack))
+  {
+    return ERROR;
+  }
+
+  return OK;
 }

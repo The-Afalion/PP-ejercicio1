@@ -20,6 +20,5 @@ else
     else
       valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes "./$binary"
     fi
-    echo
   done
 fi

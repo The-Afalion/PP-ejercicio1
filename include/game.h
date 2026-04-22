@@ -370,4 +370,14 @@ int game_get_number_of_followers_of_player(Game*game);
  * @return Array de id, o NULL si hay error.
  */
 Id * game_get_players_followers(Game*game);
+
+/**
+ * @brief Obtiene el ID de un objeto por su nombre.
+ * @author Unai.G
+ * @param game Puntero al juego.
+ * @param name Nombre del objeto a buscar.
+ * @return ID del objeto encontrado, o NO_ID si no existe o hay error.
+ */
+Id game_get_object_id_from_name(Game *game, char *name);
+
 #endif

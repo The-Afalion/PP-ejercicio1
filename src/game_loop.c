@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
   /* Inicializacion de la semilla aleatoria */
   srand(time(NULL));
-
+printf("funciona");
   /* Comprueba los argumentos de entrada */
   if (argc < 2)
   {
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
       return 1;
     }
   }
-
+printf("se abre");
   /* Inicializacion del juego desde archivo */
   if (game_create_from_file(&game, argv[1]) == ERROR)
   {
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     }
     return 1;
   }
-
+printf("se crea");
   /* Inicializacion del motor grafico */
   if ((gengine = graphic_engine_create()) == NULL)
   {
@@ -95,7 +95,6 @@ int main(int argc, char *argv[])
         fprintf(log_file, "%s: %s\n", last_input, game_get_last_command_status(game) == OK ? "OK" : "ERROR");
       }
     }
-
     /* Actualiza la interfaz grafica post-comando */
     graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
     sleep(1);

@@ -13,6 +13,7 @@
 
 #include "set.h"
 #include "types.h"
+#define INVENTORY_SIZE 3
 
 /**
  * @brief Define el inventario.

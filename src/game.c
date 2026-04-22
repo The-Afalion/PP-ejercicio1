@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #define PLAYER_ID 0
 #define FIRST_POSITION 0
@@ -840,4 +841,25 @@ Id *game_get_players_followers(Game *game)
     }
   }
   return ids;
+}
+
+Id game_get_object_id_from_name(Game *game, char *name)
+{
+  int i;
+
+  /* Comprueba la validez de los parametros */
+  if (!game || !name)
+  {
+    return NO_ID;
+  }
+
+  /* Busca el objeto por nombre */
+  for (i = 0; i < game->n_objects; i++)
+  {
+    if (game->objects[i] != NULL && !strcasecmp(object_get_name(game->objects[i]), name))
+    {
+      return object_get_id(game->objects[i]);
+    }
+  }
+  return NO_ID;
 }

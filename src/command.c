@@ -12,23 +12,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
-#define CMD_LENGHT 30
+#define CMD_LENGHT 100
 #define SINGLE_ELEM 1
+#define MAX_ARGS 3
 
-char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "exit"}, {"t", "Take"}, {"d", "drop"}, {"a", "attack"}, {"c", "chat"}, {"m", "move"}, {"i", "inspect"}, {"r", "recruit"},{"ab", "abandon"}};
+char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "exit"}, {"t", "Take"}, {"d", "drop"}, {"a", "attack"}, {"c", "chat"}, {"m", "move"}, {"i", "inspect"}, {"r", "recruit"}, {"ab", "abandon"}, {"u", "use"}};
 
 struct _Command
 {
   CommandCode code;            /*!<  Codigo del comando enumerado */
-  char arg[CMD_LENGHT];        /*!< Argumento del comando introducido */
+  char *args[MAX_ARGS];        /*!< Argumentos del comando introducido */
+  int n_args;                  /*!< Numero de argumentos introducidos */
   char last_input[CMD_LENGHT]; /*!< Almacena la ultima entrada completa del usuario */
 };
 
 Command *command_create()
 {
   Command *newCommand = NULL;
-
+  int i = 0;
   newCommand = (Command *)calloc(SINGLE_ELEM, sizeof(Command));
 
   /* Comprueba si falla la reserva de memoria */
@@ -39,7 +42,12 @@ Command *command_create()
 
   /* Inicializacion de los campos por defecto */
   newCommand->code = NO_CMD;
-  newCommand->arg[0] = '\0';
+
+  for (i = 0; i < MAX_ARGS; i++)
+  {
+    newCommand->args[i] = (char *)calloc(CMD_LENGHT, sizeof(char));
+  }
+  newCommand->n_args = 0;
   newCommand->last_input[0] = '\0';
 
   return newCommand;
@@ -47,10 +55,15 @@ Command *command_create()
 
 Status command_destroy(Command *command)
 {
+  int i = 0;
   /* Comprueba que el comando no sea NULL antes de liberar */
   if (!command)
   {
     return ERROR;
+  }
+  for (i = 0; i < MAX_ARGS; i++)
+  {
+    free(command->args[i]);
   }
 
   free(command);
@@ -80,14 +93,14 @@ CommandCode command_get_code(Command *command)
   return command->code;
 }
 
-char *command_get_arg(Command *command)
+char **command_get_arg(Command *command)
 {
   /* Comprueba la validez del puntero y devuelve el argumento */
   if (!command)
   {
     return NULL;
   }
-  return command->arg;
+  return command->args;
 }
 
 char *command_get_last_input(Command *command)
@@ -132,7 +145,7 @@ Status command_get_user_input(Command *command)
     /* Busca coincidencia del token con los comandos validos */
     while (cmd == UNKNOWN && i < N_CMD)
     {
-      if (!strcmp(token, cmd_to_str[i][CMDS]) || !strcmp(token, cmd_to_str[i][CMDL]))
+      if (!strcasecmp(token, cmd_to_str[i][CMDS]) || !strcasecmp(token, cmd_to_str[i][CMDL]))
       {
         cmd = i + NO_CMD;
       }
@@ -143,15 +156,29 @@ Status command_get_user_input(Command *command)
     }
 
     /* Extrae el segundo token correspondiente al argumento */
-    arg = strtok(NULL, " \n");
+    arg = strtok(NULL, "\n");
+
     if (arg)
     {
-      strncpy(command->arg, arg, CMD_LENGHT - 1);
-      command->arg[CMD_LENGHT - 1] = '\0';
-    }
-    else
-    {
-      command->arg[0] = '\0';
+      i = 0;
+      command->n_args = 1;
+      token = strtok(arg, " ");
+      strcpy(command->args[i], token);
+      while (token != NULL && i < 3)
+      {
+        i++;
+        token = strtok(NULL, " ");
+        if (token == NULL)
+        {
+          break;
+        }
+        strcpy(command->args[i], token);
+        command->n_args++;
+      }
+      for (i = 0; i < command->n_args; i++)
+      {
+        printf("token %i :%s ", i, command->args[i]);
+      }
     }
 
     return command_set_code(command, cmd);
@@ -163,4 +190,13 @@ Status command_get_user_input(Command *command)
     command->last_input[CMD_LENGHT - 1] = '\0';
     return command_set_code(command, EXIT);
   }
+}
+
+int command_get_nargs(Command *command)
+{
+  if (!command)
+  {
+    return -1;
+  }
+  return command->n_args;
 }

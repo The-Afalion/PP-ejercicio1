@@ -14,7 +14,7 @@
 #include "types.h"
 
 #define N_CMDT 2
-#define N_CMD 11
+#define N_CMD 12
 
 /**
  * @brief Tipos de formato para los comandos (corto o largo)
@@ -24,7 +24,7 @@ typedef enum { CMDS, CMDL } CommandType;
 /**
  * @brief Códigos de los comandos disponibles en el juego
  */
-typedef enum { NO_CMD = -1, UNKNOWN, EXIT, TAKE, DROP , ATTACK , CHAT, MOVE, INSPECT, RECRUIT, ABANDON} CommandCode;
+typedef enum { NO_CMD = -1, UNKNOWN, EXIT, TAKE, DROP , ATTACK , CHAT, MOVE, INSPECT, RECRUIT, ABANDON, USE} CommandCode;
 
 /**
  * @brief Estructura opaca del comando
@@ -68,7 +68,7 @@ CommandCode command_get_code(Command* command);
  * @param command Puntero al comando.
  * @return El argumento del comando o NULL si hay error.
  */
-char* command_get_arg(Command* command);
+char** command_get_arg(Command* command);
 
 /**
  * @brief Obtiene el comando introducido por el usuario desde teclado.
@@ -85,5 +85,13 @@ char* command_get_last_input(Command* command);
  * @return OK si se lee con éxito, ERROR en caso contrario.
  */
 Status command_get_user_input(Command* command);
+
+/**
+ * @brief Obtiene el número de argumentos del comando.
+ * @author Unai.G
+ * @param command Puntero al comando.
+ * @return El número de argumentos o -1 si hay error.
+ */
+int command_get_nargs(Command* command);
 
 #endif
