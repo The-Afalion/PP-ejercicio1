@@ -95,6 +95,10 @@ printf("se crea");
         fprintf(log_file, "%s: %s\n", last_input, game_get_last_command_status(game) == OK ? "OK" : "ERROR");
       }
     }
+
+    if (command_get_code(command) == EXIT || game_get_finished(game)) break;
+
+    
     /* Actualiza la interfaz grafica post-comando */
     graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
     sleep(1);

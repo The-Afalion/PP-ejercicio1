@@ -568,5 +568,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
     /* Refresco por pantalla del ciclo completo */
     screen_paint(game_get_turn(game));
-    printf("prompt:> ");
+
+    if (game_get_finished(game)) {
+        printf("GAME OVER\n");
+    } else if (command_get_code(game_get_last_command(game)) == EXIT) {
+        printf("GAME EXIT\n");
+    } else {
+        printf("prompt:> ");
+    }
 }

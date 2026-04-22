@@ -1,0 +1,4 @@
+*.o
+castle
+doc/
+obj/
