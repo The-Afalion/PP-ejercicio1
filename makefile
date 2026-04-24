@@ -7,13 +7,14 @@ LIBS = lib
 CC=gcc
 CFLAGS= -I$(HEADERS) -g -Wall -pedantic -ansi
 
-# Object files used to compile the program (objectss) and the tests (t_objectss)
+# Object files used to compile the program and the tests
 OBJECTS = $(OBJDIR)/command.o $(OBJDIR)/game_actions.o $(OBJDIR)/game_loop.o $(OBJDIR)/game_reader.o $(OBJDIR)/game.o $(OBJDIR)/graphic_engine.o $(OBJDIR)/object.o $(OBJDIR)/player.o $(OBJDIR)/space.o $(OBJDIR)/set.o $(OBJDIR)/character.o $(OBJDIR)/link.o $(OBJDIR)/inventory.o
-TEST_OBJECTS = $(OBJDIR)/character.o $(OBJDIR)/space.o $(OBJDIR)/set.o $(OBJDIR)/object.o $(OBJDIR)/player.o $(OBJDIR)/space_test.o $(OBJDIR)/set_test.o $(OBJDIR)/character_test.o $(OBJDIR)/object_test.o $(OBJDIR)/player_test.o $(OBJDIR)/inventory.o $(OBJDIR)/link.o $(OBJDIR)/link_test.o $(OBJDIR)/inventory_test.o
+TEST_HELPERS = $(OBJDIR)/test.o
+TESTS = space_test set_test character_test object_test player_test link_test inventory_test
 
-EXES = castle space_test set_test character_test object_test player_test link_test inventory_test
+EXES = castle $(TESTS)
 
-.PHONY: all clean runtests docs
+.PHONY: all clean tests doxygen
 
 # The main task
 all: $(OBJECTS)
@@ -24,30 +25,29 @@ $(OBJDIR)/%.o: $(SRC)/%.c
 	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Runs tests with valgrind.
-tests: $(TEST_OBJECTS)
-	@echo ">>>>>>Running space tests with valgrind"
-	$(CC) -o space_test $(OBJDIR)/space_test.o $(OBJDIR)/space.o $(OBJDIR)/set.o $(OBJDIR)/inventory.o $(OBJDIR)/link.o
-	valgrind --leak-check=full ./space_test
-	@echo ">>>>>>Running set tests with valgrind"
-	$(CC) -o set_test $(OBJDIR)/set_test.o $(OBJDIR)/set.o
-	valgrind --leak-check=full ./set_test
-	@echo ">>>>>>Running character tests with valgrind"
-	$(CC) -o character_test $(OBJDIR)/character_test.o $(OBJDIR)/character.o
-	valgrind --leak-check=full ./character_test
-	@echo ">>>>>>Running object tests with valgrind"
-	$(CC) -o object_test $(OBJDIR)/object_test.o $(OBJDIR)/object.o
-	valgrind --leak-check=full ./object_test
-	@echo ">>>>>>Running player tests with valgrind"
-	$(CC) -o player_test $(OBJDIR)/player_test.o $(OBJDIR)/player.o $(OBJDIR)/inventory.o $(OBJDIR)/set.o
-	valgrind --leak-check=full ./player_test
-	@echo ">>>>>>Running link tests with valgrind"
-	$(CC) -o link_test $(OBJDIR)/link_test.o $(OBJDIR)/link.o
-	valgrind --leak-check=full ./link_test
-	@echo ">>>>>>Running inventory tests with valgrind"
-	$(CC) -o inventory_test $(OBJDIR)/inventory_test.o $(OBJDIR)/inventory.o $(OBJDIR)/set.o
-	valgrind --leak-check=full ./inventory_test
-	$(MAKE) clean
+# Builds all test executables.
+tests: $(TESTS)
+
+space_test: $(OBJDIR)/space_test.o $(OBJDIR)/space.o $(OBJDIR)/set.o $(OBJDIR)/inventory.o $(OBJDIR)/link.o $(TEST_HELPERS)
+	$(CC) -o $@ $^
+
+set_test: $(OBJDIR)/set_test.o $(OBJDIR)/set.o $(TEST_HELPERS)
+	$(CC) -o $@ $^
+
+character_test: $(OBJDIR)/character_test.o $(OBJDIR)/character.o $(TEST_HELPERS)
+	$(CC) -o $@ $^
+
+object_test: $(OBJDIR)/object_test.o $(OBJDIR)/object.o $(TEST_HELPERS)
+	$(CC) -o $@ $^
+
+player_test: $(OBJDIR)/player_test.o $(OBJDIR)/player.o $(OBJDIR)/inventory.o $(OBJDIR)/set.o $(TEST_HELPERS)
+	$(CC) -o $@ $^
+
+link_test: $(OBJDIR)/link_test.o $(OBJDIR)/link.o $(TEST_HELPERS)
+	$(CC) -o $@ $^
+
+inventory_test: $(OBJDIR)/inventory_test.o $(OBJDIR)/inventory.o $(OBJDIR)/set.o $(TEST_HELPERS)
+	$(CC) -o $@ $^
 
 # Program objects
 $(OBJDIR)/command.o: $(HEADERS)/command.h $(HEADERS)/types.h
@@ -63,6 +63,7 @@ $(OBJDIR)/set.o: $(HEADERS)/set.h $(HEADERS)/types.h
 $(OBJDIR)/character.o: $(HEADERS)/character.h $(HEADERS)/types.h
 $(OBJDIR)/link.o: $(HEADERS)/link.h $(HEADERS)/types.h
 $(OBJDIR)/inventory.o: $(HEADERS)/inventory.h $(HEADERS)/set.h $(HEADERS)/types.h
+$(OBJDIR)/test.o: $(HEADERS)/test.h
 
 # Test objects
 $(OBJDIR)/inventory_test.o: $(HEADERS)/inventory_test.h $(HEADERS)/set.h $(HEADERS)/types.h $(HEADERS)/test.h
