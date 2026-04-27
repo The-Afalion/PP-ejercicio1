@@ -128,6 +128,12 @@ Status command_get_user_input(Command *command)
   /* Lee la entrada del usuario desde el flujo estándar */
   if (fgets(input, CMD_LENGHT, stdin))
   {
+    for (i = 0; i < MAX_ARGS; i++)
+    {
+      command->args[i][0] = '\0';
+    }
+    command->n_args = 0;
+
     strncpy(command->last_input, input, CMD_LENGHT - 1);
     command->last_input[CMD_LENGHT - 1] = '\0';
 
@@ -141,6 +147,7 @@ Status command_get_user_input(Command *command)
     }
 
     cmd = UNKNOWN;
+    i = UNKNOWN - NO_CMD + 1;
 
     /* Busca coincidencia del token con los comandos validos */
     while (cmd == UNKNOWN && i < N_CMD)
@@ -161,19 +168,25 @@ Status command_get_user_input(Command *command)
     if (arg)
     {
       i = 0;
-      command->n_args = 1;
       token = strtok(arg, " ");
-      strcpy(command->args[i], token);
-      while (token != NULL && i < 3)
+      if (token != NULL)
       {
-        i++;
-        token = strtok(NULL, " ");
-        if (token == NULL)
-        {
-          break;
-        }
+        command->n_args = 1;
         strcpy(command->args[i], token);
-        command->n_args++;
+        while (token != NULL && i < MAX_ARGS)
+        {
+          i++;
+          token = strtok(NULL, " ");
+          if (token == NULL)
+          {
+            break;
+          }
+          if (i < MAX_ARGS)
+          {
+            strcpy(command->args[i], token);
+            command->n_args++;
+          }
+        }
       }
     }
 

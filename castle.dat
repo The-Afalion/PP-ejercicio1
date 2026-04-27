@@ -2,25 +2,59 @@
 #p:2|Príncipe|^P>|11|6|3|
 #c:31|Malo|(-_-) |121|2|0|¡Grrr!|
 #c:32|Bueno|(^_^) |12|20|1|Hola|
+#c:61|Guardian|[G]   |204|4|0|No pasaras sin una llave.|
+#c:62|Sanador|[S]   |203|3|1|Descansa, aun queda camino.|
+#c:63|Mercader|[M]   |207|3|1|Todo tesoro tiene un precio.|
+#c:64|Sombra|[X]   |210|5|0|El reloj ya esta despierto.|
 #o:21|Espada|11|Una afilada espada de hierro.|0|1|-1|-1|
 #o:22|Candelabro|12|Un viejo y polvoriento candelabro.|0|1|-1|-1|
 #o:23|Armor|121|Una mellada y oxidada armadura de caballero.|0|0|-1|-1|
 #o:24|Tapiz|13|Un bonito tapete de pareado.|0|0|-1|-1|
-#o:25|Pecho|112|Un viejo compañero de madera con cerrada.|0|0|-1|-1|
-#o:26|Clave|111|Una pequena llave de hierro algo frya al tacto.|0|1|-1|22|
+#o:25|Cofre|112|Un viejo compañero de madera con cerrada.|0|0|-1|-1|
+#o:26|llave|111|Una pequeña llave de hierro algo fría al tacto.|0|1|-1|22|
 #o:27|Espada Dorada|113|Una espada de oro brillante guardada como un tesoro.|0|1|-1|-1|
-#s:11|Entrada| _ !# |[_]--'---|!'!""`""!|! ! /^\ !|!_!_!¡yo!_!|
-#s:12|Pasillo|!-------!|! . . ! |! . . ! |! . . ! |!-------!|
-#s:111|Azotea|/////^^^^|///____//|//_KEY_//|/ ___ /|/__====_/|
-#s:112|Sotano|#########|# . . #|#C#|#.. #|#########|
-#s:113|Tesoro|*********|* $$$ *|* // *|* /__/ *|*********|
-#s:121|Mazmorra|. -=== -.|! . . ! |! .'. ! |()_____()|II_____II|
-#s:13|Comedor|/\ /\ /\ |//\\/\\/\|//\\/\\/\|II II II |--------|
-#s:131|Habitación|+-------+|! ¡HHHH!|! !|! ¡HHHH!|+-------+|
-#s:132|Baño|+-------+|! ¡BBB!|! !|! ¡BBB!|+-------+|
-#s:14|Cocina|+-------+|! ¡KKK!|! !|! ¡KKK!|+-------+|
-#s:15|Patio|+-------+|! ¡PPP!|! !|! ¡PPP!|+-------+|
-#s:16|Jardin|+-------+|! ¡JJJ!|! !|! ¡JJJ!|+-------+|
+#o:41|Llavero|202|Un llavero con espacio para varias llaves.|0|1|-1|-1|
+#o:42|Antorcha|201|Una antorcha seca preparada para arder.|0|1|-1|-1|
+#o:43|Mapa|201|Un mapa incompleto del subterraneo.|0|1|-1|-1|
+#o:44|Brujula|202|Una brujula que apunta al reves.|0|1|-1|-1|
+#o:45|Cuerda|203|Una cuerda resistente y mal enrollada.|0|1|-1|-1|
+#o:46|Daga|203|Una daga corta con filo desgastado.|0|1|-1|-1|
+#o:47|Diario|204|Un diario con notas antiguas.|0|1|-1|-1|
+#o:48|Amuleto|204|Un amuleto con forma de sol.|0|1|-1|-1|
+#o:49|Escudo|205|Un escudo abollado.|0|1|-1|-1|
+#o:50|Pocion|205|Una pocion roja que recupera el animo.|1|1|-1|-1|
+#o:51|Martillo|206|Un martillo pesado para abrir grietas.|0|1|-1|-1|
+#o:52|Corona|206|Una corona cubierta de polvo negro.|0|1|-1|-1|
+#o:53|Gema|207|Una gema verde que ilumina el suelo.|0|1|-1|-1|
+#o:54|Reloj|207|Un reloj parado a medianoche.|0|1|-1|-1|
+#o:55|Pergamino|208|Un pergamino con instrucciones borrosas.|0|1|-1|-1|
+#o:56|Moneda|208|Una moneda antigua con un ojo grabado.|0|1|-1|-1|
+#o:57|Anillo|209|Un anillo fino escondido bajo ceniza.|0|1|-1|-1|
+#o:58|Casco|209|Un casco de hierro con una grieta lateral.|0|1|-1|-1|
+#o:59|Botas|210|Unas botas ligeras cubiertas de barro.|0|1|-1|-1|
+#o:60|Manzana|210|Una manzana sorprendentemente fresca.|1|1|-1|-1|
+#s:11|Entrada|.--ENTRADA--.|.   ____    .|.  /____\\  .|.    /\\    .|.---PUERTA--.|
+#s:12|Pasillo|-------------|..  ..  ..  .|.--.--.--.--.|..  ..  ..  .|-------------|
+#s:111|Azotea|/////^^^/////|//  CIELO  //|/  _LLAVE_  /|/ TORRETA  //|/////___/////|
+#s:112|Sotano|#############|#  SOTANO   #|#  [COFRE]  #|#  ESCALON  #|#############|
+#s:113|Tesoro|*************|*  TESORO   *|*  $$$$$$   *|*  _GEMA_   *|*************|
+#s:121|Mazmorra|#############|#  CELDA    #|#  .-.-.    #|#  ARMOR    #|#############|
+#s:13|Comedor|=============|=  COMEDOR  =|=  MESA++   =|=  TAPIZ    =|=============|
+#s:131|Habitación|+===========+|+  CAMA     +|+  ALMOHADA +|+  LAMPARA  +|+===========+|
+#s:132|Baño|+===========+|+   BANO    +|+  AGUA~~   +|+  LAVABO   +|+===========+|
+#s:14|Cocina|+-----------+|+  COCINA   +|+  FOGON    +|+  CUCHILLO +|+-----------+|
+#s:15|Patio|.-----------.|.   PATIO   .|.  PLANTAS  .|.  PORTON   .|.-----------.|
+#s:16|Jardin|~~~~~~~~~~~~~|~  JARDIN   ~|~  ARBOL    ~|~  FLORES   ~|~~~~~~~~~~~~~|
+#s:201|Atrio|===[=====]===|=   ATRIO   =|=    +++    =|=   DOOR    =|=============|
+#s:202|Galeria|---===---===-|-  GALERIA  -|-  LLAVERO  -|-  MURO##   -|---===---===-|
+#s:203|Fuente|~~~~~~~~~~~~~|~  FUENTE   ~|~   o O o   ~|~  CUERDA   ~|~~~~~~~~~~~~~|
+#s:204|Puerta|#############|#  PORTON   #|#  [LOCK]   #|# GUARDIAN  #|#############|
+#s:205|Armeria|+-----------+|+  ARMERIA  +|+  ESCUDO   +|+  CASCO    +|+-----------+|
+#s:206|Forja|*************|*   FORJA   *|*  MARTILLO *|*  YUNQUE   *|*************|
+#s:207|Bazar|$$$$$$$$$$$$$|$   BAZAR   $|$  PUESTOS  $|$  GEMA ?   $|$$$$$$$$$$$$$|
+#s:208|Archivo|+++++++++++++|+  ARCHIVO  +|+ PERGAMINO +|+  LIBROS   +|+++++++++++++|
+#s:209|Cripta|.-----------.|.  CRIPTA   .|.  URNAS    .|.  CENIZA   .|.-----------.|
+#s:210|Relojeria|IIIIIIIIIIIII|I RELOJERIA I|I   12:00   I|I  SOMBRA   I|IIIIIIIIIIIII|
 #l:01|Entrada|11|12|1|1|
 #l:02|CorridorUp|12|11|0|1|
 #l:03|CorredorAbajo|12|13|1|1|
@@ -42,5 +76,25 @@
 #l:19|TechoAbajo|111|11|5|1|
 #l:20|BasementDown|11|112|5|1|
 #l:21|BasementUp|112|11|4|1|
-#l:22|Pecho|112|113|2|0|
+#l:22|Cofre|112|113|2|0|
 #l:23|Salida del pico|113|112|3|1|
+#l:101|AtrioGaleria|201|202|2|1|
+#l:102|GaleriaAtrio|202|201|3|1|
+#l:103|AtrioFuente|201|203|1|1|
+#l:104|FuenteAtrio|203|201|0|1|
+#l:105|GaleriaPuerta|202|204|1|1|
+#l:106|PuertaGaleria|204|202|0|1|
+#l:107|FuenteArmeria|203|205|2|1|
+#l:108|ArmeriaFuente|205|203|3|1|
+#l:109|PuertaForja|204|206|2|1|
+#l:110|ForjaPuerta|206|204|3|1|
+#l:111|ArmeriaBazar|205|207|1|1|
+#l:112|BazarArmeria|207|205|0|1|
+#l:113|ForjaArchivo|206|208|1|1|
+#l:114|ArchivoForja|208|206|0|1|
+#l:115|BazarCripta|207|209|2|1|
+#l:116|CriptaBazar|209|207|3|1|
+#l:117|ArchivoRelojeria|208|210|2|1|
+#l:118|RelojeriaArchivo|210|208|3|1|
+#l:119|CriptaRelojeria|209|210|1|1|
+#l:120|RelojeriaCripta|210|209|0|1|

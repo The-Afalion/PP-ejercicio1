@@ -28,6 +28,7 @@ Status game_actions_inspect(Game *game);
 Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 Status game_actions_use(Game *game);
+Status game_actions_open(Game *game);
 
 Status game_actions_update(Game *game, Command *command)
 {
@@ -69,6 +70,12 @@ Status game_actions_update(Game *game, Command *command)
     break;
   case ABANDON:
     status = game_actions_abandon(game);
+    break;
+  case USE:
+    status = game_actions_use(game);
+    break;
+  case OPEN:
+    status = game_actions_open(game);
     break;
   default:
     break;
@@ -811,4 +818,89 @@ Status game_actions_use(Game *game)
   }
 
   return OK;
+}
+
+Status game_actions_open(Game *game)
+{
+  Player *player = NULL;
+  Command *last_cmd = NULL;
+  Object *object = NULL;
+  Link *link = NULL;
+  char **arg = NULL;
+  Id object_id = NO_ID, player_loc = NO_ID;
+  int i = 0, n_links = 0;
+
+  if (!game)
+  {
+    return ERROR;
+  }
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  if (!(arg = command_get_arg(last_cmd)))
+  {
+    return ERROR;
+  }
+  if (command_get_nargs(last_cmd) != 3 || strcasecmp(arg[1], "with") != 0)
+  {
+    return ERROR;
+  }
+  if (!(player = game_get_player(game)))
+  {
+    return ERROR;
+  }
+  player_loc = game_get_player_location(game);
+  if (player_loc == NO_ID)
+  {
+    return ERROR;
+  }
+
+  n_links = game_get_number_of_links(game);
+  if (n_links <= 0)
+  {
+    return ERROR;
+  }
+
+  for (i = 0; i < n_links; i++)
+  {
+    link = game_get_link_at(game, i);
+    if (link && link_get_name(link) && strcasecmp(link_get_name(link), arg[0]) == 0)
+    {
+      break;
+    }
+  }
+
+  if (!link || i == n_links)
+  {
+    return ERROR;
+  }
+  if (link_get_origin(link) != player_loc && link_get_destination(link) != player_loc)
+  {
+    return ERROR;
+  }
+
+  object_id = game_get_object_id_from_name(game, arg[2]);
+  if (object_id == NO_ID)
+  {
+    return ERROR;
+  }
+  if (!player_has_object(player, object_id))
+  {
+    return ERROR;
+  }
+  if (!(object = game_get_object(game, object_id)))
+  {
+    return ERROR;
+  }
+  if (object_get_open(object) != link_get_id(link))
+  {
+    return ERROR;
+  }
+  if (link_get_open(link) == TRUE)
+  {
+    return ERROR;
+  }
+
+  return link_set_open(link, TRUE);
 }

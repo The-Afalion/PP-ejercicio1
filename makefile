@@ -18,7 +18,7 @@ EXES = castle $(TESTS)
 
 # The main task
 all: $(OBJECTS)
-	$(CC) -o castle $(OBJECTS) -lscreen -L$(LIBS)
+	$(CC) -o castle $(OBJECTS) -L$(LIBS) -lscreen
 
 # Generates the object files defined below
 $(OBJDIR)/%.o: $(SRC)/%.c

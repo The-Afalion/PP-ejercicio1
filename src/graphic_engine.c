@@ -20,7 +20,7 @@
 #include "player.h"
 #include "object.h"
 
-#define WIDTH_MAP 55
+#define WIDTH_MAP 67
 #define WIDTH_DES 55
 #define WIDTH_BAN 25
 #define HEIGHT_MAP 30
@@ -28,7 +28,7 @@
 #define HEIGHT_HLP 2
 #define HEIGHT_FDB 3
 #define MAX_OBJECTS 100
-#define ROOM_WIDTH 15
+#define ROOM_WIDTH 19
 
 struct _Graphic_engine
 {
@@ -37,6 +37,7 @@ struct _Graphic_engine
 
 void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL is_act);
 Status graphic_engine_get_objects_str(Game *game, Space *space, char *str);
+void graphic_engine_get_vertical_exits_str(Game *game, Space *space, char *str);
 
 Graphic_engine *graphic_engine_create()
 {
@@ -73,6 +74,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     Space *west, *east;
     Character *character;
     char str[255], west_str[85], middle_str[85], east_str[85], obj_list[ROOM_WIDTH + 1];
+    char vertical_exits[3];
     const char *character_gdesc;
     char (*space_gdesc)[GDESC_COLS];
     int i;
@@ -93,36 +95,38 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     /* Generacion grafica del borde superior */
     if (!west)
     {
-        sprintf(west_str, "                 ");
+        sprintf(west_str, "                     ");
     }
     else
     {
-        sprintf(west_str, "+---------------+");
+        sprintf(west_str, "+-------------------+");
     }
 
     if (!east)
     {
-        sprintf(east_str, "                 ");
+        sprintf(east_str, "                     ");
     }
     else
     {
-        sprintf(east_str, "+---------------+");
+        sprintf(east_str, "+-------------------+");
     }
 
-    sprintf(str, "%s  +---------------+  %s", west_str, east_str);
+    sprintf(str, "%s  +-------------------+  %s", west_str, east_str);
     screen_area_puts(area, str);
 
     /* Construccion del bloque de informacion de personajes e identificadores */
     if (!west)
     {
-        sprintf(west_str, "                 ");
+        sprintf(west_str, "                     ");
     }
     else if (!(west_discovered = space_get_discovered(west)))
     {
-        sprintf(west_str, "|            %3d|", (int)space_get_id(west));
+        graphic_engine_get_vertical_exits_str(game, west, vertical_exits);
+        sprintf(west_str, "|%s              %3d|", vertical_exits, (int)space_get_id(west));
     }
     else
     {
+        graphic_engine_get_vertical_exits_str(game, west, vertical_exits);
         character = game_get_character(game, space_get_character(west, 0));
         if (!character)
         {
@@ -132,7 +136,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
         {
             character_gdesc = character_get_gdesc(character);
         }
-        sprintf(west_str, "|     %s %3d|", character_gdesc, (int)space_get_id(west));
+        sprintf(west_str, "|%s   %s %7d|", vertical_exits, character_gdesc, (int)space_get_id(west));
     }
 
     character = game_get_character(game, space_get_character(middle, 0));
@@ -147,23 +151,27 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
 
     if (middle_discovered)
     {
-        sprintf(middle_str, "  | %s %s %3d|  ", is_act == TRUE ? player_get_gdesc(game_get_player(game)) : "   ", character_gdesc, (int)space_get_id(middle));
+        graphic_engine_get_vertical_exits_str(game, middle, vertical_exits);
+        sprintf(middle_str, "  |%s %s %s %5d|  ", vertical_exits, is_act == TRUE ? player_get_gdesc(game_get_player(game)) : "   ", character_gdesc, (int)space_get_id(middle));
     }
     else
     {
-        sprintf(middle_str, "  |            %3d|  ", (int)space_get_id(middle));
+        graphic_engine_get_vertical_exits_str(game, middle, vertical_exits);
+        sprintf(middle_str, "  |%s              %3d|  ", vertical_exits, (int)space_get_id(middle));
     }
 
     if (!east)
     {
-        sprintf(east_str, "                 ");
+        sprintf(east_str, "                     ");
     }
     else if (!(east_discovered = space_get_discovered(east)))
     {
-        sprintf(east_str, "|            %3d|", (int)space_get_id(east));
+        graphic_engine_get_vertical_exits_str(game, east, vertical_exits);
+        sprintf(east_str, "|%s              %3d|", vertical_exits, (int)space_get_id(east));
     }
     else
     {
+        graphic_engine_get_vertical_exits_str(game, east, vertical_exits);
         character = game_get_character(game, space_get_character(east, 0));
         if (!character)
         {
@@ -173,7 +181,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
         {
             character_gdesc = character_get_gdesc(character);
         }
-        sprintf(east_str, "|     %s %3d|", character_gdesc, (int)space_get_id(east));
+        sprintf(east_str, "|%s   %s %7d|", vertical_exits, character_gdesc, (int)space_get_id(east));
     }
 
     sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -184,18 +192,18 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     {
         if (!west)
         {
-            sprintf(west_str, "                 ");
+            sprintf(west_str, "                     ");
         }
         else if (!(west_discovered))
         {
-            sprintf(west_str, "|               |");
+            sprintf(west_str, "|                   |");
         }
         else
         {
             space_gdesc = space_get_gdesc(west);
             if (!space_gdesc)
             {
-                sprintf(west_str, "|               |");
+                sprintf(west_str, "|                   |");
             }
             else
             {
@@ -208,7 +216,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
         {
             if (!space_gdesc)
             {
-                sprintf(middle_str, "  |               |  ");
+                sprintf(middle_str, "  |                   |  ");
             }
             else
             {
@@ -217,23 +225,23 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
         }
         else
         {
-            sprintf(middle_str, "  |               |  ");
+            sprintf(middle_str, "  |                   |  ");
         }
 
         if (!east)
         {
-            sprintf(east_str, "                 ");
+            sprintf(east_str, "                     ");
         }
         else if (!(east_discovered))
         {
-            sprintf(east_str, "|               |");
+            sprintf(east_str, "|                   |");
         }
         else
         {
             space_gdesc = space_get_gdesc(east);
             if (!space_gdesc)
             {
-                sprintf(east_str, "|               |");
+                sprintf(east_str, "|                   |");
             }
             else
             {
@@ -248,18 +256,18 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     /* Evaluacion y renderizado de los objetos presentes en cada espacio */
     if (!west)
     {
-        sprintf(west_str, "                 ");
+        sprintf(west_str, "                     ");
     }
     else if (!(west_discovered))
     {
-        sprintf(west_str, "|               |");
+        sprintf(west_str, "|                   |");
     }
     else
     {
         obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
         if (obj_list_status == ERROR)
         {
-            sprintf(west_str, "|               |");
+            sprintf(west_str, "|                   |");
         }
         else
         {
@@ -272,7 +280,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
         obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
         if (obj_list_status == ERROR)
         {
-            sprintf(middle_str, " %s|               |%s ", (west) ? "<" : " ", (east) ? ">" : " ");
+            sprintf(middle_str, " %s|                   |%s ", (west) ? "<" : " ", (east) ? ">" : " ");
         }
         else
         {
@@ -281,23 +289,23 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     }
     else
     {
-        sprintf(middle_str, "  |               |  ");
+        sprintf(middle_str, "  |                   |  ");
     }
 
     if (!east)
     {
-        sprintf(east_str, "                 ");
+        sprintf(east_str, "                     ");
     }
     else if (!(east_discovered))
     {
-        sprintf(east_str, "|               |");
+        sprintf(east_str, "|                   |");
     }
     else
     {
         obj_list_status = graphic_engine_get_objects_str(game, east, obj_list);
         if (obj_list_status == ERROR)
         {
-            sprintf(east_str, "|               |");
+            sprintf(east_str, "|                   |");
         }
         else
         {
@@ -311,23 +319,23 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     /* Construccion grafica del borde inferior de cierre */
     if (!west)
     {
-        sprintf(west_str, "                 ");
+        sprintf(west_str, "                     ");
     }
     else
     {
-        sprintf(west_str, "+---------------+");
+        sprintf(west_str, "+-------------------+");
     }
 
     if (!east)
     {
-        sprintf(east_str, "                 ");
+        sprintf(east_str, "                     ");
     }
     else
     {
-        sprintf(east_str, "+---------------+");
+        sprintf(east_str, "+-------------------+");
     }
 
-    sprintf(str, "%s  +---------------+  %s", west_str, east_str);
+    sprintf(str, "%s  +-------------------+  %s", west_str, east_str);
     screen_area_puts(area, str);
 }
 
@@ -369,7 +377,7 @@ Status graphic_engine_get_objects_str(Game *game, Space *space, char *str)
     }
 
     /* Padding de la cadena para asegurar el ancho constante del formato grafico */
-    while (strlen(car) < 15)
+    while (strlen(car) < ROOM_WIDTH)
     {
         strcat(car, " ");
     }
@@ -439,7 +447,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
         if (id_back != NO_ID)
         {
             graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE);
-            screen_area_puts(ge->map, "                           ^");
+            screen_area_puts(ge->map, "                                 ^");
         }
 
         graphic_engine_paint_spaces_row(ge->map, game, act, TRUE);
@@ -447,7 +455,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
         /* Renderizado direccional Sur */
         if (id_next != NO_ID)
         {
-            screen_area_puts(ge->map, "                           v");
+            screen_area_puts(ge->map, "                                 v");
             graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
         }
     }
@@ -550,7 +558,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     screen_area_puts(ge->help, " The commands you can use are:");
     screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
     screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, open/o");
-    screen_area_puts(ge->help, "     move: north/south/east/west/up/down");
+    screen_area_puts(ge->help, "     move: north/south/east/west/up/down; U/D marks up/down exits");
 
     if (paint_cmd == TRUE)
     {
@@ -576,4 +584,16 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     } else {
         printf("prompt:> ");
     }
+}
+
+void graphic_engine_get_vertical_exits_str(Game *game, Space *space, char *str)
+{
+    if (!game || !space || !str)
+    {
+        return;
+    }
+
+    str[0] = game_get_connection(game, space_get_id(space), U) != NO_ID ? 'U' : ' ';
+    str[1] = game_get_connection(game, space_get_id(space), D) != NO_ID ? 'D' : ' ';
+    str[2] = '\0';
 }
