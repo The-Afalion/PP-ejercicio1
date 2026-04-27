@@ -18,6 +18,59 @@
 #include "game_actions.h"
 #include <time.h>
 
+BOOL game_loop_command_allows_turn_roll(CommandCode code);
+void game_loop_update_turn(Game *game, Command *command);
+
+BOOL game_loop_command_allows_turn_roll(CommandCode code)
+{
+  switch (code)
+  {
+  case TAKE:
+  case DROP:
+  case MOVE:
+  case INSPECT:
+  case USE:
+  case OPEN:
+    return TRUE;
+  default:
+    return FALSE;
+  }
+}
+
+void game_loop_update_turn(Game *game, Command *command)
+{
+  int random_num = 0;
+  char turn_message[WORD_SIZE] = "";
+
+  if (!game || !command)
+  {
+    return;
+  }
+
+  if (game_get_last_command_status(game) == ERROR)
+  {
+    return;
+  }
+
+  if (game_loop_command_allows_turn_roll(command_get_code(command)) == FALSE)
+  {
+    return;
+  }
+
+  random_num = rand() % 10;
+  if (random_num <= 2)
+  {
+    game_next_turn(game);
+    sprintf(turn_message, "you rolled %d, next players turn", random_num);
+  }
+  else
+  {
+    sprintf(turn_message, "you rolled %d, you continue", random_num);
+  }
+
+  game_set_chat_message(game, turn_message);
+}
+
 int main(int argc, char *argv[])
 {
   Game *game = NULL;
@@ -103,8 +156,8 @@ printf("se crea");
     graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
     sleep(1);
 
-    /* Procesa el cambio de turno */
-    game_next_turn(game);
+    /* Procesa el cambio de turno solo tras acciones validas de exploracion */
+    game_loop_update_turn(game, command);
   }
 
   /* Imprime el estado final antes de salir */

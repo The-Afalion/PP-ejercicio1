@@ -1,11 +1,12 @@
-#p:1|caballero|^C>|11|5|3|
-#p:2|Príncipe|^P>|11|6|3|
+#p:1|caballero|^C>|11|5|5|
+#p:2|Príncipe|^P>|11|6|5|
 #c:31|Malo|(-_-) |121|2|0|¡Grrr!|
 #c:32|Bueno|(^_^) |12|20|1|Hola|
 #c:61|Guardian|[G]   |204|4|0|No pasaras sin una llave.|
 #c:62|Sanador|[S]   |203|3|1|Descansa, aun queda camino.|
 #c:63|Mercader|[M]   |207|3|1|Todo tesoro tiene un precio.|
 #c:64|Sombra|[X]   |210|5|0|El reloj ya esta despierto.|
+#c:65|Dragon|[D]   |113|8|0|El oro duerme bajo mis alas.|
 #o:21|Espada|11|Una afilada espada de hierro.|0|1|-1|-1|
 #o:22|Candelabro|12|Un viejo y polvoriento candelabro.|0|1|-1|-1|
 #o:23|Armor|121|Una mellada y oxidada armadura de caballero.|0|0|-1|-1|
@@ -13,6 +14,9 @@
 #o:25|Cofre|112|Un viejo compañero de madera con cerrada.|0|0|-1|-1|
 #o:26|llave|111|Una pequeña llave de hierro algo fría al tacto.|0|1|-1|22|
 #o:27|Espada Dorada|113|Una espada de oro brillante guardada como un tesoro.|0|1|-1|-1|
+#o:28|LlaveDorada|114|Una llave dorada escondida dentro del cofre.|0|1|-1|24|
+#o:29|LlaveMazmorra|13|Una llave pesada con olor a hierro viejo.|0|1|-1|04|
+#o:30|LlaveTemplo|113|Una llave negra guardada junto al tesoro del dragon.|0|1|-1|26|
 #o:41|Llavero|202|Un llavero con espacio para varias llaves.|0|1|-1|-1|
 #o:42|Antorcha|201|Una antorcha seca preparada para arder.|0|1|-1|-1|
 #o:43|Mapa|201|Un mapa incompleto del subterraneo.|0|1|-1|-1|
@@ -37,7 +41,8 @@
 #s:12|Pasillo|-------------|..  ..  ..  .|.--.--.--.--.|..  ..  ..  .|-------------|
 #s:111|Azotea|/////^^^/////|//  CIELO  //|/  _LLAVE_  /|/ TORRETA  //|/////___/////|
 #s:112|Sotano|#############|#  SOTANO   #|#  [COFRE]  #|#  ESCALON  #|#############|
-#s:113|Tesoro|*************|*  TESORO   *|*  $$$$$$   *|*  _GEMA_   *|*************|
+#s:113|Tesoro|*************|*  DRAGON   *|*  $$$$$$   *|*  _GEMA_   *|*************|
+#s:114|InteriorCofre|#############|#  COFRE    #|# LLAVE ORO #|#  CERRADUR #|#############|
 #s:121|Mazmorra|#############|#  CELDA    #|#  .-.-.    #|#  ARMOR    #|#############|
 #s:13|Comedor|=============|=  COMEDOR  =|=  MESA++   =|=  TAPIZ    =|=============|
 #s:131|Habitación|+===========+|+  CAMA     +|+  ALMOHADA +|+  LAMPARA  +|+===========+|
@@ -58,8 +63,8 @@
 #l:01|Entrada|11|12|1|1|
 #l:02|CorridorUp|12|11|0|1|
 #l:03|CorredorAbajo|12|13|1|1|
-#l:04|CorredorIzquierdo|12|121|3|1|
-#l:05|DungeonRight|121|12|2|0|
+#l:04|PuertaMazmorra|12|121|3|0|
+#l:05|MazmorraPasillo|121|12|2|1|
 #l:06|DungeonGarden|121|16|1|1|
 #l:07|LunchRoomUp|13|12|0|1|
 #l:08|LunchRoomDown|13|14|1|1|
@@ -76,8 +81,12 @@
 #l:19|TechoAbajo|111|11|5|1|
 #l:20|BasementDown|11|112|5|1|
 #l:21|BasementUp|112|11|4|1|
-#l:22|Cofre|112|113|2|0|
-#l:23|Salida del pico|113|112|3|1|
+#l:22|Cofre|112|114|2|0|
+#l:23|SalidaCofre|114|112|3|1|
+#l:24|PuertaTesoro|114|113|2|0|
+#l:25|SalidaTesoro|113|114|3|1|
+#l:26|PuertaTemplo|113|201|1|0|
+#l:27|TesoroNorte|201|113|0|1|
 #l:101|AtrioGaleria|201|202|2|1|
 #l:102|GaleriaAtrio|202|201|3|1|
 #l:103|AtrioFuente|201|203|1|1|
