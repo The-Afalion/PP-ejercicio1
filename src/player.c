@@ -265,3 +265,9 @@ Inventory *player_get_backpack(Player *player)
   }
   return player->backpack;
 }
+int player_get_number_of_backpack(Player*p){
+  if(!p){
+    return -1;
+  }
+  return p->nobj;
+}
