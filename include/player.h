@@ -165,5 +165,12 @@ char* player_get_gdesc(Player* player);
  * @return el inventario del jugador o NULL en caso de error
  */
 Inventory *player_get_backpack(Player *player);
+/**
+ * @brief Obtiene el numero de inventario maximo
+ * @author Unai
+ * @param player puntero al jugador
+ * @return el numero maximo de objetos o -1 en caso de error
+ */
+int player_get_number_of_backpack(Player*p);
 
 #endif

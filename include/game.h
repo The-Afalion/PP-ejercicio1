@@ -381,4 +381,50 @@ Id * game_get_players_followers(Game*game);
  */
 Id game_get_object_id_from_name(Game *game, char *name);
 
+
+/**
+ * @brief Obtiene el numero de jugadores
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return numero de jugadores o -1 en casi de error
+ */
+int game_get_number_of_players(Game*game);
+/**
+ * @brief Obtiene el jugador por indice
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param n indice
+ * @return el jugador del indice o NULL en caso de error
+ */
+Player *game_get_player_from_index(Game*game,int n);
+/**
+ * @brief Obtiene el numero de objetos
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return el numero de jugadores o -1 en caso de error
+ */
+int game_get_number_of_objects(Game*game);
+/**
+ * @brief Obtiene el objeto por indice
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param n indice
+ * @return el objeto del indice o NULL en caso de error
+ */
+Object *game_get_object_from_index(Game*game,int n);
+/**
+ * @brief Obtiene el numero de espacios
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return el numero de espacios o -1 en caso de error
+ */
+int game_get_number_of_space(Game *game);
+/**
+ * @brief Obtiene el espacio por indice
+ * @author Unai
+ * @param game Puntero al juego.
+ * @param n indice
+ * @return el espacio del indice o NULL en caso de error
+ */
+Space*game_get_space_from_index(Game*game,int n);
 #endif
