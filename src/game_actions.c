@@ -795,7 +795,10 @@ Status game_actions_use(Game *game)
   Player *player = NULL;
   Command *last_cmd = NULL;
   Inventory *backpack = NULL;
-  Id object_in_backpack = NO_ID;
+  Id object_in_backpack = NO_ID, * followers_ids = NULL;
+  Object *object = NULL;
+  Character *follower = NULL;
+  int objhealth, i = 0;
   char **arg = NULL;
 
   if (!game)
