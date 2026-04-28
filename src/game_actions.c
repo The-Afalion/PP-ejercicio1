@@ -846,13 +846,11 @@ Status game_actions_use(Game *game)
       {
         return ERROR;
       }
-      
     }
     
   }
-
-
-  return OK;
+  
+  return object_destroy(object);
 }
 
 Status game_actions_open(Game *game)
