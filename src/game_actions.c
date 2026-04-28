@@ -205,6 +205,7 @@ Status game_actions_take(Game *game)
   Object *object = NULL;
   Player *player = NULL;
   char **arg = NULL;
+  int health = 0;
   /* Comprueba la validez del puntero */
   if (!game)
   {
@@ -234,11 +235,6 @@ Status game_actions_take(Game *game)
 
   arg = command_get_arg(last_cmd);
   if (!arg || arg[0][0] == '\0')
-  {
-    return ERROR;
-  }
-
-  if (inventory_is_full(player_get_backpack(game_get_player(game))) == TRUE)
   {
     return ERROR;
   }
@@ -274,8 +270,23 @@ Status game_actions_take(Game *game)
     return ERROR;
   }
 
+  health = object_get_health(object);
+  if (health > 0)
+  {
+    player_set_health(player, player_get_health(player) + health);
+    game_set_object_desc(game, "Has bebido la pocion y recuperas vida.");
+    return OK;
+  }
+
+  if (inventory_is_full(player_get_backpack(game_get_player(game))) == TRUE)
+  {
+    game_set_object_location(game, player_loc, obj_id);
+    return ERROR;
+  }
+
   if (player_add_object(game_get_player(game), obj_id) == ERROR)
   {
+    game_set_object_location(game, player_loc, obj_id);
     return ERROR;
   }
 
@@ -784,11 +795,9 @@ Status game_actions_use(Game *game)
   Player *player = NULL;
   Command *last_cmd = NULL;
   Inventory *backpack = NULL;
-  Id object_in_backpack = NO_ID, *followers_ids = NULL;
-  Object *object = NULL;
-  Character* follower = NULL;
+  Id object_in_backpack = NO_ID;
   char **arg = NULL;
-  int objhealth = 0 , i = 0;
+
   if (!game)
   {
     return ERROR;
