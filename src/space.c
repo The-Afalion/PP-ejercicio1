@@ -332,3 +332,9 @@ int space_get_n_characters(Space *space)
   }
   return set_get_numberid(space->characters);
 }
+char *space_get_gdes_from_index(Space*s, int n){
+if(!s||n>=5||n<0){
+  return NULL;
+}
+return s->gdesc[n];
+}

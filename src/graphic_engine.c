@@ -25,7 +25,7 @@
 #define WIDTH_BAN 25
 #define HEIGHT_MAP 30
 #define HEIGHT_BAN 1
-#define HEIGHT_HLP 4
+#define HEIGHT_HLP 2
 #define HEIGHT_FDB 3
 #define MAX_OBJECTS 100
 #define ROOM_WIDTH 19
@@ -344,10 +344,6 @@ Status graphic_engine_get_objects_str(Game *game, Space *space, char *str)
     Id *n;
     int i, cont;
     char car[ROOM_WIDTH + 1] = "";
-    Object *object = NULL;
-    const char *name = NULL;
-    size_t used = 0;
-    size_t available = 0;
 
     /* Comprueba la validez de los parametros */
     if (!game || !space || !str)
@@ -370,34 +366,13 @@ Status graphic_engine_get_objects_str(Game *game, Space *space, char *str)
     /* Recorrido secuencial para concatenar los nombres de objetos */
     for (i = 0; i < cont; i++)
     {
-        object = game_get_object(game, n[i]);
-        if (!object)
+        if (strlen(car) + strlen(object_get_name(game_get_object(game, n[i]))) < ROOM_WIDTH)
         {
-            continue;
+            strcat(car, object_get_name(game_get_object(game, n[i])));
         }
-
-        name = object_get_name(object);
-        if (!name)
+        if (i < cont - 1)
         {
-            continue;
-        }
-
-        used = strlen(car);
-        if (used >= ROOM_WIDTH)
-        {
-            break;
-        }
-
-        if (used > 0 && used < ROOM_WIDTH)
-        {
-            strncat(car, ", ", ROOM_WIDTH - used);
-            used = strlen(car);
-        }
-
-        available = ROOM_WIDTH - used;
-        if (available > 0)
-        {
-            strncat(car, name, available);
+            strcat(car, ", ");
         }
     }
 
@@ -580,8 +555,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     screen_area_puts(ge->banner, str);
 
     screen_area_clear(ge->help);
+    screen_area_puts(ge->help, " The commands you can use are:");
     screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
-    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, use/u, open/o");
+    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, open/o");
     screen_area_puts(ge->help, "     move: north/south/east/west/up/down; U/D marks up/down exits");
 
     if (paint_cmd == TRUE)

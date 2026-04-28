@@ -47,6 +47,11 @@ void game_loop_update_turn(Game *game, Command *command)
     return;
   }
 
+  if (game_get_last_command_status(game) == ERROR)
+  {
+    return;
+  }
+
   if (game_loop_command_allows_turn_roll(command_get_code(command)) == FALSE)
   {
     return;
@@ -56,7 +61,7 @@ void game_loop_update_turn(Game *game, Command *command)
   if (random_num <= 2)
   {
     game_next_turn(game);
-    sprintf(turn_message, "He rolled %d, your turn", random_num);
+    sprintf(turn_message, "you rolled %d, next players turn", random_num);
   }
   else
   {
@@ -76,7 +81,7 @@ int main(int argc, char *argv[])
 
   /* Inicializacion de la semilla aleatoria */
   srand(time(NULL));
-
+printf("funciona");
   /* Comprueba los argumentos de entrada */
   if (argc < 2)
   {
@@ -95,7 +100,7 @@ int main(int argc, char *argv[])
       return 1;
     }
   }
-
+printf("se abre");
   /* Inicializacion del juego desde archivo */
   if (game_create_from_file(&game, argv[1]) == ERROR)
   {
@@ -106,7 +111,7 @@ int main(int argc, char *argv[])
     }
     return 1;
   }
-
+printf("se crea");
   /* Inicializacion del motor grafico */
   if ((gengine = graphic_engine_create()) == NULL)
   {

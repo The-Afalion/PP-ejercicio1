@@ -221,3 +221,5 @@ Id object_get_open(Object *obj)
   }
   return obj->open;
 }
+
+

@@ -9,7 +9,6 @@
  */
 
 #include "game.h"
-#include "game_reader.h"
 #include "command.h"
 #include "space.h"
 #include "player.h"
@@ -19,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include "game_managment.h"
 
 #define PLAYER_ID 0
 #define FIRST_POSITION 0
@@ -119,23 +119,23 @@ Status game_create_from_file(Game **game, char *filename)
   }
 
   /* Delegacion modular de la carga de las entidades */
-  if (game_reader_load_spaces(*game, filename) == ERROR)
+  if (game_managment_load_spaces(*game, filename) == ERROR)
   {
     return ERROR;
   }
-  if (game_reader_load_objects(*game, filename) == ERROR)
+  if (game_managment_load_players(*game, filename) == ERROR)
   {
     return ERROR;
   }
-  if (game_reader_load_players(*game, filename) == ERROR)
+  if (game_managment_load_objects(*game, filename) == ERROR)
   {
     return ERROR;
   }
-  if (game_reader_load_characters(*game, filename) == ERROR)
+  if (game_managment_load_links(*game, filename) == ERROR)
   {
     return ERROR;
   }
-  if (game_reader_load_links(*game, filename) == ERROR)
+  if (game_managment_load_characters(*game, filename) == ERROR)
   {
     return ERROR;
   }
@@ -909,4 +909,10 @@ Space*game_get_space_from_index(Game*game,int n){
     return NULL;
   }
   return game->spaces[n];
+}
+Link *game_get_link_from_index(Game*game, int n){
+  if(!game||n>=game_get_number_of_links(game)||n<0){
+    return NULL;
+  }
+return game->link[n];
 }
