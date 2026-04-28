@@ -25,7 +25,7 @@
 #define WIDTH_BAN 25
 #define HEIGHT_MAP 30
 #define HEIGHT_BAN 1
-#define HEIGHT_HLP 2
+#define HEIGHT_HLP 4
 #define HEIGHT_FDB 3
 #define MAX_OBJECTS 100
 #define ROOM_WIDTH 19
@@ -580,9 +580,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     screen_area_puts(ge->banner, str);
 
     screen_area_clear(ge->help);
-    screen_area_puts(ge->help, " The commands you can use are:");
     screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
-    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, open/o");
+    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, use/u, open/o");
     screen_area_puts(ge->help, "     move: north/south/east/west/up/down; U/D marks up/down exits");
 
     if (paint_cmd == TRUE)
