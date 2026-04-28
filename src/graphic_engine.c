@@ -344,6 +344,10 @@ Status graphic_engine_get_objects_str(Game *game, Space *space, char *str)
     Id *n;
     int i, cont;
     char car[ROOM_WIDTH + 1] = "";
+    Object *object = NULL;
+    const char *name = NULL;
+    size_t used = 0;
+    size_t available = 0;
 
     /* Comprueba la validez de los parametros */
     if (!game || !space || !str)
@@ -366,13 +370,34 @@ Status graphic_engine_get_objects_str(Game *game, Space *space, char *str)
     /* Recorrido secuencial para concatenar los nombres de objetos */
     for (i = 0; i < cont; i++)
     {
-        if (strlen(car) + strlen(object_get_name(game_get_object(game, n[i]))) < ROOM_WIDTH)
+        object = game_get_object(game, n[i]);
+        if (!object)
         {
-            strcat(car, object_get_name(game_get_object(game, n[i])));
+            continue;
         }
-        if (i < cont - 1)
+
+        name = object_get_name(object);
+        if (!name)
         {
-            strcat(car, ", ");
+            continue;
+        }
+
+        used = strlen(car);
+        if (used >= ROOM_WIDTH)
+        {
+            break;
+        }
+
+        if (used > 0 && used < ROOM_WIDTH)
+        {
+            strncat(car, ", ", ROOM_WIDTH - used);
+            used = strlen(car);
+        }
+
+        available = ROOM_WIDTH - used;
+        if (available > 0)
+        {
+            strncat(car, name, available);
         }
     }
 
