@@ -16,7 +16,7 @@
 #include "link.h" /* Necesario para usar la estructura Link */
 
 #define GDESC_ROWS 5
-#define GDESC_COLS 10
+#define GDESC_COLS 14
 
 typedef struct Space Space;
 
