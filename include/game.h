@@ -427,4 +427,13 @@ int game_get_number_of_space(Game *game);
  * @return el espacio del indice o NULL en caso de error
  */
 Space*game_get_space_from_index(Game*game,int n);
+/**
+ * @brief Obtiene un personaje concreto del juego a partir de su ID.
+ * @author Unai.G
+ * @param game Puntero al juego.
+ * @param id ID del personaje a obtener.
+ * @return Puntero al personaje encontrado o NULL si el ID es inválido o hay error.
+ */
+Character * game_get_character_from_id(Game *game, Id id);
+
 #endif

@@ -784,9 +784,11 @@ Status game_actions_use(Game *game)
   Player *player = NULL;
   Command *last_cmd = NULL;
   Inventory *backpack = NULL;
-  Id object_in_backpack = NO_ID;
+  Id object_in_backpack = NO_ID, *followers_ids = NULL;
+  Object *object = NULL;
+  Character* follower = NULL;
   char **arg = NULL;
-
+  int objhealth = 0 , i = 0;
   if (!game)
   {
     return ERROR;
@@ -816,6 +818,39 @@ Status game_actions_use(Game *game)
   {
     return ERROR;
   }
+  if (!(object = (game_get_object(game, object_in_backpack))))
+  {
+    return ERROR;
+  }
+  if (!(objhealth = object_get_health(object)))
+  {
+    return ERROR;
+  }
+  if (strcasecmp("over", arg[1]) != 0)
+  {
+    if (!player_set_health(player, player_get_health(player) + objhealth))
+    {
+      return ERROR;
+    }
+  }else{
+    if(!(followers_ids = game_get_players_followers(game)))
+    for ( i = 0; i < game_get_number_of_followers_of_player(game); i++)
+    {
+      follower = game_get_character(game, followers_ids[i]);
+      if (!follower || character_get_following(follower) != player_get_id(player)||strcasecmp(character_get_name(follower), arg[2]) != 0)
+      {
+        continue;
+      }
+      
+      if(!character_set_health(follower, character_get_health(follower) + objhealth))
+      {
+        return ERROR;
+      }
+      
+    }
+    
+  }
+
 
   return OK;
 }
