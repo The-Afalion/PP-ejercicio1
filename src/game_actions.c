@@ -205,7 +205,6 @@ Status game_actions_take(Game *game)
   Object *object = NULL;
   Player *player = NULL;
   char **arg = NULL;
-  int health = 0;
   /* Comprueba la validez del puntero */
   if (!game)
   {
@@ -268,14 +267,6 @@ Status game_actions_take(Game *game)
   if (space_remove_object(space, obj_id) == ERROR)
   {
     return ERROR;
-  }
-
-  health = object_get_health(object);
-  if (health > 0)
-  {
-    player_set_health(player, player_get_health(player) + health);
-    game_set_object_desc(game, "Has bebido la pocion y recuperas vida.");
-    return OK;
   }
 
   if (inventory_is_full(player_get_backpack(game_get_player(game))) == TRUE)
@@ -795,7 +786,7 @@ Status game_actions_use(Game *game)
   Player *player = NULL;
   Command *last_cmd = NULL;
   Inventory *backpack = NULL;
-  Id object_in_backpack = NO_ID, * followers_ids = NULL;
+  Id object_in_backpack = NO_ID, *followers_ids = NULL;
   Object *object = NULL;
   Character *follower = NULL;
   int objhealth, i = 0;
@@ -826,7 +817,7 @@ Status game_actions_use(Game *game)
   {
     return ERROR;
   }
-  if (!player_has_object(player, object_in_backpack))
+  if (player_has_object(player, object_in_backpack) == FALSE)
   {
     return ERROR;
   }
@@ -838,31 +829,33 @@ Status game_actions_use(Game *game)
   {
     return ERROR;
   }
-  if (strcasecmp("over", arg[1]) != 0)
+
+  if (strcasecmp("over", arg[1]) != 0)/**si no se pone over directamente le añade la vide al jugador */
   {
     if (!player_set_health(player, player_get_health(player) + objhealth))
     {
       return ERROR;
     }
-  }else{
-    if(!(followers_ids = game_get_players_followers(game)))
-    for ( i = 0; i < game_get_number_of_followers_of_player(game); i++)
-    {
-      follower = game_get_character(game, followers_ids[i]);
-      if (!follower || character_get_following(follower) != player_get_id(player)||strcasecmp(character_get_name(follower), arg[2]) != 0)
-      {
-        continue;
-      }
-      
-      if(!character_set_health(follower, character_get_health(follower) + objhealth))
-      {
-        return ERROR;
-      }
-    }
-    
   }
-  
-  return object_destroy(object);
+  else
+  {
+    if (!(followers_ids = game_get_players_followers(game)))
+      for (i = 0; i < game_get_number_of_followers_of_player(game); i++)
+      {
+        follower = game_get_character(game, followers_ids[i]);
+        if (!follower || character_get_following(follower) != player_get_id(player) || strcasecmp(character_get_name(follower), arg[2]) != 0)
+        {
+          continue;
+        }
+
+        if (!character_set_health(follower, character_get_health(follower) + objhealth))
+        {
+          return ERROR;
+        }
+      }
+  }
+
+  return inventory_del_object(backpack, object_in_backpack);
 }
 
 Status game_actions_open(Game *game)
