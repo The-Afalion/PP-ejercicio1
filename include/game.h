@@ -295,6 +295,7 @@ BOOL game_connection_is_open(Game *game, Id space_id, Directions dir);
  */
 Link* game_get_link(Game* game, Id link_id);
 Link *game_get_link_at(Game *game, int index);
+Link *game_get_link_from_index(Game *game, int n);
 /**
  * @brief Obtiene el número de enlaces actualmente cargados en el juego.
  * @author Unai
@@ -435,5 +436,23 @@ Space*game_get_space_from_index(Game*game,int n);
  * @return Puntero al personaje encontrado o NULL si el ID es inválido o hay error.
  */
 Character * game_get_character_from_id(Game *game, Id id);
+
+/**
+ * @brief Obtiene el id del jugador activo.
+ * @author Codex
+ * @param game Puntero al juego.
+ * @return id del jugador activo o NO_ID en caso de error.
+ */
+Id game_get_current_player_id(Game *game);
+
+/**
+ * @brief Indica si dos jugadores pertenecen al mismo equipo.
+ * @author Codex
+ * @param game Puntero al juego.
+ * @param first Primer jugador.
+ * @param second Segundo jugador.
+ * @return TRUE si comparten equipo, FALSE en caso contrario.
+ */
+BOOL game_players_are_teammates(Game *game, Player *first, Player *second);
 
 #endif

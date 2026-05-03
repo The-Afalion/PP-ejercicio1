@@ -420,7 +420,7 @@ Status game_managment_load_links(Game *game, char *filename)
 }
 Status game_managment_save_game(Game *game, char *filename){
      FILE *file = NULL;
-    int i,l;
+    int i;
     Player*p;
     Character*c;
     Object*o;
@@ -443,36 +443,37 @@ Status game_managment_save_game(Game *game, char *filename){
     }
     for(i=0;i<game_get_number_of_players(game);i++){
         p=game_get_player_from_index(game,i);
-        fprintf(file, "#p:%d|%s|%s|%d|%d|%d|\n", player_get_id(p),player_get_name(p),player_get_gdesc(p),player_get_location(p),player_get_health(p),player_get_number_of_backpack(p));
+    fprintf(file, "#p:%ld|%s|%s|%ld|%d|%d|\n", player_get_id(p),player_get_name(p),player_get_gdesc(p),player_get_location(p),player_get_health(p),player_get_number_of_backpack(p));
     }
     if(game_get_number_of_characters(game)<0){
         return ERROR;
     }
     for(i=0;i<game_get_number_of_characters(game);i++){
         c=game_get_character_from_index(game,i);
-        fprintf(file, "#c:%d|%s|%s|%d|%d|%d|%s|%d|\n", character_get_id(c),character_get_name(c),character_get_gdesc(c),game_get_character_location(game,character_get_id(c)),character_get_id(c),character_get_friendly(c),character_get_message(c),character_get_following(c));
+        fprintf(file, "#c:%ld|%s|%s|%ld|%d|%d|%s|%ld|\n", character_get_id(c),character_get_name(c),character_get_gdesc(c),game_get_character_location(game,character_get_id(c)),character_get_health(c),character_get_friendly(c),character_get_message(c),character_get_following(c));
     }
     if(game_get_number_of_objects(game)<0){
         return ERROR;
     }
     for(i=0;i<game_get_number_of_objects(game);i++){
         o=game_get_object_from_index(game,i);
-        fprintf(file, "#o:%d|%s|%d|%s|%d|%d|%d|%d|\n", object_get_id(o),object_get_name(o),game_get_object_location(game,object_get_id(o)),game_get_character_location(game,object_get_id(o)),object_get_desc(o),object_get_health(o),object_get_movable(o),object_get_dependency(o),object_get_open(o));
+        fprintf(file, "#o:%ld|%s|%ld|%s|%d|%d|%ld|%ld|\n", object_get_id(o),object_get_name(o),game_get_object_location(game,object_get_id(o)),object_get_desc(o),object_get_health(o),object_get_movable(o),object_get_dependency(o),object_get_open(o));
     }
     if(game_get_number_of_space(game)<0){
         return ERROR;
     }
     for(i=0;i<game_get_number_of_space(game);i++){
         s=game_get_space_from_index(game,i);
-        fprintf(file, "#s:%d|%s|%s|%s|%s|%s|%s|%d|\n",space_get_id(s),space_get_name(s),space_get_gdes_from_index(s,0),space_get_gdes_from_index(s,1),space_get_gdes_from_index(s,2),space_get_gdes_from_index(s,3),space_get_gdes_from_index(s,4),space_get_discovered(s));
+        fprintf(file, "#s:%ld|%s|%s|%s|%s|%s|%s|%d|\n",space_get_id(s),space_get_name(s),space_get_gdes_from_index(s,0),space_get_gdes_from_index(s,1),space_get_gdes_from_index(s,2),space_get_gdes_from_index(s,3),space_get_gdes_from_index(s,4),space_get_discovered(s));
        }  
 if(game_get_number_of_links(game)<0){
     return ERROR;
 }
     for(i=0;i<game_get_number_of_links(game);i++){
         e=game_get_link_from_index(game,i);
-        fprintf(file,"#l:%d|%s|%d|%d|%d|\n",link_get_id(l),link_get_name(l),link_get_origin(l),link_get_destination(l),link_get_direction(l),link_get_open(l));
+        fprintf(file,"#l:%ld|%s|%ld|%ld|%d|%d|\n",link_get_id(e),link_get_name(e),link_get_origin(e),link_get_destination(e),link_get_direction(e),link_get_open(e));
     }
 
+    fclose(file);
     return OK;
 }

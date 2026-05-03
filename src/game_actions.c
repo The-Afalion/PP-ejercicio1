@@ -30,8 +30,76 @@ Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 Status game_actions_use(Game *game);
 Status game_actions_open(Game *game);
+Status game_actions_team(Game *game);
 Status game_actions_save(Game *game);
 Status game_actions_load(Game *game);
+Player *game_actions_find_player(Game *game, char *name_or_id);
+Player *game_actions_find_object_owner_in_team(Game *game, Player *player, Id object_id);
+
+Player *game_actions_find_player(Game *game, char *name_or_id)
+{
+  Player *player = NULL;
+  char *endptr = NULL;
+  Id id = NO_ID;
+  int i = 0;
+
+  if (!game || !name_or_id || name_or_id[0] == '\0')
+  {
+    return NULL;
+  }
+
+  id = strtol(name_or_id, &endptr, 10);
+
+  for (i = 0; i < game_get_number_of_players(game); i++)
+  {
+    player = game_get_player_from_index(game, i);
+    if (!player)
+    {
+      continue;
+    }
+
+    if ((endptr && *endptr == '\0' && player_get_id(player) == id) ||
+        (player_get_name(player) && strcasecmp(player_get_name(player), name_or_id) == 0))
+    {
+      return player;
+    }
+  }
+
+  return NULL;
+}
+
+Player *game_actions_find_object_owner_in_team(Game *game, Player *player, Id object_id)
+{
+  Player *teammate = NULL;
+  int i = 0;
+
+  if (!game || !player || object_id == NO_ID)
+  {
+    return NULL;
+  }
+
+  if (player_has_object(player, object_id) == TRUE)
+  {
+    return player;
+  }
+
+  for (i = 0; i < game_get_number_of_players(game); i++)
+  {
+    teammate = game_get_player_from_index(game, i);
+    if (!teammate || teammate == player)
+    {
+      continue;
+    }
+
+    if (game_players_are_teammates(game, player, teammate) == TRUE &&
+        player_has_object(teammate, object_id) == TRUE)
+    {
+      return teammate;
+    }
+  }
+
+  return NULL;
+}
 
 Status game_actions_update(Game *game, Command *command)
 {
@@ -79,6 +147,9 @@ Status game_actions_update(Game *game, Command *command)
     break;
   case OPEN:
     status = game_actions_open(game);
+    break;
+  case TEAM:
+    status = game_actions_team(game);
     break;
   case LOAD:
    status = game_actions_load(game);
@@ -373,7 +444,9 @@ Status game_actions_attack(Game *game)
   int random_num;
   int player_health, char_health, n_attackers = 0, damaged_index, i;
   Character *ally;
-  Id attackers_ids[MAX_CHARACTERS + 1];
+  Player *teammate = NULL;
+  Id attackers_ids[MAX_CHARACTERS + 32];
+  BOOL attackers_are_players[MAX_CHARACTERS + 32];
   Id *followers_ids = NULL;
   Command *last_cmd = NULL;
 
@@ -454,10 +527,31 @@ Status game_actions_attack(Game *game)
   for (i = 0; i < n_attackers; i++)
   {
     attackers_ids[i] = followers_ids[i];
+    attackers_are_players[i] = FALSE;
   }
 
   attackers_ids[n_attackers] = player_get_id(game_get_player(game));
+  attackers_are_players[n_attackers] = TRUE;
   n_attackers++;
+
+  for (i = 0; i < game_get_number_of_players(game); i++)
+  {
+    teammate = game_get_player_from_index(game, i);
+    if (!teammate || teammate == player)
+    {
+      continue;
+    }
+
+    if (game_players_are_teammates(game, player, teammate) == TRUE &&
+        player_get_location(teammate) == space_id &&
+        player_get_health(teammate) > 0 &&
+        n_attackers < MAX_CHARACTERS + 32)
+    {
+      attackers_ids[n_attackers] = player_get_id(teammate);
+      attackers_are_players[n_attackers] = TRUE;
+      n_attackers++;
+    }
+  }
 
   random_num = rand() % 10;
 
@@ -466,13 +560,36 @@ Status game_actions_attack(Game *game)
   {
     damaged_index = rand() % n_attackers;
 
-    if (attackers_ids[damaged_index] == player_get_id(player))
+    if (attackers_are_players[damaged_index] == TRUE)
     {
-      player_health = player_get_health(player);
-      player_health--;
-      player_set_health(player, player_health);
+      if (attackers_ids[damaged_index] == player_get_id(player))
+      {
+        teammate = player;
+      }
+      else
+      {
+        teammate = NULL;
+        for (i = 0; i < game_get_number_of_players(game); i++)
+        {
+          teammate = game_get_player_from_index(game, i);
+          if (teammate && player_get_id(teammate) == attackers_ids[damaged_index])
+          {
+            break;
+          }
+          teammate = NULL;
+        }
+      }
 
-      if (player_health <= 0)
+      if (!teammate)
+      {
+        return ERROR;
+      }
+
+      player_health = player_get_health(teammate);
+      player_health--;
+      player_set_health(teammate, player_health);
+
+      if (player_health <= 0 && teammate == player)
       {
         game_set_finished(game, 1);
       }
@@ -797,6 +914,7 @@ Status game_actions_abandon(Game *game)
 Status game_actions_use(Game *game)
 {
   Player *player = NULL;
+  Player *object_owner = NULL;
   Command *last_cmd = NULL;
   Inventory *backpack = NULL;
   Id object_in_backpack = NO_ID, *followers_ids = NULL;
@@ -821,16 +939,18 @@ Status game_actions_use(Game *game)
   {
     return ERROR;
   }
-  if (!(backpack = player_get_backpack(player)))
-  {
-    return ERROR;
-  }
   object_in_backpack = game_get_object_id_from_name(game, arg[0]);
   if (object_in_backpack == NO_ID)
   {
     return ERROR;
   }
-  if (player_has_object(player, object_in_backpack) == FALSE)
+  object_owner = game_actions_find_object_owner_in_team(game, player, object_in_backpack);
+  if (!object_owner)
+  {
+    return ERROR;
+  }
+  backpack = player_get_backpack(object_owner);
+  if (!backpack)
   {
     return ERROR;
   }
@@ -843,9 +963,9 @@ Status game_actions_use(Game *game)
     return ERROR;
   }
 
-  if (strcasecmp("over", arg[1]) != 0)/**si no se pone over directamente le añade la vide al jugador */
+  if (arg[1][0] == '\0' || strcasecmp("over", arg[1]) != 0)/**si no se pone over directamente le añade la vide al jugador */
   {
-    if (!player_set_health(player, player_get_health(player) + objhealth))
+    if (player_set_health(player, player_get_health(player) + objhealth) == ERROR)
     {
       return ERROR;
     }
@@ -853,19 +973,23 @@ Status game_actions_use(Game *game)
   else
   {
     if (!(followers_ids = game_get_players_followers(game)))
-      for (i = 0; i < game_get_number_of_followers_of_player(game); i++)
-      {
-        follower = game_get_character(game, followers_ids[i]);
-        if (!follower || character_get_following(follower) != player_get_id(player) || strcasecmp(character_get_name(follower), arg[2]) != 0)
-        {
-          continue;
-        }
+    {
+      return ERROR;
+    }
 
-        if (!character_set_health(follower, character_get_health(follower) + objhealth))
-        {
-          return ERROR;
-        }
+    for (i = 0; i < game_get_number_of_followers_of_player(game); i++)
+    {
+      follower = game_get_character(game, followers_ids[i]);
+      if (!follower || character_get_following(follower) != player_get_id(player) || strcasecmp(character_get_name(follower), arg[2]) != 0)
+      {
+        continue;
       }
+
+      if (character_set_health(follower, character_get_health(follower) + objhealth) == ERROR)
+      {
+        return ERROR;
+      }
+    }
   }
 
   return inventory_del_object(backpack, object_in_backpack);
@@ -874,6 +998,7 @@ Status game_actions_use(Game *game)
 Status game_actions_open(Game *game)
 {
   Player *player = NULL;
+  Player *object_owner = NULL;
   Command *last_cmd = NULL;
   Object *object = NULL;
   Link *link = NULL;
@@ -936,7 +1061,8 @@ Status game_actions_open(Game *game)
   {
     return ERROR;
   }
-  if (!player_has_object(player, object_id))
+  object_owner = game_actions_find_object_owner_in_team(game, player, object_id);
+  if (!object_owner)
   {
     return ERROR;
   }
@@ -954,6 +1080,68 @@ Status game_actions_open(Game *game)
   }
 
   return link_set_open(link, TRUE);
+}
+Status game_actions_team(Game *game)
+{
+  Player *player = NULL;
+  Player *target = NULL;
+  Command *last_cmd = NULL;
+  char **arg = NULL;
+  Id team_id = NO_ID;
+
+  if (!game)
+  {
+    return ERROR;
+  }
+
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd)
+  {
+    return ERROR;
+  }
+
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0][0] == '\0')
+  {
+    return ERROR;
+  }
+
+  player = game_get_player(game);
+  target = game_actions_find_player(game, arg[0]);
+  if (!player || !target || target == player)
+  {
+    return ERROR;
+  }
+
+  if (player_get_location(player) != player_get_location(target))
+  {
+    return ERROR;
+  }
+
+  team_id = player_get_team(player);
+  if (team_id == NO_ID && player_get_team(target) != NO_ID)
+  {
+    team_id = player_get_team(target);
+    if (player_set_team(player, team_id) == ERROR)
+    {
+      return ERROR;
+    }
+  }
+  else if (team_id == NO_ID)
+  {
+    team_id = player_get_id(player);
+    if (player_set_team(player, team_id) == ERROR)
+    {
+      return ERROR;
+    }
+  }
+
+  if (player_get_team(target) != NO_ID && player_get_team(target) != team_id)
+  {
+    return ERROR;
+  }
+
+  return player_set_team(target, team_id);
 }
 Status game_actions_save(Game *game){
   Command *last_cmd = NULL;

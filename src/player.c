@@ -30,6 +30,7 @@ struct Player
   int nobj;                           /*!< Número de objetos en el inventario*/
   int health;                         /*!< Puntos de salud del jugador*/
   char *gdesc;                        /*!< Descripción gráfica del jugador*/
+  Id team;                            /*!< Identificador del equipo del jugador*/
 };
 
 Player *player_create(Id id)
@@ -58,6 +59,7 @@ Player *player_create(Id id)
   newPlayer->backpack = inventory_create(INVENTORY_SIZE);
   newPlayer->health = START_HEALTH;
   newPlayer->gdesc = NULL;
+  newPlayer->team = NO_ID;
 
   return newPlayer;
 }
@@ -214,8 +216,8 @@ Status player_print(Player *player)
   return OK;
 }
 Status player_set_health(Player *player, int h)
-{ /*Cambia salud del jugador,si la salud es <= 0 devielve error*/
-  if (!player || h <= 0)
+{ /*Cambia salud del jugador, si la salud es negativa devuelve error*/
+  if (!player || h < 0)
   {
     return ERROR;
   }
@@ -269,5 +271,26 @@ int player_get_number_of_backpack(Player*p){
   if(!p){
     return -1;
   }
-  return p->nobj;
+  return inventory_get_max_objs(p->backpack);
+}
+
+Status player_set_team(Player *player, Id team_id)
+{
+  if (!player)
+  {
+    return ERROR;
+  }
+
+  player->team = team_id;
+  return OK;
+}
+
+Id player_get_team(Player *player)
+{
+  if (!player)
+  {
+    return NO_ID;
+  }
+
+  return player->team;
 }

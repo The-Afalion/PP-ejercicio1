@@ -18,7 +18,7 @@
 #define SINGLE_ELEM 1
 #define MAX_ARGS 3
 
-char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "exit"}, {"t", "Take"}, {"d", "drop"}, {"a", "attack"}, {"c", "chat"}, {"m", "move"}, {"i", "inspect"}, {"r", "recruit"}, {"ab", "abandon"}, {"u", "use"}, {"o", "open"},{"s", "save"},{"l","load"}};
+char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "exit"}, {"t", "take"}, {"d", "drop"}, {"a", "attack"}, {"c", "chat"}, {"m", "move"}, {"i", "inspect"}, {"r", "recruit"}, {"ab", "abandon"}, {"u", "use"}, {"o", "open"}, {"tm", "team"}, {"s", "save"}, {"l", "load"}};
 struct _Command
 {
   CommandCode code;            /*!<  Codigo del comando enumerado */

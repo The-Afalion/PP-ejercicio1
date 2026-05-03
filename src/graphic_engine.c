@@ -506,8 +506,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     /* Monitorizacion del estado del jugador activo */
     player = game_get_player(game);
     max_backpack_obj = inventory_get_max_objs(player_get_backpack(player));
-    sprintf(str, " Player: %d (%d)", (int)player_get_location(player), player_get_health(player));
+    sprintf(str, " Player P%ld: %d (%d)", player_get_id(player), (int)player_get_location(player), player_get_health(player));
     screen_area_puts(ge->descript, str);
+    if (player_get_team(player) != NO_ID)
+    {
+        sprintf(str, " Team: %ld", player_get_team(player));
+        screen_area_puts(ge->descript, str);
+    }
 
     screen_area_puts(ge->descript, "Player has: ");
     for (i = 0; i < max_backpack_obj; i++)
@@ -551,13 +556,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     }
 
     /* Actualizacion de modulos auxiliares: Banner, Help y Feedback */
-    sprintf(str, "  Turn Player :%d ", game_get_turn(game) + 1);
+    sprintf(str, "  Turn Player: P%ld ", game_get_current_player_id(game));
     screen_area_puts(ge->banner, str);
 
     screen_area_clear(ge->help);
     screen_area_puts(ge->help, " The commands you can use are:");
     screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
-    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, open/o");
+    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, use/u, team/tm, open/o");
     screen_area_puts(ge->help, "     move: north/south/east/west/up/down; U/D marks up/down exits");
 
     if (paint_cmd == TRUE)
@@ -565,11 +570,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
         last_cmd = command_get_code(game_get_last_command(game));
         if (last_cmd_status == OK)
         {
-            sprintf(str, " %s (%s): OK", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS]);
+            sprintf(str, " P%ld %s (%s): OK", game_get_current_player_id(game), cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS]);
         }
         else
         {
-            sprintf(str, " %s (%s): ERROR", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS]);
+            sprintf(str, " P%ld %s (%s): ERROR", game_get_current_player_id(game), cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS]);
         }
         screen_area_puts(ge->feedback, str);
     }

@@ -187,4 +187,6 @@ BOOL space_get_discovered(Space* space);
  */
 int space_get_n_characters(Space* space);
 
+char *space_get_gdes_from_index(Space *s, int n);
+
 #endif

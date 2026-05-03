@@ -173,4 +173,21 @@ Inventory *player_get_backpack(Player *player);
  */
 int player_get_number_of_backpack(Player*p);
 
+/**
+ * @brief Establece el identificador de equipo del jugador.
+ * @author Codex
+ * @param player puntero al jugador
+ * @param team_id identificador del equipo o NO_ID si no tiene equipo
+ * @return OK si se establece con éxito, ERROR en caso contrario
+ */
+Status player_set_team(Player *player, Id team_id);
+
+/**
+ * @brief Obtiene el identificador de equipo del jugador.
+ * @author Codex
+ * @param player puntero al jugador
+ * @return id del equipo o NO_ID si no pertenece a ninguno
+ */
+Id player_get_team(Player *player);
+
 #endif

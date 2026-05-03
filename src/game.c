@@ -916,3 +916,39 @@ Link *game_get_link_from_index(Game*game, int n){
   }
 return game->link[n];
 }
+
+Id game_get_current_player_id(Game *game)
+{
+  Player *player = NULL;
+
+  if (!game)
+  {
+    return NO_ID;
+  }
+
+  player = game_get_player(game);
+  if (!player)
+  {
+    return NO_ID;
+  }
+
+  return player_get_id(player);
+}
+
+BOOL game_players_are_teammates(Game *game, Player *first, Player *second)
+{
+  Id team = NO_ID;
+
+  if (!game || !first || !second)
+  {
+    return FALSE;
+  }
+
+  team = player_get_team(first);
+  if (team == NO_ID)
+  {
+    return FALSE;
+  }
+
+  return team == player_get_team(second) ? TRUE : FALSE;
+}
