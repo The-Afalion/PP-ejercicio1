@@ -131,7 +131,8 @@ Status object_set_open(Object* object, Id open);
  * @return El Id de lo que abre, o NO_ID si hay error
  */
 Id object_get_open(Object* object);
-
+int object_get_price(Object*o);
+Status object_set_price(Object*o,  int m);
 
 
 #endif
