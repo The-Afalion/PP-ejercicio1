@@ -12,36 +12,36 @@
 #c:68|Ezequiel|{E}|91|8|0|0|Soy el sepulturero.|
 #c:69|Alcalde|{A}|101|4|0|0|Bienvenido a nuestra humilde ciudad.|
 #c:70|Sheriff|{S}|31|6|5|0|Manten las manos donde pueda verlas.|
-#o:21|Revolver|100|Un pesado revolver de tambor de seis tiros.|0|1|-1|-1|
-#o:22|Lampara|21|Una lampara de aceite de cristal ahumado.|0|1|-1|-1|
-#o:23|Poncho|110|Un poncho de lana que protege del polvo y la arena.|0|0|-1|-1|
-#o:24|Piel_Oso|22|Una autentica piel de oso cazado en las montañas.|0|0|-1|-1|
-#o:25|CajaFuerte|62|Una caja fuerte de acero pesada con cerradura de tambor.|0|0|-1|-1|
-#o:26|LlaveLaton|23|Una pequeña llave de laton desgastada.|0|1|-1|61|
-#o:27|Winchester|71|Un rifle de repeticion reluciente.|0|1|-1|-1|
-#o:28|LlaveBanco|101|Una llave gruesa con la insignia del banco local.|0|1|-1|59|
-#o:29|LlaveCarcel|31|Una llave aspera de la Comisaria.|0|1|-1|51|
-#o:30|LlaveMina|63|Una llave negra cubierta de polvo de carbon.|0|1|-1|67|
-#o:41|Anilla|111|Un aro de alambre pesado para agrupar llaves.|0|1|-1|-1|
-#o:42|Dinamita|81|Un cartucho rojo con la mecha intacta.|0|1|-1|-1|
-#o:43|Mapa|115|Un mapa a medio dibujar del cañon subterraneo.|0|1|-1|-1|
-#o:44|Brujula|122|Una brujula de laton con el cristal roto.|0|1|-1|-1|
-#o:45|Lazo|102|Una soga gruesa con nudo corredizo.|0|1|-1|-1|
-#o:46|Cuchillo|71|Un cuchillo Bowie de cazador muy afilado.|0|1|-1|-1|
-#o:47|Cartel|31|Un cartel antiguo de recompensa SE BUSCA.|0|1|-1|-1|
-#o:48|Placa|31|Una estrella de hojalata de seis puntas para el pecho.|0|1|-1|-1|
-#o:49|Montura|102|Una montura de cuero curtido para caballo.|0|1|-1|-1|
-#o:50|Whisky|21|Una botella de licor de centeno casero muy fuerte.|1|1|-1|-1|
-#o:51|Pico|72|Un pico de minero con mango de roble astillado.|0|1|-1|-1|
-#o:52|Sombrero|41|Un autentico sombrero Stetson de ala ancha cubierto de polvo.|0|1|-1|-1|
-#o:53|PepitaOro|82|Una gran piedra irregular y muy brillante.|0|1|-1|-1|
-#o:54|Reloj|92|Un reloj de bolsillo de plata parado a mediodia.|0|1|-1|-1|
-#o:55|Escrituras|63|Las escrituras manchadas de un rancho lejano.|0|1|-1|-1|
-#o:56|Dolar|61|Un dolar de plata troquelado y algo rayado.|0|1|-1|-1|
-#o:57|Espuela|91|Una espuela dentada escondida bajo la arena.|0|1|-1|-1|
-#o:58|Panuelo|112|Un pañuelo de algodon rojo para atar al rostro.|0|1|-1|-1|
-#o:59|Botas|51|Unas botas de cuero de montar gastadas.|0|1|-1|-1|
-#o:60|Frijoles|42|Una lata de frijoles en conserva todavia sellada.|1|1|-1|-1|
+#o:21|Revolver|100|0|Un pesado revolver de tambor de seis tiros.|0|1|-1|-1|
+#o:22|Lampara|21|0|Una lampara de aceite de cristal ahumado.|0|1|-1|-1|
+#o:23|Poncho|110|0|Un poncho de lana que protege del polvo y la arena.|0|0|-1|-1|
+#o:24|Piel_Oso|22|0|Una autentica piel de oso cazado en las montañas.|0|0|-1|-1|
+#o:25|CajaFuerte|62|0|Una caja fuerte de acero pesada con cerradura de tambor.|0|0|-1|-1|
+#o:26|LlaveLaton|23|0|Una pequeña llave de laton desgastada.|0|1|-1|61|
+#o:27|Winchester|71|0|Un rifle de repeticion reluciente.|0|1|-1|-1|
+#o:28|LlaveBanco|101|0|Una llave gruesa con la insignia del banco local.|0|1|-1|59|
+#o:29|LlaveCarcel|31|0|Una llave aspera de la Comisaria.|0|1|-1|51|
+#o:30|LlaveMina|63|0|Una llave negra cubierta de polvo de carbon.|0|1|-1|67|
+#o:41|Anilla|111|0|Un aro de alambre pesado para agrupar llaves.|0|1|-1|-1|
+#o:42|Dinamita|81|0|Un cartucho rojo con la mecha intacta.|0|1|-1|-1|
+#o:43|Mapa|115|0|Un mapa a medio dibujar del cañon subterraneo.|0|1|-1|-1|
+#o:44|Brujula|122|0|Una brujula de laton con el cristal roto.|0|1|-1|-1|
+#o:45|Lazo|102|0|Una soga gruesa con nudo corredizo.|0|1|-1|-1|
+#o:46|Cuchillo|71|0|Un cuchillo Bowie de cazador muy afilado.|0|1|-1|-1|
+#o:47|Cartel|31|0|Un cartel antiguo de recompensa SE BUSCA.|0|1|-1|-1|
+#o:48|Placa|31|0|Una estrella de hojalata de seis puntas para el pecho.|0|1|-1|-1|
+#o:49|Montura|102|0|Una montura de cuero curtido para caballo.|0|1|-1|-1|
+#o:50|Whisky|21|0|Una botella de licor de centeno casero muy fuerte.|1|1|-1|-1|
+#o:51|Pico|72|0|Un pico de minero con mango de roble astillado.|0|1|-1|-1|
+#o:52|Sombrero|41|0|Un autentico sombrero Stetson de ala ancha cubierto de polvo.|0|1|-1|-1|
+#o:53|PepitaOro|82|0|Una gran piedra irregular y muy brillante.|0|1|-1|-1|
+#o:54|Reloj|92|0|Un reloj de bolsillo de plata parado a mediodia.|0|1|-1|-1|
+#o:55|Escrituras|63|0|Las escrituras manchadas de un rancho lejano.|0|1|-1|-1|
+#o:56|Dolar|61|0|Un dolar de plata troquelado y algo rayado.|0|1|-1|-1|
+#o:57|Espuela|91|0|Una espuela dentada escondida bajo la arena.|0|1|-1|-1|
+#o:58|Panuelo|112|0|Un pañuelo de algodon rojo para atar al rostro.|0|1|-1|-1|
+#o:59|Botas|51|0|Unas botas de cuero de montar gastadas.|0|1|-1|-1|
+#o:60|Frijoles|42|0|Una lata de frijoles en conserva todavia sellada.|1|1|-1|-1|
 #s:100|Afueras|.............|  / \   / \  |   |  *  |   |   |  v  |   |.............|
 #s:110|Calle1|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
 #s:111|Calle2|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
