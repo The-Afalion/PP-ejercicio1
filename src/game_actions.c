@@ -148,8 +148,8 @@ Status game_actions_update(Game *game, Command *command)
   case OPEN:
     status = game_actions_open(game);
     break;
-  case TEAM:
-    status = game_actions_team(game);
+  case COLAB:
+    status = game_actions_colab(game);
     break;
   case LOAD:
    status = game_actions_load(game);
@@ -1081,7 +1081,7 @@ Status game_actions_open(Game *game)
 
   return link_set_open(link, TRUE);
 }
-Status game_actions_team(Game *game)
+Status game_actions_colab(Game *game)
 {
   Player *player = NULL;
   Player *target = NULL;
