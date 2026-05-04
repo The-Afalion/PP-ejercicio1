@@ -31,6 +31,7 @@ struct Player
   int health;                         /*!< Puntos de salud del jugador*/
   char *gdesc;                        /*!< Descripción gráfica del jugador*/
   Id team;                            /*!< Identificador del equipo del jugador*/
+  int money
 };
 
 Player *player_create(Id id)
@@ -60,6 +61,7 @@ Player *player_create(Id id)
   newPlayer->health = START_HEALTH;
   newPlayer->gdesc = NULL;
   newPlayer->team = NO_ID;
+  newPlayer->money=0;
 
   return newPlayer;
 }
@@ -211,6 +213,7 @@ Status player_print(Player *player)
   fprintf(stdout, "--> Jugador (Id: %ld; Nombre: %s; Descripción: %s)\n", player->id, player->name, player->gdesc ? player->gdesc : "None");
   fprintf(stdout, "--> Salud: %d\n", player->health);
   fprintf(stdout, "--> Localización: %ld\n", player->location);
+    fprintf(stdout, "--> Dinero: %d\n", player->money);
   inventory_print(player->backpack);
 
   return OK;
@@ -293,4 +296,26 @@ Id player_get_team(Player *player)
   }
 
   return player->team;
+}
+int player_get_money(Player *player){
+  if(!player){
+    return -1;
+  }
+  return player->money;
+}
+Status player_set_money(Player *player,int m){
+if(!player){
+  return ERROR;
+}
+player->money=m;
+return OK;
+}
+BOOL player_has_money(Player *player,int m){
+  if(!m){
+    return FALSE;
+  }
+  if(player->money>=m){
+    return TRUE;
+  }
+  return FALSE;
 }

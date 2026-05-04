@@ -183,9 +183,9 @@ Status game_managment_load_objects(Game *game, char *filename)
                 object_set_movable(object, movable ? TRUE : FALSE);
                 object_set_dependency(object, dependency);
                 object_set_open(object, open);
-
                 game_add_object(game, object);
                 game_set_object_location(game, location_id, id);
+                dddd
             }
         }
     }
@@ -210,7 +210,7 @@ Status game_managment_load_characters(Game *game, char *filename)
     char *toks = NULL;
     Id id = NO_ID, location_id = NO_ID,following;
     int health = 0;
-    int friendly = 0;
+    int friendly = 0,money;
     Character *character = NULL;
     Status status = OK;
     char *endptr;
@@ -249,6 +249,8 @@ Status game_managment_load_characters(Game *game, char *filename)
             strcpy(message, toks);
             toks = strtok(NULL, "|");
             following = (Id)strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            money = (Id)strtol(toks, &endptr, 10);
             /* Creacion e integracion del personaje en el motor de juego */
             character = character_create(id);
             if (character != NULL)
@@ -258,10 +260,12 @@ Status game_managment_load_characters(Game *game, char *filename)
                 character_set_health(character, health);
                 character_set_friendly(character, friendly);
                 character_set_message(character, message);
-
+                game_set_character_location(game, location_id, id);
+                character_set_following(character,following);
+                character_set_money(character,money);
                 game_add_character(game, character);
                 game_set_character_location(game, location_id, id);
-            character_set_following(character,following);
+
             }
             
         }
@@ -285,7 +289,7 @@ Status game_managment_load_players(Game *game, char *filename)
     char gdesc[WORD_SIZE] = "";
     char *toks = NULL;
     Id id = NO_ID, location_id = NO_ID,id_obj;
-    int health = 0, max_objs = 0,i;
+    int health = 0, max_objs = 0,i,money;
     Player *player = NULL;
     Status status = OK;
     char *endptr;
@@ -321,6 +325,8 @@ Status game_managment_load_players(Game *game, char *filename)
             health = (int)strtol(toks, &endptr, 10);
             toks = strtok(NULL, "|");
             max_objs = (int)strtol(toks, &endptr, 10);
+            toks = strtok(NULL, "|");
+            money = (int)strtol(toks, &endptr, 10);
 
             /* Creacion e integracion del jugador en el motor de juego */
             player = player_create(id);
@@ -330,8 +336,15 @@ Status game_managment_load_players(Game *game, char *filename)
                 player_set_gdesc(player, gdesc);
                 player_set_location(player, location_id);
                 player_set_health(player, health);
+                player_set_money(player,money);
                 inventory_set_max_objs(player_get_backpack(player), max_objs);
-
+                for(i=0;i<max_objs;i++){
+                    toks = strtok(NULL, "|");
+                id_obj = (Id)strtol(toks, &endptr, 10);
+                if(id_obj!=NO_ID){
+                    player_add_object(player,id_obj);
+                }
+                }
                 game_set_player(game, player);
 
                 /* Asignacion del estado descubierto al espacio inicial */
@@ -340,13 +353,7 @@ Status game_managment_load_players(Game *game, char *filename)
                 {
                     space_set_discovered(starting_space, TRUE);
                 }
-                for(i=0;i<max_objs;i++){
-                    toks = strtok(NULL, "|");
-                id_obj = (Id)strtol(toks, &endptr, 10);
-                if(id_obj!=NO_ID){
-                    player_add_object(player,id_obj);
-                }
-                }
+            
             }
         }
     }
@@ -453,7 +460,7 @@ Status game_managment_save_game(Game *game, char *filename){
     }
     for(i=0;i<game_get_number_of_players(game);i++){
         p=game_get_player_from_index(game,i);
-    fprintf(file, "#p:%ld|%s|%s|%ld|%d|%d|", player_get_id(p),player_get_name(p),player_get_gdesc(p),player_get_location(p),player_get_health(p),player_get_number_of_backpack(p));
+    fprintf(file, "#p:%ld|%s|%s|%ld|%d|%d|%d|", player_get_id(p),player_get_name(p),player_get_gdesc(p),player_get_location(p),player_get_health(p),player_get_number_of_backpack(p),player_get_money(p));
     for(j=0;j<player_get_number_of_backpack(p);j++){
         fprintf(file,"%d|",player_get_object(p,j));
     }
@@ -464,7 +471,7 @@ Status game_managment_save_game(Game *game, char *filename){
     }
     for(i=0;i<game_get_number_of_characters(game);i++){
         c=game_get_character_from_index(game,i);
-        fprintf(file, "#c:%ld|%s|%s|%ld|%d|%d|%s|%ld|\n", character_get_id(c),character_get_name(c),character_get_gdesc(c),game_get_character_location(game,character_get_id(c)),character_get_health(c),character_get_friendly(c),character_get_message(c),character_get_following(c));
+        fprintf(file, "#c:%ld|%s|%s|%ld|%d|%d|%s|%ld|%d|\n", character_get_id(c),character_get_name(c),character_get_gdesc(c),game_get_character_location(game,character_get_id(c)),character_get_health(c),character_get_friendly(c),character_get_message(c),character_get_following(c),character_get_money(c));
     }
     if(game_get_number_of_objects(game)<0){
         return ERROR;

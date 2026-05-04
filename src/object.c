@@ -27,6 +27,7 @@ struct Object
   BOOL movable;                              /*!<Si se puede mover o no*/
   Id dependency;                             /*!<Indica el id del que depende*/
   Id open;                                   /*!<Indica el id de lo que puede abrir*/
+  int price;
 };
 
 Object *object_create(Id id)
@@ -53,7 +54,7 @@ Object *object_create(Id id)
   newObject->name[FIRST_CHAR] = '\0';
   newObject->description[FIRST_CHAR] = '\0';
   newObject->dependency = NO_ID;
-  newObject->health = 0;
+  newObject->price=0;
   newObject->open = NO_ID;
   newObject->movable = FALSE;
 
@@ -206,7 +207,7 @@ BOOL object_get_movable(Object *obj)
 
 Id object_get_dependency(Object *obj)
 {
-  if (obj == NULL)
+  if (!obj)
   {
     return -1;
   }
@@ -221,5 +222,17 @@ Id object_get_open(Object *obj)
   }
   return obj->open;
 }
+int object_get_price(Object*o){
+  if(!o){
+    return -1;
+  }
+  return o->price;
+}
 
-
+Status object_set_price(Object*o,  int m){
+  if(!o){
+    return ERROR;
+  }
+  o->price=m;
+  return OK;
+}

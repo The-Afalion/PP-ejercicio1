@@ -30,9 +30,10 @@ Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 Status game_actions_use(Game *game);
 Status game_actions_open(Game *game);
-Status game_actions_colab(Game *game);
+Status game_actions_team(Game *game);
 Status game_actions_save(Game *game);
 Status game_actions_load(Game *game);
+Status game_actions_buy(Game *game);
 Player *game_actions_find_player(Game *game, char *name_or_id);
 Player *game_actions_find_object_owner_in_team(Game *game, Player *player, Id object_id);
 
@@ -148,8 +149,8 @@ Status game_actions_update(Game *game, Command *command)
   case OPEN:
     status = game_actions_open(game);
     break;
-  case COLAB:
-    status = game_actions_colab(game);
+  case TEAM:
+    status = game_actions_team(game);
     break;
   case LOAD:
    status = game_actions_load(game);
@@ -157,6 +158,9 @@ Status game_actions_update(Game *game, Command *command)
   case SAVE:
   status= game_actions_save(game);
   break;
+case BUY:
+status= game_actions_buy(game);
+break;
   default:
     break;
   }
@@ -1081,7 +1085,7 @@ Status game_actions_open(Game *game)
 
   return link_set_open(link, TRUE);
 }
-Status game_actions_colab(Game *game)
+Status game_actions_team(Game *game)
 {
   Player *player = NULL;
   Player *target = NULL;

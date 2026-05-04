@@ -119,26 +119,11 @@ Status game_create_from_file(Game **game, char *filename)
   }
 
   /* Delegacion modular de la carga de las entidades */
-  if (game_managment_load_spaces(*game, filename) == ERROR)
+  if (game_managment_load(*game, filename) == ERROR)
   {
     return ERROR;
   }
-  if (game_managment_load_players(*game, filename) == ERROR)
-  {
-    return ERROR;
-  }
-  if (game_managment_load_objects(*game, filename) == ERROR)
-  {
-    return ERROR;
-  }
-  if (game_managment_load_links(*game, filename) == ERROR)
-  {
-    return ERROR;
-  }
-  if (game_managment_load_characters(*game, filename) == ERROR)
-  {
-    return ERROR;
-  }
+  
 
   return OK;
 }
