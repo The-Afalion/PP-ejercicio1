@@ -16,6 +16,7 @@
 #include "game.h"
 #include "command.h"
 #include "game_actions.h"
+#include "game_rules.h"
 #include <time.h>
 
 BOOL game_loop_command_allows_turn_roll(CommandCode code);
@@ -159,6 +160,10 @@ int main(int argc, char *argv[])
       if (command_get_code(command) == EXIT || game_get_finished(game))
         break;
 
+      if(game_rules_update(game, command) == ERROR){
+        break;
+      }
+      
       /* Actualiza la interfaz grafica post-comando */
       graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
       sleep(1);
