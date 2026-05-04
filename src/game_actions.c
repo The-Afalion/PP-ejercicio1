@@ -30,7 +30,7 @@ Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 Status game_actions_use(Game *game);
 Status game_actions_open(Game *game);
-Status game_actions_team(Game *game);
+Status game_actions_colab(Game *game);
 Status game_actions_save(Game *game);
 Status game_actions_load(Game *game);
 Player *game_actions_find_player(Game *game, char *name_or_id);
