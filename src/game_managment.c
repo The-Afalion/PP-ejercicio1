@@ -106,6 +106,8 @@ Status game_managment_load_objects(Game *game, char *filename)
     char description[WORD_SIZE] = "";
     int health = 0;
     int movable = 0;
+    int price=0;
+    int damage=0;
 
     /* Comprueba la validez del nombre de archivo */
     if (!filename)
@@ -172,7 +174,22 @@ Status game_managment_load_objects(Game *game, char *filename)
             {
                 open = NO_ID;
             }
-
+             if (toks)
+            {
+                price = strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                price = 0;
+            }
+            if (toks)
+            {
+                damage = strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                damage = 0;
+            }
             /* Creacion e integracion del objeto en el motor de juego */
             object = object_create(id);
             if (object != NULL)
@@ -183,9 +200,11 @@ Status game_managment_load_objects(Game *game, char *filename)
                 object_set_movable(object, movable ? TRUE : FALSE);
                 object_set_dependency(object, dependency);
                 object_set_open(object, open);
+                object_set_price(object,price);
+                object_set_damage(object,damage);
                 game_add_object(game, object);
                 game_set_object_location(game, location_id, id);
-                dddd
+            
             }
         }
     }
@@ -462,7 +481,7 @@ Status game_managment_save_game(Game *game, char *filename){
         p=game_get_player_from_index(game,i);
     fprintf(file, "#p:%ld|%s|%s|%ld|%d|%d|%d|", player_get_id(p),player_get_name(p),player_get_gdesc(p),player_get_location(p),player_get_health(p),player_get_number_of_backpack(p),player_get_money(p));
     for(j=0;j<player_get_number_of_backpack(p);j++){
-        fprintf(file,"%d|",player_get_object(p,j));
+        fprintf(file,"%ld|",player_get_object(p,j));
     }
     fprintf(file,"\n");
     }
@@ -478,7 +497,7 @@ Status game_managment_save_game(Game *game, char *filename){
     }
     for(i=0;i<game_get_number_of_objects(game);i++){
         o=game_get_object_from_index(game,i);
-        fprintf(file, "#o:%ld|%s|%ld|%s|%d|%d|%ld|%ld|\n", object_get_id(o),object_get_name(o),game_get_object_location(game,object_get_id(o)),object_get_desc(o),object_get_health(o),object_get_movable(o),object_get_dependency(o),object_get_open(o));
+        fprintf(file, "#o:%ld|%s|%ld|%s|%d|%d|%ld|%ld|%d|%d|\n", object_get_id(o),object_get_name(o),game_get_object_location(game,object_get_id(o)),object_get_desc(o),object_get_health(o),object_get_movable(o),object_get_dependency(o),object_get_open(o),object_get_price(o),object_get_damage(o));
     }
     if(game_get_number_of_space(game)<0){
         return ERROR;

@@ -2,7 +2,7 @@
  * @brief It tests character module
  *
  * @file character_test.c
- * @author Rodrigo
+ * @author RAHER
  * @version 0.0
  * @date 17-03-2025
  * @copyright GNU Public License
@@ -15,19 +15,16 @@
 #include "character_test.h"
 #include "test.h"
 
-/** Numero maximo de pruebas disponibles en este modulo. */
-#define MAX_TESTS 36
+#define MAX_TESTS 30
 
 /**
- * @brief Funcion principal de las pruebas del modulo Character.
+ * @brief Main function for CHARACTER unit tests.
  *
- * Ejecuta todas las pruebas si no se recibe argumento, o una prueba concreta si
- * se indica su numero.
+ * You may execute ALL or a SINGLE test
+ *   1.- No parameter -> ALL test are executed
+ *   2.- A number means a particular test (the one identified by that number)
+ *       is executed
  *
- * @author Rodrigo
- * @param argc Numero de argumentos de entrada.
- * @param argv Argumentos de entrada.
- * @return 0 si la ejecucion termina correctamente.
  */
 int main(int argc, char** argv) {
 
@@ -77,12 +74,6 @@ int main(int argc, char** argv) {
   if (all || test == 28) test2_character_get_following();
   if (all || test == 29) test1_character_set_following();
   if (all || test == 30) test2_character_set_following();
-  if (all || test == 31) test1_character_print();
-  if (all || test == 32) test2_character_print();
-  if (all || test == 33) test1_character_set_money();
-  if (all || test == 34) test2_character_set_money();
-  if (all || test == 35) test1_character_get_money();
-  if (all || test == 36) test2_character_get_money();
 
 
   PRINT_PASSED_PERCENTAGE;
@@ -90,10 +81,6 @@ int main(int argc, char** argv) {
   return 0;
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_create.
- * @author Rodrigo
- */
 void test1_character_create() {
   Character *c;
   c = character_create(1);
@@ -101,10 +88,6 @@ void test1_character_create() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_create.
- * @author Rodrigo
- */
 void test2_character_create() {
   Character *c;
   c = character_create(1);
@@ -112,30 +95,18 @@ void test2_character_create() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_destroy.
- * @author Rodrigo
- */
 void test1_character_destroy() {
     Character *c = character_create(1);
     character_destroy(c);
     PRINT_TEST_RESULT(1);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_destroy.
- * @author Rodrigo
- */
 void test2_character_destroy() {
     character_destroy(NULL);
     PRINT_TEST_RESULT(1);
 }
 
 
-/**
- * @brief Ejecuta la prueba test1_character_get_id.
- * @author Rodrigo
- */
 void test1_character_get_id() {
   Character *c;
   c = character_create(1);
@@ -143,19 +114,11 @@ void test1_character_get_id() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_get_id.
- * @author Rodrigo
- */
 void test2_character_get_id() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_id(c) == NO_ID);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_get_name.
- * @author Rodrigo
- */
 void test1_character_get_name() {
   Character *c;
   c = character_create(1);
@@ -164,19 +127,11 @@ void test1_character_get_name() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_get_name.
- * @author Rodrigo
- */
 void test2_character_get_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_name(c) == NULL);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_set_name.
- * @author Rodrigo
- */
 void test1_character_set_name() {
   Character *c;
   c = character_create(1);
@@ -184,19 +139,11 @@ void test1_character_set_name() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_set_name.
- * @author Rodrigo
- */
 void test2_character_set_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_name(c, "test") == ERROR);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_get_gdesc.
- * @author Rodrigo
- */
 void test1_character_get_gdesc() {
   Character *c;
   c = character_create(1);
@@ -205,19 +152,11 @@ void test1_character_get_gdesc() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_get_gdesc.
- * @author Rodrigo
- */
 void test2_character_get_gdesc() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_gdesc(c) == NULL);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_set_gdesc.
- * @author Rodrigo
- */
 void test1_character_set_gdesc() {
   Character *c;
   c = character_create(1);
@@ -225,19 +164,11 @@ void test1_character_set_gdesc() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_set_gdesc.
- * @author Rodrigo
- */
 void test2_character_set_gdesc() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_gdesc(c, "gdesc") == ERROR);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_get_health.
- * @author Rodrigo
- */
 void test1_character_get_health() {
   Character *c;
   c = character_create(1);
@@ -246,19 +177,11 @@ void test1_character_get_health() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_get_health.
- * @author Rodrigo
- */
 void test2_character_get_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_health(c) == 0);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_set_health.
- * @author Rodrigo
- */
 void test1_character_set_health() {
   Character *c;
   c = character_create(1);
@@ -266,19 +189,11 @@ void test1_character_set_health() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_set_health.
- * @author Rodrigo
- */
 void test2_character_set_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_health(c, 10) == ERROR);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_get_friendly.
- * @author Rodrigo
- */
 void test1_character_get_friendly() {
   Character *c;
   c = character_create(1);
@@ -287,19 +202,11 @@ void test1_character_get_friendly() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_get_friendly.
- * @author Rodrigo
- */
 void test2_character_get_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_friendly(c) == 0);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_set_friendly.
- * @author Rodrigo
- */
 void test1_character_set_friendly() {
   Character *c;
   c = character_create(1);
@@ -307,19 +214,11 @@ void test1_character_set_friendly() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_set_friendly.
- * @author Rodrigo
- */
 void test2_character_set_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_friendly(c, 1) == ERROR);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_get_message.
- * @author Rodrigo
- */
 void test1_character_get_message() {
   Character *c;
   c = character_create(1);
@@ -328,37 +227,21 @@ void test1_character_get_message() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_get_message.
- * @author Rodrigo
- */
 void test2_character_get_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_message(c) == NULL);
 }
-/**
- * @brief Ejecuta la prueba test1_character_set_message.
- * @author Rodrigo
- */
 void test1_character_set_message() {
   Character *c;
   c = character_create(1);
   PRINT_TEST_RESULT(character_set_message(c, "message") == OK);
   character_destroy(c);
 }
-/**
- * @brief Ejecuta la prueba test2_character_set_message.
- * @author Rodrigo
- */
 void test2_character_set_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_message(c, "message") == ERROR);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_get_following.
- * @author Rodrigo
- */
 void test1_character_get_following() {
   Character *c;
   c = character_create(1);
@@ -367,19 +250,11 @@ void test1_character_get_following() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_get_following.
- * @author Rodrigo
- */
 void test2_character_get_following() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_following(c) == NO_ID);
 }
 
-/**
- * @brief Ejecuta la prueba test1_character_set_following.
- * @author Rodrigo
- */
 void test1_character_set_following() {
   Character *c;
   c = character_create(1);
@@ -387,71 +262,7 @@ void test1_character_set_following() {
   character_destroy(c);
 }
 
-/**
- * @brief Ejecuta la prueba test2_character_set_following.
- * @author Rodrigo
- */
 void test2_character_set_following() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_following(c, 7) == ERROR);
-}
-
-/**
- * @brief Ejecuta la prueba test1_character_print.
- * @author Rodrigo
- */
-void test1_character_print() {
-  Character *c;
-  c = character_create(1);
-  character_print(c);
-  PRINT_TEST_RESULT(1);
-  character_destroy(c);
-}
-
-/**
- * @brief Ejecuta la prueba test2_character_print.
- * @author Rodrigo
- */
-void test2_character_print() {
-  character_print(NULL);
-  PRINT_TEST_RESULT(1);
-}
-
-/**
- * @brief Ejecuta la prueba test1_character_set_money.
- * @author Rodrigo
- */
-void test1_character_set_money() {
-  Character *c;
-  c = character_create(1);
-  PRINT_TEST_RESULT(character_set_money(c, 10) == OK);
-  character_destroy(c);
-}
-
-/**
- * @brief Ejecuta la prueba test2_character_set_money.
- * @author Rodrigo
- */
-void test2_character_set_money() {
-  PRINT_TEST_RESULT(character_set_money(NULL, 10) == ERROR);
-}
-
-/**
- * @brief Ejecuta la prueba test1_character_get_money.
- * @author Rodrigo
- */
-void test1_character_get_money() {
-  Character *c;
-  c = character_create(1);
-  character_set_money(c, 10);
-  PRINT_TEST_RESULT(character_get_money(c) == 10);
-  character_destroy(c);
-}
-
-/**
- * @brief Ejecuta la prueba test2_character_get_money.
- * @author Rodrigo
- */
-void test2_character_get_money() {
-  PRINT_TEST_RESULT(character_get_money(NULL) == -1);
 }

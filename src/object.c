@@ -28,6 +28,7 @@ struct Object
   Id dependency;                             /*!<Indica el id del que depende*/
   Id open;                                   /*!<Indica el id de lo que puede abrir*/
   int price;
+  int damage;
 };
 
 Object *object_create(Id id)
@@ -57,6 +58,7 @@ Object *object_create(Id id)
   newObject->price=0;
   newObject->open = NO_ID;
   newObject->movable = FALSE;
+  newObject->damage=0;
 
   return newObject;
 }
@@ -235,4 +237,18 @@ Status object_set_price(Object*o,  int m){
   }
   o->price=m;
   return OK;
+}
+int object_get_damage(Object*o){
+  if(!o){
+    return -1;
+  }
+return o->damage;
+}
+
+Status object_get_damage(Object*o,int m){
+  if(!o){
+    return  ERROR;
+  }
+o->damage=m;
+return OK;
 }
