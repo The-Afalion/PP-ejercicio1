@@ -2,7 +2,7 @@
  * @brief It defines the object interface
  *
  * @file object.h
- * @author Rodrigo
+ * @author Unai Amondarain 
  * @version 1.0
  * @date (3/2/2026)
  */
@@ -131,8 +131,29 @@ Status object_set_open(Object* object, Id open);
  * @return El Id de lo que abre, o NO_ID si hay error
  */
 Id object_get_open(Object* object);
+/**
+ * @brief Obtiene el precio que vale el objeto
+ * @param object Puntero al objeto
+ * @return el valor o -1
+ */
 int object_get_price(Object*o);
+/**
+ * @brief cambia el precio que vale el objeto
+ * @param object Puntero al objeto
+ * @return OK o ERROR si algo ha fallado
+ */
 Status object_set_price(Object*o,  int m);
-
+/**
+ * @brief Obtiene el daño que vale el objeto
+ * @param object Puntero al objeto
+ * @return el valor o -1
+ */
+int object_get_damage(Object*o);
+/**
+ * @brief Cambia el precio que vale el objeto
+ * @param object Puntero al objeto
+ * @return OK o ERROR si algo ha fallado
+ */
+Status object_set_damage(Object*o,int m);
 
 #endif
