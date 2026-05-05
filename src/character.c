@@ -22,6 +22,7 @@ struct _Character
     int friendly;                      /*!< Indica si es amistoso */
     char message[100];                 /*!< Mensaje asociado al personaje */
     Id following;                      /*!< Id de la entidad a la que sigue */
+    int money;
 };
 
 Character *character_create(Id id)
@@ -49,6 +50,7 @@ Character *character_create(Id id)
     newCharacter->friendly = 0;
     newCharacter->message[0] = '\0';
     newCharacter->following = NO_ID;
+    newCharacter->money=0;
 
     return newCharacter;
 }
@@ -219,4 +221,17 @@ void character_print(Character *character)
         printf("--> Character (Id: %ld; Name: %s; Gdesc: %s; Health: %d; Friendly: %d; Message: %s; Following:%ld)\n",
                character->id, character->name, character->gdesc, character->health, character->friendly, character->message, character->following);
     }
+}
+int character_get_money(Character *c){
+  if(!c){
+    return -1;
+  }
+  return c->money;
+}
+Status character_set_money(Character *c,int m){
+if(!c){
+  return ERROR;
+}
+c->money=m;
+return OK;
 }

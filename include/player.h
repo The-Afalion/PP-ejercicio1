@@ -175,7 +175,7 @@ int player_get_number_of_backpack(Player*p);
 
 /**
  * @brief Establece el identificador de equipo del jugador.
- * @author Rodrigo
+ * @author Codex
  * @param player puntero al jugador
  * @param team_id identificador del equipo o NO_ID si no tiene equipo
  * @return OK si se establece con éxito, ERROR en caso contrario
@@ -189,5 +189,28 @@ Status player_set_team(Player *player, Id team_id);
  * @return id del equipo o NO_ID si no pertenece a ninguno
  */
 Id player_get_team(Player *player);
+/**
+ * @brief Obtiene el dinero del jugador.
+ * @author Unai
+ * @param player puntero al jugador
+ * @return el dinero del jugador o -1 en caso de error
+ */
+int player_get_money(Player *player);
+/**
+ * @brief set del dinero del jugador
+ * @author Unai
+ * @param player puntero al jugador
+ * @param m dinero que quieres que tenga el jugador
+ * @return OK si esta toso correcto o ERROR si ha habido algun fallo
+ */
+Status player_set_money(Player *player,int m);
+/**
+ * @brief comprueba si el jugador tiene cierta cantidad
+ * @author Unai
+ * @param player puntero al jugador
+ * @param m dinero que quieres que tenga el jugador
+ * @return TRUE si tiene el dinero o mas o FALSE si no
+ */
+BOOL player_has_money(Player *player,int m);
 
 #endif

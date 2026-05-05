@@ -30,9 +30,11 @@ Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 Status game_actions_use(Game *game);
 Status game_actions_open(Game *game);
-Status game_actions_colab(Game *game);
+Status game_actions_team(Game *game);
 Status game_actions_save(Game *game);
 Status game_actions_load(Game *game);
+Status game_actions_buy(Game *game);
+Status game_actions_steal(Game *game);
 Player *game_actions_find_player(Game *game, char *name_or_id);
 Player *game_actions_find_object_owner_in_team(Game *game, Player *player, Id object_id);
 
@@ -148,14 +150,20 @@ Status game_actions_update(Game *game, Command *command)
   case OPEN:
     status = game_actions_open(game);
     break;
-  case COLAB:
-    status = game_actions_colab(game);
+  case TEAM:
+    status = game_actions_team(game);
     break;
   case LOAD:
    status = game_actions_load(game);
    break;
   case SAVE:
   status= game_actions_save(game);
+  break;
+case BUY:
+  status= game_actions_buy(game);
+  break;
+case STEAL:
+  status =game_actions_steal(game);
   break;
   default:
     break;
@@ -437,15 +445,16 @@ Status game_actions_attack(Game *game)
 {
   Id space_id = NO_ID, enemy_id = NO_ID;
   Space *space;
-  char *enemy_name = NULL;
+  char *enemy_name = NULL,*w,*ob;
   char **arg = NULL;
   Character *enemy = NULL;
   Player *player;
-  int random_num;
-  int player_health, char_health, n_attackers = 0, damaged_index, i;
+  int random_num,d;
+  int player_health, char_health, n_attackers = 0, damaged_index, i,n;
   Character *ally;
+  Object*o;
   Player *teammate = NULL;
-  Id attackers_ids[MAX_CHARACTERS + 32];
+  Id attackers_ids[MAX_CHARACTERS + 32],id_obj=NO_ID;
   BOOL attackers_are_players[MAX_CHARACTERS + 32];
   Id *followers_ids = NULL;
   Command *last_cmd = NULL;
@@ -461,6 +470,11 @@ Status game_actions_attack(Game *game)
   }
   arg = command_get_arg(last_cmd);
   enemy_name = arg[0];
+  w=arg[1];
+  ob=arg[2];
+  if(strcmp(w,"with")||!ob){
+    return ERROR;
+  }
 
   if (enemy_name == NULL)
   {
@@ -473,6 +487,18 @@ Status game_actions_attack(Game *game)
     return ERROR;
   }
 
+n=game_get_number_of_objects(game);
+for(i=0;i<n;i++){
+  o=game_get_object_from_index(game,i);
+  if(!strcmp(object_get_name(o),ob)){
+    id_obj=object_get_id(o);
+    break;
+  }
+}
+if(id_obj==NO_ID){
+  return ERROR;
+}
+d=object_get_damage(o);
   space_id = game_get_player_location(game);
   if (space_id == NO_ID)
   {
@@ -609,7 +635,8 @@ Status game_actions_attack(Game *game)
   }
   else
   {
-    char_health -= n_attackers;
+    d=
+    char_health -= n_attackers -1 + d;
     character_set_health(enemy, char_health);
   }
 
@@ -792,7 +819,12 @@ Status game_actions_recruit(Game *game)
   Space *space = NULL;
   Character *character = NULL;
   Player *player = NULL;
-  char **arg = NULL, *name = NULL;
+  char **arg = NULL, *name = NULL;  Id space_id = NO_ID, enemy_id = NO_ID;
+  Space *space;
+  Command *last_cmd = NULL;
+
+  /* Verificaciones de estado del juego y jugador */
+
   Command *last_cmd = NULL;
   int i;
   BOOL found = FALSE;
@@ -990,6 +1022,22 @@ Status game_actions_use(Game *game)
         return ERROR;
       }
     }
+  if (!game)
+  {
+    return ERROR;
+  }
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  if (!(arg = command_get_arg(last_cmd)))
+  {
+    return ERROR;
+  }
+  if (command_get_nargs(last_cmd) != 3 || strcasecmp(arg[1], "with") != 0)
+  {
+    return ERROR;
+  }
   }
 
   return inventory_del_object(backpack, object_in_backpack);
@@ -1081,7 +1129,7 @@ Status game_actions_open(Game *game)
 
   return link_set_open(link, TRUE);
 }
-Status game_actions_colab(Game *game)
+Status game_actions_team(Game *game)
 {
   Player *player = NULL;
   Player *target = NULL;
@@ -1184,25 +1232,102 @@ Status game_actions_load(Game *game){
   {
     return ERROR;
   }
- s=game_managment_load_players(game,arg[0]);
- if(!s){
-  return ERROR;
- }
- s=game_managment_load_spaces(game,arg[0]);
- if(!s){
-  return ERROR;
- }
- s=game_managment_load_objects(game,arg[0]);
- if(!s){
-  return ERROR;
- }
- s=game_managment_load_links(game,arg[0]);
- if(!s){
-  return ERROR;
- }
- s=game_managment_load_characters(game,arg[0]);
- if(!s){
-  return ERROR;
- }
+s=game_managment_load(game,arg[0]);
  return s;
+}
+Status game_actions_buy(Game *game){
+  Command *last_cmd = NULL;
+  Id id_obj=NO_ID,id_s1,id_s2;
+  Player*p;
+  Object*o;
+  Space*s1,*s2;
+  int n,i;
+  char **arg = NULL;
+    if (!game)
+  {
+    return ERROR;
+  }
+
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd)
+  {
+    return ERROR;
+  }
+
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0][0] == '\0')
+  {
+    return ERROR;
+  }
+p=game_get_player(game);
+if(!p){
+  return ERROR;
+}
+n=game_get_number_of_objects(game);
+for(i=0;i<n;i++){
+  o=game_get_object_from_index(game,i);
+  if(!strcmp(object_get_name(o),arg[0])){
+    id_obj=object_get_id(o);
+    break;
+  }
+}
+if(id_obj==NO_ID){
+  return ERROR;
+}
+id_s1=game_get_player_location(game);
+s1=game_get_space(game,id_s1);
+id_s2=game_get_object_location(game,object_get_id(o));
+s2=game_get_space(game,id_s2);
+if(!s1||!s2||id_s1!=id_s2){
+  return ERROR;
+}
+if(!player_has_money(p,object_get_price(o))){
+  return ERROR;
+}
+n=object_get_price(o);
+i=player_get_money(p);
+i=i-n;
+player_set_money(p,i);
+object_set_movable(o,TRUE);
+object_set_price(o,0);
+return OK;
+}
+Status game_actions_steal(Game *game){
+    Player *player = NULL;
+  Command *last_cmd = NULL;
+  Inventory *backpack = NULL;
+  Id object_in_backpack = NO_ID, *followers_ids = NULL;
+  Object *object = NULL;
+  Character *follower = NULL;
+  int objhealth, i = 0;
+  char **arg = NULL;
+
+  if (!game)
+  {
+    return ERROR;
+  }
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  if (!(arg = command_get_arg(last_cmd)))
+  {
+    return ERROR;
+  }
+  if (!(player = game_get_player(game)))
+  {
+    return ERROR;
+  }
+  if (object_in_backpack == NO_ID)
+  {
+    return ERROR;
+  }
+  
+  
+  
+  
+  
+  if(!game){
+    return ERROR;
+  }
 }

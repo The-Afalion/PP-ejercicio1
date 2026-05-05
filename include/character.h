@@ -164,4 +164,18 @@ Id character_get_following(Character* character);
   */
 
 Status character_set_following(Character* character,Id id);
+/**
+  * @brief Devuelve el dinero del personaje
+  * @author Unai Amondarain
+  * @param character Un puntero al personaje
+  * @return El dinero del personaje o -1 en caso de error
+  */
+int character_get_money(Character *c);
+/**
+  * @brief establece el dinero del personaje
+  * @author Unai Amondarain
+  * @param character Un puntero al personaje
+  * @return OK si todo fue bien, o ERROR si hubo algún error
+  */
+Status character_set_money(Character *c,int m);
 #endif

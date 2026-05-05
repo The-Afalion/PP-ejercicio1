@@ -1,58 +1,45 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+if [ "$1" = "integration" ]; then
+  make all || exit 1
+  mkdir -p integration_tests/tmp
 
-if [[ $# -lt 1 || $# -gt 2 ]]; then
+  for cmd_file in integration_tests/*.cmd; do
+    test_name=$(basename "$cmd_file" .cmd)
+    data_file="integration_tests/$test_name.dat"
+    expected_file="integration_tests/$test_name.expected"
+    log_file="integration_tests/tmp/$test_name.log"
+
+    tr -d '\r' < "$cmd_file" | ./castle "$data_file" -l "$log_file" > /dev/null || exit 1
+    diff -u "$expected_file" "$log_file" || exit 1
+    echo "$test_name: OK"
+  done
+
+  exit 0
+fi
+
+if [ "$1" != "0" ] && [ "$1" != "1" ]; then
   echo "Uso: $0 <0|1> [nombre_test_sin_extension]"
   exit 1
 fi
 
-mode="$1"
-selected_test="${2:-}"
-
-if [[ "$mode" != "0" && "$mode" != "1" ]]; then
-  echo "El primer argumento debe ser 0 o 1."
-  exit 1
-fi
-
 run_test() {
-  local test_name="$1"
-
-  if [[ "$mode" == "0" ]]; then
-    "./$test_name"
+  if [ "$1" = "1" ]; then
+    valgrind "./$2"
   else
-    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes "./$test_name"
+    "./$2"
   fi
 }
 
-if [[ "$mode" == "1" ]] && ! command -v valgrind >/dev/null 2>&1; then
-  echo "Valgrind no está instalado."
-  exit 1
-fi
-
-if [[ -n "$selected_test" ]]; then
-  if [[ ! -f "src/${selected_test}.c" ]]; then
-    echo "No existe el fichero de pruebas src/${selected_test}.c."
-    exit 1
-  fi
-
-  make "$selected_test"
-  run_test "$selected_test"
+if [ -n "$2" ]; then
+  make "$2" || exit 1
+  run_test "$1" "$2"
   exit 0
 fi
 
-make tests
+make tests || exit 1
 
-shopt -s nullglob
-test_files=(src/*_test.c)
-shopt -u nullglob
-
-if [[ ${#test_files[@]} -eq 0 ]]; then
-  echo "No se han encontrado ficheros *_test.c en src."
-  exit 1
-fi
-
-for test_file in "${test_files[@]}"; do
-  test_name="$(basename "$test_file" .c)"
-  run_test "$test_name"
+for test_file in src/*_test.c; do
+  test_name=$(basename "$test_file" .c)
+  run_test "$1" "$test_name"
 done
