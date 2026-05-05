@@ -1,82 +1,90 @@
-#p:1|Vaquero|{V}|100|5|5|0|21|-1|-1|-1|-1|
-#p:2|Bandido|{B}|100|5|5|0|21|-1|-1|-1|-1|
-#c:31|Forajido|{F}|122|2|0|0|¡Manos arriba!|
-#c:32|Cantinero|{C}|21|20|0|0|¿Qué te sirvo, forastero?|
-#c:33|Pistolero|{P}|21|5|0|0|Mis balas son tuyas si pagas bien.|
-#c:61|Capataz|{G}|81|4|0|0|La mina esta cerrada.|
-#c:63|Buhonero|{V}|41|3|0|0|Tengo de todo si tienes dolares.|
-#c:64|Jinete|[X]|122|5|0|0|El mediodia se acerca.|
-#c:65|Cuatrero|{C}|82|8|0|0|El motin descansara en el infierno.|
-#c:66|BillyElNiño|{b}|82|8|0|0|¡No soy un niño!|
-#c:67|Manosrapidas|{M}|32|8|0|0|¡Sacadme de aqui, soy inocente!|
-#c:68|Ezequiel|{E}|91|8|0|0|Soy el sepulturero.|
-#c:69|Alcalde|{A}|101|4|0|0|Bienvenido a nuestra humilde ciudad.|
-#c:70|Sheriff|{S}|31|6|5|0|Manten las manos donde pueda verlas.|
-#o:21|Revolver|100|0|Un pesado revolver de tambor de seis tiros.|0|1|-1|-1|
-#o:22|Lampara|21|0|Una lampara de aceite de cristal ahumado.|0|1|-1|-1|
-#o:23|Poncho|110|0|Un poncho de lana que protege del polvo y la arena.|0|0|-1|-1|
-#o:24|Piel_Oso|22|0|Una autentica piel de oso cazado en las montañas.|0|0|-1|-1|
-#o:25|CajaFuerte|62|0|Una caja fuerte de acero pesada con cerradura de tambor.|0|0|-1|-1|
-#o:26|LlaveLaton|23|0|Una pequeña llave de laton desgastada.|0|1|-1|61|
-#o:27|Winchester|71|0|Un rifle de repeticion reluciente.|0|1|-1|-1|
-#o:28|LlaveBanco|101|0|Una llave gruesa con la insignia del banco local.|0|1|-1|59|
-#o:29|LlaveCarcel|31|0|Una llave aspera de la Comisaria.|0|1|-1|51|
-#o:30|LlaveMina|63|0|Una llave negra cubierta de polvo de carbon.|0|1|-1|67|
-#o:41|Anilla|111|0|Un aro de alambre pesado para agrupar llaves.|0|1|-1|-1|
-#o:42|Dinamita|81|0|Un cartucho rojo con la mecha intacta.|0|1|-1|-1|
-#o:43|Mapa|115|0|Un mapa a medio dibujar del cañon subterraneo.|0|1|-1|-1|
-#o:44|Brujula|122|0|Una brujula de laton con el cristal roto.|0|1|-1|-1|
-#o:45|Lazo|102|0|Una soga gruesa con nudo corredizo.|0|1|-1|-1|
-#o:46|Cuchillo|71|0|Un cuchillo Bowie de cazador muy afilado.|0|1|-1|-1|
-#o:47|Cartel|31|0|Un cartel antiguo de recompensa SE BUSCA.|0|1|-1|-1|
-#o:48|Placa|31|0|Una estrella de hojalata de seis puntas para el pecho.|0|1|-1|-1|
-#o:49|Montura|102|0|Una montura de cuero curtido para caballo.|0|1|-1|-1|
-#o:50|Whisky|21|0|Una botella de licor de centeno casero muy fuerte.|1|1|-1|-1|
-#o:51|Pico|72|0|Un pico de minero con mango de roble astillado.|0|1|-1|-1|
-#o:52|Sombrero|41|0|Un autentico sombrero Stetson de ala ancha cubierto de polvo.|0|1|-1|-1|
-#o:53|PepitaOro|82|0|Una gran piedra irregular y muy brillante.|0|1|-1|-1|
-#o:54|Reloj|92|0|Un reloj de bolsillo de plata parado a mediodia.|0|1|-1|-1|
-#o:55|Escrituras|63|0|Las escrituras manchadas de un rancho lejano.|0|1|-1|-1|
-#o:56|Dolar|61|0|Un dolar de plata troquelado y algo rayado.|0|1|-1|-1|
-#o:57|Espuela|91|0|Una espuela dentada escondida bajo la arena.|0|1|-1|-1|
-#o:58|Panuelo|112|0|Un pañuelo de algodon rojo para atar al rostro.|0|1|-1|-1|
-#o:59|Botas|51|0|Unas botas de cuero de montar gastadas.|0|1|-1|-1|
-#o:60|Frijoles|42|0|Una lata de frijoles en conserva todavia sellada.|1|1|-1|-1|
-#s:100|Afueras|.............|  / \   / \  |   |  *  |   |   |  v  |   |.............|
-#s:110|Calle1|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:111|Calle2|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:112|Calle3|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:113|Calle4|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:114|Calle5|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:115|Calle6|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:116|Calle7|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:117|Calle8|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:118|Calle9|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:119|Calle10|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:120|Calle11|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:121|Calle12|.............|  | = = = |  |  | = = = |  |  | = = = |  |.............|
-#s:122|Desierto|~~~~~~~~~~~~~|  ,  *  ,  , | * , ~ , ~ , | ,  ~  ,  *  |~~~~~~~~~~~~~|
-#s:21|Cantina|.===========.| |  i i i  | | | [_______] | |   }{ /^/  | |'========='|
-#s:22|HabitacionesCantina|.===========.| | [=]   [=] | |   \v\ /^/ | |  _   _    | |'========='|
-#s:23|TejadoCantina|/////////////| ///////// //| // \v\ // //| ///////// //|/////////////|
-#s:31|Comisaria|.-----------.| |   <*>   | | |  [===]  | | |   \v\   | | |'---------'|
-#s:32|Carcel|#############|#|||||||||||#|#|         |#|#|  [===]  |#|#############|
-#s:41|TiendaGeneral|.$$$$$$$$$$$.| | [=] [=] | | ||| ||| ||| | | === === | |'$$$$$$$$$'|
-#s:42|Trastienda|.-----------.| | [X] [X] | | |[X][X][X]| | ||| ||| ||| |'---------'|
-#s:51|Barbero|.-----------.| |   8<    | | |  (o_o)  | | |   _h_   | |'---------'|
-#s:61|Banco|.===========.| |  $   $  | | |=========| | |   \v\   | |'==========='|
-#s:62|BovedaBanco|#############|#|   /^/   |#|#|  ( O )  |#|#|         |#|#############|
-#s:63|InteriorCajaFuerte|#############|#| $$$$$$$ |#|#| $$$$$$$ |#|#|         |#|#############|
-#s:71|Armeria|.-----------.| |  --o==  | | |  =>--   | | |  --o==  | |'---------'|
-#s:72|Herreria|.***********.|*|   ( )   |*|*|  [___]  |*|*|   ^T^   |*|'***********'|
-#s:81|EntradaMina|#############|#|   / \   |#|#|   |=|   |#|#| |=| \v\ |#|#############|
-#s:82|ProfundidadesMina|*************|* /.\ ./.\  *|* \./ /^/   *|*  /.\      *|*************|
-#s:91|Cementerio|_____________|  _t_   _t_  |  _t_  /^/   |  _t_   _t_  |-------------|
-#s:92|TorreReloj|./~\./~\./~\.| |  ( o )  | | |   /|\   | | |   \v\   | |.\~//~\//~\/.|
-#s:101|Ayuntamiento|.===========.| | || || ||| | | || || ||| | | ||_||_||| |'==========='|
-#s:102|Establo|.-----------.| |   (#)   | | |  U   U  | | |   (#)   | |'---------'|
-#s:103|Casino|.===========.| | [ 777 ] | | |  (R/N)  | | |   $$$   | |'==========='|
-#s:104|EstacionTren|=============| =[+]=|=[+]= | //|//|//|// | =[+]=|=[+]= |=============|
+# Formato del fichero. Las lineas de datos reales empiezan por #p, #c, #o, #s o #l.
+# Valores comunes: -1 = ninguno; booleanos 0 = no y 1 = si.
+# p = jugador: id|nombre|gdesc|localizacion|salud|max_objetos|dinero|objeto_1|...|objeto_max|
+# c = personaje: id|nombre|gdesc|localizacion|salud|amigable|mensaje|siguiendo|dinero|
+# o = objeto: id|nombre|localizacion|descripcion|salud|movible|dependencia|abre|
+# s = espacio: id|nombre|gdesc0|gdesc1|gdesc2|gdesc3|gdesc4|descubierto|
+# l = enlace: id|nombre|origen|destino|direccion|abierto|
+# Cada gdesc de espacio debe tener 13 caracteres.
+#p:1|Vaquero|{V}|100|5|5|0|-1|-1|-1|-1|-1|
+#p:2|Bandido|{B}|100|5|5|0|-1|-1|-1|-1|-1|
+#c:31|Forajido|{F}|122|2|0|¡Manos arriba!|-1|0|
+#c:32|Cantinero|{C}|21|20|1|¿Qué te sirvo, forastero?|-1|0|
+#c:33|Pistolero|{P}|21|5|1|Mis balas son tuyas si pagas bien.|-1|0|
+#c:61|Capataz|{G}|81|4|0|La mina esta cerrada.|-1|0|
+#c:63|Buhonero|{V}|41|3|1|Tengo de todo si tienes dolares.|-1|0|
+#c:64|Jinete|[X]|122|5|0|El mediodia se acerca.|-1|0|
+#c:65|Cuatrero|{C}|82|8|0|El motin descansara en el infierno.|-1|0|
+#c:66|BillyElNiño|{b}|82|8|0|¡No soy un niño!|-1|0|
+#c:67|Manosrapidas|{M}|32|8|1|¡Sacadme de aqui, soy inocente!|-1|0|
+#c:68|Ezequiel|{E}|91|8|1|Soy el sepulturero.|-1|0|
+#c:69|Alcalde|{A}|101|4|1|Bienvenido a nuestra humilde ciudad.|-1|0|
+#c:70|Sheriff|{S}|31|6|1|Manten las manos donde pueda verlas.|-1|0|
+#o:21|Revolver|100|Un pesado revolver de tambor de seis tiros.|0|1|-1|-1|
+#o:22|Lampara|21|Una lampara de aceite de cristal ahumado.|0|1|-1|-1|
+#o:23|Poncho|110|Un poncho de lana que protege del polvo y la arena.|0|0|-1|-1|
+#o:24|Piel_Oso|22|Una autentica piel de oso cazado en las montañas.|0|0|-1|-1|
+#o:25|CajaFuerte|62|Una caja fuerte de acero pesada con cerradura de tambor.|0|0|-1|-1|
+#o:26|LlaveLaton|23|Una pequeña llave de laton desgastada.|0|1|-1|61|
+#o:27|Winchester|71|Un rifle de repeticion reluciente.|0|1|-1|-1|
+#o:28|LlaveBanco|101|Una llave gruesa con la insignia del banco local.|0|1|-1|59|
+#o:29|LlaveCarcel|31|Una llave aspera de la Comisaria.|0|1|-1|51|
+#o:30|LlaveMina|63|Una llave negra cubierta de polvo de carbon.|0|1|-1|67|
+#o:41|Anilla|111|Un aro de alambre pesado para agrupar llaves.|0|1|-1|-1|
+#o:42|Dinamita|81|Un cartucho rojo con la mecha intacta.|0|1|-1|-1|
+#o:43|Mapa|115|Un mapa a medio dibujar del cañon subterraneo.|0|1|-1|-1|
+#o:44|Brujula|122|Una brujula de laton con el cristal roto.|0|1|-1|-1|
+#o:45|Lazo|102|Una soga gruesa con nudo corredizo.|0|1|-1|-1|
+#o:46|Cuchillo|71|Un cuchillo Bowie de cazador muy afilado.|0|1|-1|-1|
+#o:47|Cartel|31|Un cartel antiguo de recompensa SE BUSCA.|0|1|-1|-1|
+#o:48|Placa|31|Una estrella de hojalata de seis puntas para el pecho.|0|1|-1|-1|
+#o:49|Montura|102|Una montura de cuero curtido para caballo.|0|1|-1|-1|
+#o:50|Whisky|21|Una botella de licor de centeno casero muy fuerte.|1|1|-1|-1|
+#o:51|Pico|72|Un pico de minero con mango de roble astillado.|0|1|-1|-1|
+#o:52|Sombrero|41|Un autentico sombrero Stetson de ala ancha cubierto de polvo.|0|1|-1|-1|
+#o:53|PepitaOro|82|Una gran piedra irregular y muy brillante.|0|1|-1|-1|
+#o:54|Reloj|92|Un reloj de bolsillo de plata parado a mediodia.|0|1|-1|-1|
+#o:55|Escrituras|63|Las escrituras manchadas de un rancho lejano.|0|1|-1|-1|
+#o:56|Dolar|61|Un dolar de plata troquelado y algo rayado.|0|1|-1|-1|
+#o:57|Espuela|91|Una espuela dentada escondida bajo la arena.|0|1|-1|-1|
+#o:58|Panuelo|112|Un pañuelo de algodon rojo para atar al rostro.|0|1|-1|-1|
+#o:59|Botas|51|Unas botas de cuero de montar gastadas.|0|1|-1|-1|
+#o:60|Frijoles|42|Una lata de frijoles en conserva todavia sellada.|1|1|-1|-1|
+#s:100|Afueras|.............|             |   Afueras   |             |.............|0|
+#s:110|Calle1|.............|             |    Calle1   |             |.............|0|
+#s:111|Calle2|.............|             |    Calle2   |             |.............|0|
+#s:112|Calle3|.............|             |    Calle3   |             |.............|0|
+#s:113|Calle4|.............|             |    Calle4   |             |.............|0|
+#s:114|Calle5|.............|             |    Calle5   |             |.............|0|
+#s:115|Calle6|.............|             |    Calle6   |             |.............|0|
+#s:116|Calle7|.............|             |    Calle7   |             |.............|0|
+#s:117|Calle8|.............|             |    Calle8   |             |.............|0|
+#s:118|Calle9|.............|             |    Calle9   |             |.............|0|
+#s:119|Calle10|.............|             |   Calle10   |             |.............|0|
+#s:120|Calle11|.............|             |   Calle11   |             |.............|0|
+#s:121|Calle12|.............|             |   Calle12   |             |.............|0|
+#s:122|Desierto|.............|             |   Desierto  |             |.............|0|
+#s:21|Cantina|.............|             |   Cantina   |             |.............|0|
+#s:22|HabitacionesCantina|.............|             |HabitacionesC|             |.............|0|
+#s:23|TejadoCantina|.............|             |TejadoCantina|             |.............|0|
+#s:31|Comisaria|.............|             |  Comisaria  |             |.............|0|
+#s:32|Carcel|.............|             |    Carcel   |             |.............|0|
+#s:41|TiendaGeneral|.............|             |TiendaGeneral|             |.............|0|
+#s:42|Trastienda|.............|             |  Trastienda |             |.............|0|
+#s:51|Barbero|.............|             |   Barbero   |             |.............|0|
+#s:61|Banco|.............|             |    Banco    |             |.............|0|
+#s:62|BovedaBanco|.............|             | BovedaBanco |             |.............|0|
+#s:63|InteriorCajaFuerte|.............|             |InteriorCajaF|             |.............|0|
+#s:71|Armeria|.............|             |   Armeria   |             |.............|0|
+#s:72|Herreria|.............|             |   Herreria  |             |.............|0|
+#s:81|EntradaMina|.............|             | EntradaMina |             |.............|0|
+#s:82|ProfundidadesMina|.............|             |Profundidades|             |.............|0|
+#s:91|Cementerio|.............|             |  Cementerio |             |.............|0|
+#s:92|TorreReloj|.............|             |  TorreReloj |             |.............|0|
+#s:101|Ayuntamiento|.............|             | Ayuntamiento|             |.............|0|
+#s:102|Establo|.............|             |   Establo   |             |.............|0|
+#s:103|Casino|.............|             |    Casino   |             |.............|0|
+#s:104|EstacionTren|.............|             | EstacionTren|             |.............|0|
 #l:01|InicioCalle|100|110|1|1|
 #l:02|CalleInicio|110|100|0|1|
 #l:03|Calle1a2|110|111|1|1|
