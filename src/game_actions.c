@@ -34,6 +34,7 @@ Status game_actions_team(Game *game);
 Status game_actions_save(Game *game);
 Status game_actions_load(Game *game);
 Status game_actions_buy(Game *game);
+Status game_actions_steal(Game *game);
 Player *game_actions_find_player(Game *game, char *name_or_id);
 Player *game_actions_find_object_owner_in_team(Game *game, Player *player, Id object_id);
 
@@ -159,8 +160,11 @@ Status game_actions_update(Game *game, Command *command)
   status= game_actions_save(game);
   break;
 case BUY:
-status= game_actions_buy(game);
-break;
+  status= game_actions_buy(game);
+  break;
+case STEAL:
+  status =game_actions_steal(game);
+  break;
   default:
     break;
   }
@@ -1287,4 +1291,43 @@ player_set_money(p,i);
 object_set_movable(o,TRUE);
 object_set_price(o,0);
 return OK;
+}
+Status game_actions_steal(Game *game){
+    Player *player = NULL;
+  Command *last_cmd = NULL;
+  Inventory *backpack = NULL;
+  Id object_in_backpack = NO_ID, *followers_ids = NULL;
+  Object *object = NULL;
+  Character *follower = NULL;
+  int objhealth, i = 0;
+  char **arg = NULL;
+
+  if (!game)
+  {
+    return ERROR;
+  }
+  if (!(last_cmd = game_get_last_command(game)))
+  {
+    return ERROR;
+  }
+  if (!(arg = command_get_arg(last_cmd)))
+  {
+    return ERROR;
+  }
+  if (!(player = game_get_player(game)))
+  {
+    return ERROR;
+  }
+  if (object_in_backpack == NO_ID)
+  {
+    return ERROR;
+  }
+  
+  
+  
+  
+  
+  if(!game){
+    return ERROR;
+  }
 }
