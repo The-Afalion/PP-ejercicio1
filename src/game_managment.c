@@ -455,7 +455,7 @@ Status game_managment_save_game(Game *game, char *filename){
         p=game_get_player_from_index(game,i);
     fprintf(file, "#p:%ld|%s|%s|%ld|%d|%d|", player_get_id(p),player_get_name(p),player_get_gdesc(p),player_get_location(p),player_get_health(p),player_get_number_of_backpack(p));
     for(j=0;j<player_get_number_of_backpack(p);j++){
-        fprintf(file,"%d|",player_get_object(p,j));
+        fprintf(file,"%ld|",player_get_object(p,j));
     }
     fprintf(file,"\n");
     }
