@@ -2,7 +2,7 @@
  * @brief It tests space module
  * 
  * @file space_test.c
- * @author Profesores Pprog
+ * @author Rodrigo
  * @version 0.0 
  * @date 17-02-2025
  * @copyright GNU Public License
@@ -16,7 +16,8 @@
 #include "test.h"
 #include "link.h"
 
-#define MAX_TESTS 33
+/** Numero maximo de pruebas disponibles en este modulo. */
+#define MAX_TESTS 47
 
 /** 
  * @brief Main function for SPACE unit tests. 
@@ -25,7 +26,11 @@
  *   1.- No parameter -> ALL test are executed 
  *   2.- A number means a particular test (the one identified by that number) 
  *       is executed
- *  
+ *
+ * @author Rodrigo
+ * @param argc Numero de argumentos de entrada.
+ * @param argv Argumentos de entrada.
+ * @return 0 si la ejecucion termina correctamente.
  */
 int main(int argc, char** argv) {
 
@@ -78,12 +83,30 @@ int main(int argc, char** argv) {
   if (all || test == 31) test2_space_set_gdesc();
   if (all || test == 32) test1_space_get_gdesc();
   if (all || test == 33) test2_space_get_gdesc();
+  if (all || test == 34) test1_space_add_link();
+  if (all || test == 35) test2_space_add_link();
+  if (all || test == 36) test1_space_get_link();
+  if (all || test == 37) test2_space_get_link();
+  if (all || test == 38) test1_space_get_number_of_links();
+  if (all || test == 39) test2_space_get_number_of_links();
+  if (all || test == 40) test1_space_remove_character();
+  if (all || test == 41) test2_space_remove_character();
+  if (all || test == 42) test1_space_print();
+  if (all || test == 43) test2_space_print();
+  if (all || test == 44) test1_space_get_n_characters();
+  if (all || test == 45) test2_space_get_n_characters();
+  if (all || test == 46) test1_space_get_gdes_from_index();
+  if (all || test == 47) test2_space_get_gdes_from_index();
 
   PRINT_PASSED_PERCENTAGE;
 
   return 0;
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_create.
+ * @author Rodrigo
+ */
 void test1_space_create() {
   int result;
   Space *s;
@@ -93,6 +116,10 @@ void test1_space_create() {
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_create.
+ * @author Rodrigo
+ */
 void test2_space_create() {
   Space *s;
   s = space_create(4);
@@ -100,6 +127,10 @@ void test2_space_create() {
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_set_name.
+ * @author Rodrigo
+ */
 void test1_space_set_name() {
   Space *s;
   s = space_create(5);
@@ -107,11 +138,19 @@ void test1_space_set_name() {
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_set_name.
+ * @author Rodrigo
+ */
 void test2_space_set_name() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_set_name(s, "hola") == ERROR);
 }
 
+/**
+ * @brief Ejecuta la prueba test3_space_set_name.
+ * @author Rodrigo
+ */
 void test3_space_set_name() {
   Space *s;
   s = space_create(5);
@@ -119,6 +158,10 @@ void test3_space_set_name() {
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_get_name.
+ * @author Rodrigo
+ */
 void test1_space_get_name() {
   Space *s;
   s = space_create(1);
@@ -127,11 +170,19 @@ void test1_space_get_name() {
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_get_name.
+ * @author Rodrigo
+ */
 void test2_space_get_name() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_get_name(s) == NULL);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_get_id.
+ * @author Rodrigo
+ */
 void test1_space_get_id() {
   Space *s;
   s = space_create(25);
@@ -139,11 +190,19 @@ void test1_space_get_id() {
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_get_id.
+ * @author Rodrigo
+ */
 void test2_space_get_id() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_get_id(s) == NO_ID);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_add_object.
+ * @author Rodrigo
+ */
 void test1_space_add_object() {
     Space *s;
     s = space_create(1);
@@ -151,11 +210,19 @@ void test1_space_add_object() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_add_object.
+ * @author Rodrigo
+ */
 void test2_space_add_object() {
     Space *s = NULL;
     PRINT_TEST_RESULT(space_add_object(s, 10) == ERROR);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_get_objects.
+ * @author Rodrigo
+ */
 void test1_space_get_objects() {
     Space *s;
     s = space_create(1);
@@ -164,6 +231,10 @@ void test1_space_get_objects() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_get_objects.
+ * @author Rodrigo
+ */
 void test2_space_get_objects() {
     Space *s;
     s = space_create(1);
@@ -171,6 +242,10 @@ void test2_space_get_objects() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_get_number_of_objects.
+ * @author Rodrigo
+ */
 void test1_space_get_number_of_objects() {
     Space *s;
     s = space_create(1);
@@ -179,6 +254,10 @@ void test1_space_get_number_of_objects() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_get_number_of_objects.
+ * @author Rodrigo
+ */
 void test2_space_get_number_of_objects() {
     Space *s;
     s = space_create(1);
@@ -186,6 +265,10 @@ void test2_space_get_number_of_objects() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_remove_object.
+ * @author Rodrigo
+ */
 void test1_space_remove_object() {
     Space *s;
     s = space_create(1);
@@ -194,6 +277,10 @@ void test1_space_remove_object() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_remove_object.
+ * @author Rodrigo
+ */
 void test2_space_remove_object() {
     Space *s;
     s = space_create(1);
@@ -201,6 +288,10 @@ void test2_space_remove_object() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_contains_object.
+ * @author Rodrigo
+ */
 void test1_space_contains_object() {
     Space *s;
     s = space_create(1);
@@ -209,6 +300,10 @@ void test1_space_contains_object() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_contains_object.
+ * @author Rodrigo
+ */
 void test2_space_contains_object() {
     Space *s;
     s = space_create(1);
@@ -216,6 +311,10 @@ void test2_space_contains_object() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_set_character.
+ * @author Rodrigo
+ */
 void test1_space_set_character() {
     Space *s;
     s = space_create(1);
@@ -223,26 +322,42 @@ void test1_space_set_character() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_set_character.
+ * @author Rodrigo
+ */
 void test2_space_set_character() {
     Space *s = NULL;
     PRINT_TEST_RESULT(space_set_character(s, 20) == ERROR);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_get_character.
+ * @author Rodrigo
+ */
 void test1_space_get_character() {
     Space *s;
     s = space_create(1);
     space_set_character(s, 20);
-    PRINT_TEST_RESULT(space_get_character(s) == 20);
+    PRINT_TEST_RESULT(space_get_character(s, 0) == 20);
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_get_character.
+ * @author Rodrigo
+ */
 void test2_space_get_character() {
     Space *s;
     s = space_create(1);
-    PRINT_TEST_RESULT(space_get_character(s) == NO_ID);
+    PRINT_TEST_RESULT(space_get_character(s, 0) == NO_ID);
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_set_discovered.
+ * @author Rodrigo
+ */
 void test1_space_set_discovered()
 {
   Space *s;
@@ -251,11 +366,19 @@ void test1_space_set_discovered()
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_set_discovered.
+ * @author Rodrigo
+ */
 void test2_space_set_discovered() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_set_discovered(s, TRUE) == ERROR);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_get_discovered.
+ * @author Rodrigo
+ */
 void test1_space_get_discovered() {
   Space *s = space_create(5);
   space_set_discovered(s, TRUE);
@@ -263,17 +386,29 @@ void test1_space_get_discovered() {
   space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_get_discovered.
+ * @author Rodrigo
+ */
 void test2_space_get_discovered() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_get_discovered(s) == FALSE);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_destroy.
+ * @author Rodrigo
+ */
 void test1_space_destroy() {
     Space *s;
     s = space_create(1);
     PRINT_TEST_RESULT(space_destroy(s) == OK);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_destroy.
+ * @author Rodrigo
+ */
 void test2_space_destroy() {
     Space *s;
     s = NULL;
@@ -281,6 +416,10 @@ void test2_space_destroy() {
 }
 
 
+/**
+ * @brief Ejecuta la prueba test1_space_set_gdesc.
+ * @author Rodrigo
+ */
 void test1_space_set_gdesc() {
     Space *s;
     char gdesc[GDESC_ROWS][GDESC_COLS] = { "line1", "line2", "line3", "line4", "line5" };
@@ -289,6 +428,10 @@ void test1_space_set_gdesc() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_set_gdesc.
+ * @author Rodrigo
+ */
 void test2_space_set_gdesc() {
     Space *s;
     char gdesc[GDESC_ROWS][GDESC_COLS];
@@ -301,6 +444,10 @@ void test2_space_set_gdesc() {
     PRINT_TEST_RESULT(space_set_gdesc(s, gdesc) == ERROR);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_get_gdesc.
+ * @author Rodrigo
+ */
 void test1_space_get_gdesc() {
     Space *s;
     char gdesc[GDESC_ROWS][GDESC_COLS];
@@ -317,12 +464,162 @@ void test1_space_get_gdesc() {
     space_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_space_get_gdesc.
+ * @author Rodrigo
+ */
 void test2_space_get_gdesc() {
     Space *s = NULL;
     PRINT_TEST_RESULT(space_get_gdesc(s) == NULL);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_space_add_link.
+ * @author Rodrigo
+ */
+void test1_space_add_link() {
+    Space *s = space_create(1);
+    Link *l = link_create(10);
+    PRINT_TEST_RESULT(space_add_link(s, l) == OK);
+    link_destroy(l);
+    space_destroy(s);
+}
 
+/**
+ * @brief Ejecuta la prueba test2_space_add_link.
+ * @author Rodrigo
+ */
+void test2_space_add_link() {
+    Link *l = link_create(10);
+    PRINT_TEST_RESULT(space_add_link(NULL, l) == ERROR);
+    link_destroy(l);
+}
+
+/**
+ * @brief Ejecuta la prueba test1_space_get_link.
+ * @author Rodrigo
+ */
+void test1_space_get_link() {
+    Space *s = space_create(1);
+    Link *l = link_create(10);
+    space_add_link(s, l);
+    PRINT_TEST_RESULT(space_get_link(s, 10) == l);
+    link_destroy(l);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test2_space_get_link.
+ * @author Rodrigo
+ */
+void test2_space_get_link() {
+    Space *s = space_create(1);
+    PRINT_TEST_RESULT(space_get_link(s, 10) == NULL);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test1_space_get_number_of_links.
+ * @author Rodrigo
+ */
+void test1_space_get_number_of_links() {
+    Space *s = space_create(1);
+    Link *l = link_create(10);
+    space_add_link(s, l);
+    PRINT_TEST_RESULT(space_get_number_of_links(s) == 1);
+    link_destroy(l);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test2_space_get_number_of_links.
+ * @author Rodrigo
+ */
+void test2_space_get_number_of_links() {
+    PRINT_TEST_RESULT(space_get_number_of_links(NULL) == -1);
+}
+
+/**
+ * @brief Ejecuta la prueba test1_space_remove_character.
+ * @author Rodrigo
+ */
+void test1_space_remove_character() {
+    Space *s = space_create(1);
+    space_set_character(s, 20);
+    PRINT_TEST_RESULT(space_remove_character(s, 20) == OK);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test2_space_remove_character.
+ * @author Rodrigo
+ */
+void test2_space_remove_character() {
+    Space *s = space_create(1);
+    PRINT_TEST_RESULT(space_remove_character(s, 20) == ERROR);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test1_space_print.
+ * @author Rodrigo
+ */
+void test1_space_print() {
+    Space *s = space_create(1);
+    PRINT_TEST_RESULT(space_print(s) == OK);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test2_space_print.
+ * @author Rodrigo
+ */
+void test2_space_print() {
+    PRINT_TEST_RESULT(space_print(NULL) == ERROR);
+}
+
+/**
+ * @brief Ejecuta la prueba test1_space_get_n_characters.
+ * @author Rodrigo
+ */
+void test1_space_get_n_characters() {
+    Space *s = space_create(1);
+    space_set_character(s, 20);
+    space_set_character(s, 21);
+    PRINT_TEST_RESULT(space_get_n_characters(s) == 2);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test2_space_get_n_characters.
+ * @author Rodrigo
+ */
+void test2_space_get_n_characters() {
+    PRINT_TEST_RESULT(space_get_n_characters(NULL) == -1);
+}
+
+/**
+ * @brief Ejecuta la prueba test1_space_get_gdes_from_index.
+ * @author Rodrigo
+ */
+void test1_space_get_gdes_from_index() {
+    Space *s;
+    char gdesc[GDESC_ROWS][GDESC_COLS] = { "line1", "line2", "line3", "line4", "line5" };
+    s = space_create(1);
+    space_set_gdesc(s, gdesc);
+    PRINT_TEST_RESULT(strcmp(space_get_gdes_from_index(s, 2), "line3") == 0);
+    space_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test2_space_get_gdes_from_index.
+ * @author Rodrigo
+ */
+void test2_space_get_gdes_from_index() {
+    Space *s = space_create(1);
+    PRINT_TEST_RESULT(space_get_gdes_from_index(s, 5) == NULL);
+    space_destroy(s);
+}
 
 
 

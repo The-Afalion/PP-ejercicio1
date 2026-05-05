@@ -2,7 +2,7 @@
  * @brief It tests set module
  *
  * @file set_test.c
- * @author RAHER
+ * @author Rodrigo
  * @version 0.0
  * @date 17-03-2025
  * @copyright GNU Public License
@@ -15,7 +15,8 @@
 #include "set_test.h"
 #include "test.h"
 
-#define MAX_TESTS 16
+/** Numero maximo de pruebas disponibles en este modulo. */
+#define MAX_TESTS 18
 
 /**
  * @brief Main function for SET unit tests.
@@ -25,6 +26,10 @@
  *   2.- A number means a particular test (the one identified by that number)
  *       is executed
  *
+ * @author Rodrigo
+ * @param argc Numero de argumentos de entrada.
+ * @param argv Argumentos de entrada.
+ * @return 0 si la ejecucion termina correctamente.
  */
 int main(int argc, char** argv) {
 
@@ -60,12 +65,18 @@ int main(int argc, char** argv) {
   if (all || test == 14) test2_set_get_ids();
   if (all || test == 15) test1_set_destroy();
   if (all || test == 16) test2_set_destroy();
+  if (all || test == 17) test1_set_print();
+  if (all || test == 18) test2_set_print();
 
   PRINT_PASSED_PERCENTAGE;
 
   return 0;
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_create.
+ * @author Rodrigo
+ */
 void test1_set_create() {
   Set *s;
   s = set_create(1);
@@ -73,6 +84,10 @@ void test1_set_create() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_create.
+ * @author Rodrigo
+ */
 void test2_set_create() {
   Set *s;
   s = set_create(1);
@@ -80,6 +95,10 @@ void test2_set_create() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_add.
+ * @author Rodrigo
+ */
 void test1_set_add() {
   Set *s;
   s = set_create(1);
@@ -87,11 +106,19 @@ void test1_set_add() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_add.
+ * @author Rodrigo
+ */
 void test2_set_add() {
   Set *s = NULL;
   PRINT_TEST_RESULT(set_add(s, 10) == ERROR);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_del.
+ * @author Rodrigo
+ */
 void test1_set_del() {
   Set *s;
   s = set_create(1);
@@ -100,6 +127,10 @@ void test1_set_del() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_del.
+ * @author Rodrigo
+ */
 void test2_set_del() {
   Set *s;
   s = set_create(1);
@@ -107,6 +138,10 @@ void test2_set_del() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_find.
+ * @author Rodrigo
+ */
 void test1_set_find() {
   Set *s;
   s = set_create(1);
@@ -115,6 +150,10 @@ void test1_set_find() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_find.
+ * @author Rodrigo
+ */
 void test2_set_find() {
   Set *s;
   s = set_create(1);
@@ -122,6 +161,10 @@ void test2_set_find() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_get_id.
+ * @author Rodrigo
+ */
 void test1_set_get_id() {
   Set *s;
   s = set_create(1);
@@ -130,6 +173,10 @@ void test1_set_get_id() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_get_id.
+ * @author Rodrigo
+ */
 void test2_set_get_id() {
   Set *s;
   s = set_create(1);
@@ -137,6 +184,10 @@ void test2_set_get_id() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_get_numberid.
+ * @author Rodrigo
+ */
 void test1_set_get_numberid() {
   Set *s;
   s = set_create(1);
@@ -145,6 +196,10 @@ void test1_set_get_numberid() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_get_numberid.
+ * @author Rodrigo
+ */
 void test2_set_get_numberid() {
   Set *s;
   s = set_create(1);
@@ -152,6 +207,10 @@ void test2_set_get_numberid() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_get_ids.
+ * @author Rodrigo
+ */
 void test1_set_get_ids() {
   Set *s;
   s = set_create(1);
@@ -160,6 +219,10 @@ void test1_set_get_ids() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_get_ids.
+ * @author Rodrigo
+ */
 void test2_set_get_ids() {
   Set *s;
   s = set_create(1);
@@ -167,13 +230,43 @@ void test2_set_get_ids() {
   set_destroy(s);
 }
 
+/**
+ * @brief Ejecuta la prueba test1_set_destroy.
+ * @author Rodrigo
+ */
 void test1_set_destroy() {
   Set *s;
   s = set_create(1);
   PRINT_TEST_RESULT(set_destroy(s) == OK);
 }
 
+/**
+ * @brief Ejecuta la prueba test2_set_destroy.
+ * @author Rodrigo
+ */
 void test2_set_destroy() {
   Set *s = NULL;
   PRINT_TEST_RESULT(set_destroy(s) == ERROR);
+}
+
+/**
+ * @brief Ejecuta la prueba test1_set_print.
+ * @author Rodrigo
+ */
+void test1_set_print() {
+  Set *s;
+  s = set_create();
+  set_add(s, 10);
+  set_print(s);
+  PRINT_TEST_RESULT(1);
+  set_destroy(s);
+}
+
+/**
+ * @brief Ejecuta la prueba test2_set_print.
+ * @author Rodrigo
+ */
+void test2_set_print() {
+  set_print(NULL);
+  PRINT_TEST_RESULT(1);
 }

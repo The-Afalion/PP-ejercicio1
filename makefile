@@ -14,7 +14,7 @@ TESTS = space_test set_test character_test object_test player_test link_test inv
 
 EXES = castle $(TESTS)
 
-.PHONY: all clean tests doxygen
+.PHONY: all clean tests integration_tests doxygen
 
 # The main task
 all: $(OBJECTS)
@@ -27,6 +27,10 @@ $(OBJDIR)/%.o: $(SRC)/%.c
 
 # Builds all test executables.
 tests: $(TESTS)
+
+# Runs the automated integration tests.
+integration_tests:
+	bash run_tests.sh integration
 
 space_test: $(OBJDIR)/space_test.o $(OBJDIR)/space.o $(OBJDIR)/set.o $(OBJDIR)/inventory.o $(OBJDIR)/link.o $(TEST_HELPERS)
 	$(CC) -o $@ $^
