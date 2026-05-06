@@ -245,7 +245,7 @@ int object_get_damage(Object*o){
 return o->damage;
 }
 
-Status object_get_damage(Object*o,int m){
+Status object_set_damage(Object*o,int m){
   if(!o){
     return  ERROR;
   }

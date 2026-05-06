@@ -455,4 +455,14 @@ Id game_get_current_player_id(Game *game);
  */
 BOOL game_players_are_teammates(Game *game, Player *first, Player *second);
 
+
+/**
+ * @brief Obtiene un personaje concreto del juego a partir de su nombre.
+ * @author Unai.G
+ * @param game Puntero al juego.
+ * @param name Nombre del personaje a obtener.
+ * @return Puntero al personaje encontrado o NULL si el nombre es inválido o hay error.
+ */
+Character * game_get_character_from_name(Game *game, char *name);
+
 #endif

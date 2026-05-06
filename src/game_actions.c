@@ -819,13 +819,11 @@ Status game_actions_recruit(Game *game)
   Space *space = NULL;
   Character *character = NULL;
   Player *player = NULL;
-  char **arg = NULL, *name = NULL;  Id space_id = NO_ID, enemy_id = NO_ID;
-  Space *space;
+  char **arg = NULL, *name = NULL;
   Command *last_cmd = NULL;
 
   /* Verificaciones de estado del juego y jugador */
 
-  Command *last_cmd = NULL;
   int i;
   BOOL found = FALSE;
 
@@ -1292,14 +1290,12 @@ object_set_movable(o,TRUE);
 object_set_price(o,0);
 return OK;
 }
+
 Status game_actions_steal(Game *game){
-    Player *player = NULL;
+  Player *player = NULL;
+  Character *en = NULL;
+  int stolen, en_money, mine;
   Command *last_cmd = NULL;
-  Inventory *backpack = NULL;
-  Id object_in_backpack = NO_ID, *followers_ids = NULL;
-  Object *object = NULL;
-  Character *follower = NULL;
-  int objhealth, i = 0;
   char **arg = NULL;
 
   if (!game)
@@ -1318,16 +1314,36 @@ Status game_actions_steal(Game *game){
   {
     return ERROR;
   }
-  if (object_in_backpack == NO_ID)
+  if(!(en = game_get_character_from_name(game,arg[0]))){
+    return ERROR;
+  }
+  if (character_get_friendly(en))
+  {
+    return ERROR; 
+  }
+  
+  if ((en_money = character_get_money(en)) == -1)
   {
     return ERROR;
   }
-  
-  
-  
-  
-  
-  if(!game){
-    return ERROR;
+  stolen = en_money *(rand() % 100) / 100;
+  if ((rand() % 10) < 3)
+  {
+    stolen = 0;
+    player_set_health(player, player_get_health(player) - 1);
+
+  }else
+  {
+    en_money -= stolen;
+    character_set_money(en, en_money);
+    mine = player_get_money(player);
+    mine += stolen;
+    player_set_money(player, mine);
   }
+  
+  
+  return OK;
+  
+  
+  
 }

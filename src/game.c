@@ -937,3 +937,23 @@ BOOL game_players_are_teammates(Game *game, Player *first, Player *second)
 
   return team == player_get_team(second) ? TRUE : FALSE;
 }
+
+
+Character *game_get_character_from_name(Game *game, char *name)
+{
+  int i;
+
+  if (!game || !name)
+  {
+    return NULL;
+  }
+
+  for (i = 0; i < game->n_characters; i++)
+  {
+    if (game->characters[i] != NULL && !strcasecmp(character_get_name(game->characters[i]), name))
+    {
+      return game->characters[i];
+    }
+  }
+  return NULL;
+}
