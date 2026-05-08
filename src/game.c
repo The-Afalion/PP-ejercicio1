@@ -957,23 +957,3 @@ Character *game_get_character_from_name(Game *game, char *name)
   }
   return NULL;
 }
-
-Character * game_get_character_from_id(Game *game, Id id){
-
-  int i;
-
-  if (!game || id == NO_ID)
-  {
-    return NULL;
-  }
-
-  for (i = 0; i < game->n_characters; i++)
-  {
-    if (game->characters[i] != NULL && character_get_id(game->characters[i]) == id)
-    {
-      return game->characters[i];
-    }
-  }
-  
-  return NULL;
-}

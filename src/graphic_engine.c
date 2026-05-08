@@ -380,7 +380,7 @@ Status graphic_engine_get_objects_str(Game *game, Space *space, char *str)
     while (strlen(car) < ROOM_WIDTH)
     {
         strcat(car, " ");
-     }
+    }
 
     strcpy(str, car);
     return OK;
@@ -413,7 +413,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     CommandCode last_cmd = UNKNOWN;
     extern char *cmd_to_str[N_CMD][N_CMDT];
     int i;
-    Id * obj_id_array = NULL;
     Player *player = NULL;
     Character *character = NULL;
     Object *obj = NULL;
@@ -466,16 +465,15 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
     /* Renderizado de ubicaciones de objetos globales */
     screen_area_puts(ge->descript, " Objects:");
-    for (i = 0; i < space_get_number_of_objects(act); i++)
+    for (i = 0; i < MAX_OBJECTS; i++)
     {
-        obj_id_array = space_get_objects(act);
-        obj = game_get_object(game, obj_id_array[i]);
+        obj = game_get_object(game, i);
         if (obj)
         {
             obj_loc = game_get_object_location(game, i);
-            if (obj_loc != NO_ID)
+            if (game_get_object_location(game,object_get_id(obj))==game_get_player_location(game))
             {
-                sprintf(str, "  %-10s: %d", object_get_name(obj), (int)obj_loc);
+                sprintf(str, "  - %s -Health:%d -Damage:%d -Dependency:%ld", object_get_name(obj),object_get_health(obj),object_get_damage(obj),object_get_dependency(obj));
                 screen_area_puts(ge->descript, str);
             }
         }
@@ -483,18 +481,18 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
     /* Renderizado del estado y ubicacion de los personajes */
     screen_area_puts(ge->descript, " Characters:");
-    for (i = 0; i < space_get_n_characters(act); i++)
+    for (i = 0; i < MAX_CHARACTERS; i++)
     {
-        character = game_get_character_from_id(game, space_get_character(act, i));
+        character = game_get_character_at(game, i);
         if (character)
         {
             Id char_loc = game_get_character_location(game, character_get_id(character));
-            if (char_loc != NO_ID)
+            if (game_get_character_location(game,character_get_id(character))==game_get_player_location(game))
             {
                 int health = character_get_health(character);
                 if (health > 0)
                 {
-                    sprintf(str, "  %-10s: %d (%d)", character_get_name(character), (int)char_loc, health);
+                    sprintf(str, "  %-10s: %d (%d) - %s", character_get_name(character), (int)char_loc, health, character_get_friendly(character) ? "Friend" : "Enemy");
                 }
                 else
                 {
@@ -525,7 +523,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
             obj = game_get_object(game, object_in_backpack);
             if (obj)
             {
-                sprintf(str, "  - %s", object_get_name(obj));
+                sprintf(str, "  - %s -Health:%d -Damage:%d -Dependency:%ld", object_get_name(obj),object_get_health(obj),object_get_damage(obj),object_get_dependency(obj));
             }
             else
             {
@@ -564,7 +562,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     screen_area_clear(ge->help);
     screen_area_puts(ge->help, " The commands you can use are:");
     screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
-    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, use/u, team/tm, open/o");
+    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, use/u, team/tm, open/o,steal/s,buy/b,save/s,load/l");
     screen_area_puts(ge->help, "     move: north/south/east/west/up/down; U/D marks up/down exits");
 
     if (paint_cmd == TRUE)
