@@ -974,3 +974,56 @@ Character *game_get_character_from_name(Game *game, char *name)
   }
   return NULL;
 }
+Status game_clear(Game *game)
+{
+  int i;
+  if (!game) return ERROR;
+
+  /* Destruye y limpia a NULL los espacios */
+  for (i = 0; i < MAX_SPACES; i++) {
+    if (game->spaces[i]) {
+      space_destroy(game->spaces[i]);
+      game->spaces[i] = NULL;
+    }
+  }
+  game->n_spaces = 0;
+
+  /* Destruye y limpia a NULL los jugadores */
+  for (i = 0; i < MAX_PLAYERS; i++) {
+    if (game->players[i]) {
+      player_destroy(game->players[i]);
+      game->players[i] = NULL;
+    }
+  }
+  game->n_players = 0;
+
+  /* Destruye y limpia a NULL los enlaces (Evita el Double Free y el fallo al cargar) */
+  for (i = 0; i < MAX_LINKS; i++) {
+    if (game->link[i]) {
+      link_destroy(game->link[i]);
+      game->link[i] = NULL;
+    }
+  }
+  game->n_links = 0;
+
+  /* Destruye y limpia a NULL los objetos */
+  for (i = 0; i < MAX_OBJECTS; i++) {
+    if (game->objects[i]) {
+      object_destroy(game->objects[i]);
+      game->objects[i] = NULL;
+    }
+  }
+  game->n_objects = 0;
+
+  /* Destruye y limpia a NULL los personajes */
+  for (i = 0; i < MAX_CHARACTERS; i++) {
+    if (game->characters[i]) {
+      character_destroy(game->characters[i]);
+      game->characters[i] = NULL;
+    }
+  }
+  game->n_characters = 0;
+
+  game->turn = 0;
+  return OK;
+}

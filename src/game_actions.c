@@ -544,11 +544,6 @@ Status game_actions_attack(Game *game)
   {
     return ERROR;
   }
-  /* Evalua el estatus hostil y vital del NPC */
-  if (character_get_friendly(enemy))
-  {
-    return ERROR;
-  }
 
   char_health = character_get_health(enemy);
   if (char_health <= 0)
@@ -1019,16 +1014,16 @@ Status game_actions_use(Game *game)
   {
     return ERROR;
   }
-  if (!(object = (game_get_object(game, object_in_backpack))))
+  if (!(object =(game_get_object(game, object_in_backpack))))
   {
     return ERROR;
   }
-  if (!(objhealth = object_get_health(object)))
+  if ((objhealth = object_get_health(object))<=0)
   {
     return ERROR;
   }
 
-  if (arg[1][0] == '\0' || strcasecmp("over", arg[1]) != 0) /**si no se pone over directamente le añade la vida al jugador */
+  if (arg[1][0] == '\0' || strcasecmp("over", arg[1]) != 0) /**si no se pone over directamente le añade la vide al jugador */
   {
     if (player_set_health(player, player_get_health(player) + objhealth) == ERROR)
     {
@@ -1054,6 +1049,22 @@ Status game_actions_use(Game *game)
       {
         return ERROR;
       }
+    }
+    if (!game)
+    {
+      return ERROR;
+    }
+    if (!(last_cmd = game_get_last_command(game)))
+    {
+      return ERROR;
+    }
+    if (!(arg = command_get_arg(last_cmd)))
+    {
+      return ERROR;
+    }
+    if (command_get_nargs(last_cmd) != 3 || strcasecmp(arg[1], "over") != 0)
+    {
+      return ERROR;
     }
   }
 
@@ -1116,7 +1127,7 @@ Status game_actions_open(Game *game)
   {
     return ERROR;
   }
-  if (link_get_origin(link) != player_loc)
+  if (link_get_origin(link) != player_loc && link_get_destination(link) != player_loc)
   {
     return ERROR;
   }
@@ -1381,7 +1392,7 @@ Status game_actions_steal(Game *game)
     return ERROR;
   }
   stolen = en_money * (rand() % 100) / 100;
-  if ((rand() % 10) < 3)
+  if ((rand() % 10) < 4)
   {
     stolen = 0;
     player_set_health(player, player_get_health(player) - 1);
