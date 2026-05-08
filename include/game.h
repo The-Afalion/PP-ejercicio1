@@ -439,7 +439,7 @@ Character * game_get_character_from_id(Game *game, Id id);
 
 /**
  * @brief Obtiene el id del jugador activo.
- * @author Codex
+ * @author Rodrigo
  * @param game Puntero al juego.
  * @return id del jugador activo o NO_ID en caso de error.
  */
@@ -447,7 +447,7 @@ Id game_get_current_player_id(Game *game);
 
 /**
  * @brief Indica si dos jugadores pertenecen al mismo equipo.
- * @author Codex
+ * @author Rodrigo
  * @param game Puntero al juego.
  * @param first Primer jugador.
  * @param second Segundo jugador.
@@ -464,5 +464,11 @@ BOOL game_players_are_teammates(Game *game, Player *first, Player *second);
  * @return Puntero al personaje encontrado o NULL si el nombre es inválido o hay error.
  */
 Character * game_get_character_from_name(Game *game, char *name);
-
+/**
+ * @brief Limpia el game antes de cargar otro
+ * @author Unai
+ * @param game Puntero al juego.
+ * @return OK o ERROR en caso de error
+ */
+Status game_clear(Game *game);
 #endif
