@@ -15,7 +15,7 @@
 #define SHERIFF_ID 70
 #define PLACA_ID 48
 #define WHISKY_ID 50
-#define VAULT_LINK_ID 61
+#define VAULT_LINK_ID 17
 #define VAULT_ID 62
 BOOL game_rules_sheriff_is_dead(Game *game, Command *cmd);
 BOOL game_rules_iam_drunk(Game *game, Command *cmd);
@@ -60,18 +60,18 @@ Status game_rules_update(Game *game, Command *cmd)
     {
         for (i = 0; i < game_get_number_of_characters(game); i++)
         {
-            if (character_get_friendly(game_get_character_from_index(game, i)) == FALSE)
+            if (character_get_friendly(game_get_character_from_index(game, i)) == FALSE && character_get_health(game_get_character_from_index(game, i)) > 0)
             {
-                character_set_health(game_get_character_from_index(game, i), (int)(character_get_health(game_get_character_from_index(game, i)) * 1.2));
+                character_set_health(game_get_character_from_index(game, i), (int)(character_get_health(game_get_character_from_index(game, i)) + character_get_health(game_get_character_from_index(game, i)) * 0.1));
             }
         }
     }
     /**Game rule : 6 */
     if (game_rules_heavy_inventory(game, cmd) == TRUE)
     {
-        if (player_get_money(game_get_player(game)) >= 10)
+        if (player_get_money(game_get_player(game)) >= 2)
         {
-            player_set_money(game_get_player(game), player_get_money(game_get_player(game)) - 10);
+            player_set_money(game_get_player(game), player_get_money(game_get_player(game)) - 2);
         }
     }
 
