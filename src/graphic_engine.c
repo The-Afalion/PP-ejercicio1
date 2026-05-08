@@ -380,7 +380,7 @@ Status graphic_engine_get_objects_str(Game *game, Space *space, char *str)
     while (strlen(car) < ROOM_WIDTH)
     {
         strcat(car, " ");
-    }
+     }
 
     strcpy(str, car);
     return OK;
@@ -413,6 +413,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     CommandCode last_cmd = UNKNOWN;
     extern char *cmd_to_str[N_CMD][N_CMDT];
     int i;
+    Id * obj_id_array = NULL;
     Player *player = NULL;
     Character *character = NULL;
     Object *obj = NULL;
@@ -465,9 +466,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
     /* Renderizado de ubicaciones de objetos globales */
     screen_area_puts(ge->descript, " Objects:");
-    for (i = 0; i < MAX_OBJECTS; i++)
+    for (i = 0; i < space_get_number_of_objects(act); i++)
     {
-        obj = game_get_object(game, i);
+        obj_id_array = space_get_objects(act);
+        obj = game_get_object(game, obj_id_array[i]);
         if (obj)
         {
             obj_loc = game_get_object_location(game, i);
@@ -481,9 +483,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
     /* Renderizado del estado y ubicacion de los personajes */
     screen_area_puts(ge->descript, " Characters:");
-    for (i = 0; i < MAX_CHARACTERS; i++)
+    for (i = 0; i < space_get_n_characters(act); i++)
     {
-        character = game_get_character_at(game, i);
+        character = game_get_character_from_id(game, space_get_character(act, i));
         if (character)
         {
             Id char_loc = game_get_character_location(game, character_get_id(character));

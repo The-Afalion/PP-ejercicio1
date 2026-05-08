@@ -1,24 +1,30 @@
+# p = jugador: id|nombre|gdesc|localización|salud|max_objetos|dinero|objeto_1|...|objeto_max|
+# c = personaje: id|nombre|gdesc|localización|salud|amigable|mensaje|suguiendo|dinero|
+# o = objeto: id|nombre|localización|descripción|salud|movible|dependencia|abre|precio|dano|
+# s = espacio: id|nombre|gdesc0|gdesc1|gdesc2|gdesc3|gdesc4|descubierto|
+# l = enlace: id|nombre|origen|destino|dirección|abierto|
+# Cada gdesc de espacio debe tener 13 caracteres.
 #p:1|Vaquero|{V}|110|5|5|0|-1|-1|-1|-1|-1|
 #p:2|Bandido|{B}|110|5|5|0|-1|-1|-1|-1|-1|
 #c:31|Forajido|{F}|102|2|0|¡Manos arriba!|-1|0|
-#c:32|Cantinero|{C}|21|20|1|¿Que te sirvo, forastero?|-1|0|
+#c:32|Cantinero|{C}|21|20|1|buy <consumible> : consumible(Whisky(10$, +15HP), Frijoles(8$, +5HP))|-1|0|
 #c:33|Pistolero|{P}|21|5|1|Mis balas son tuyas si pagas bien.|-1|0|
 #c:61|Capataz|{G}|81|4|0|La mina esta cerrada.|-1|0|
-#c:63|Buhonero|{V}|41|3|1|Tengo de todo si tienes dolares.|-1|0|
+#c:63|Armero|{V}|41|3|1|buy <arma> : armas(Winchester(200$), Revolver(100$), Cuchillo(30))|-1|0|
 #c:64|Jinete|[X]|110|5|0|El mediodia se acerca.|-1|0|
 #c:65|Cuatrero|{C}|82|8|0|El botin descansara en el infierno.|-1|0|
-#c:66|BillyElNiño|{b}|82|8|0|¡No soy un nino!|-1|0|
+#c:66|BillyElNino|{b}|82|8|0|¡No soy un nino!|-1|0|
 #c:67|Manosrapidas|{M}|32|8|1|¡Sacadme de aqui, soy inocente!|-1|0|
 #c:68|Ezequiel|{E}|91|8|1|Soy el sepulturero.|-1|0|
 #c:69|Alcalde|{A}|101|4|1|Bienvenido a nuestra humilde ciudad.|-1|0|
 #c:70|Sheriff|{S}|31|6|1|Manten las manos donde pueda verlas.|-1|0|
-#o:21|Revolver|110|Un pesado revolver de tambor de seis tiros.|0|1|-1|-1|0|0|
+#o:21|Revolver|110|Un pesado revolver de tambor de seis tiros.|0|1|-1|-1|100|0|
 #o:22|Lampara|21|Una lampara de aceite de cristal ahumado.|0|1|-1|-1|0|0|
 #o:23|Poncho|110|Un poncho de lana que protege del polvo y la arena.|0|1|-1|-1|0|0|
 #o:24|Piel_Oso|22|Una autentica piel de oso cazado en las montañas.|0|1|-1|-1|0|0|
 #o:25|CajaFuerte|62|Una caja fuerte de acero pesada con cerrada de tambor.|0|0|-1|-1|0|0|
 #o:26|LlaveLaton|23|Una pequeña llave de laton desgastada.|0|1|-1|61|0|0|
-#o:27|Winchester|110|Un rifle de repeticion reluciente.|0|1|-1|-1|0|0|
+#o:27|Winchester|110|Un rifle de repeticion reluciente.|0|1|-1|-1|200|0|
 #o:28|LlaveBanco|101|Una llave gruesa con la insignia del banco local.|0|1|-1|59|0|0|
 #o:29|LlaveCarcel|31|Una llave aspera de la Comisaria.|0|1|-1|51|0|0|
 #o:30|LlaveMina|62|Una llave negra cubierta de polvo de carbon.|0|1|-1|67|0|0|
@@ -27,21 +33,21 @@
 #o:43|Mapa|103|Un mapa a medio dibujar del cañon subterraneo.|0|1|-1|-1|0|0|
 #o:44|Brujula|110|Una brujula de laton con el cristal roto.|0|1|-1|-1|0|0|
 #o:45|Lazo|102|Una soga gruesa con nudo corredizo.|0|1|-1|-1|0|0|
-#o:46|Cuchillo|31|Un cuchillo Bowie de cazador muy afilado.|0|1|-1|-1|0|0|
+#o:46|Cuchillo|31|Un cuchillo Bowie de cazador muy afilado.|0|1|-1|-1|30|0|
 #o:47|Cartel|31|Un cartel antiguo de recompensa SE BUSCA.|0|1|-1|-1|0|0|
 #o:48|Placa|31|Una estrella de hojalata de seis puntas para el pecho.|0|1|-1|-1|0|0|
 #o:49|Montura|102|Una montura de cuero curtido para caballo.|0|1|-1|-1|0|0|
-#o:50|Whisky|21|Una botella de licor de centeno casero muy fuerte.|1|0|-1|-1|10|0|
+#o:50|Whisky|21|Una botella de licor de centeno casero muy fuerte.|15|0|-1|-1|10|0|
 #o:51|Pico|81|Un pico de minero con mango de roble astillado.|0|1|-1|-1|0|0|
-#o:52|Sombrero|41|Un autentico sombrero Stetson de ala ancha cubierto de polvo.|0|0|-1|-1|15|0|
+#o:52|Sombrero|41|Un autentico sombrero Stetson de ala ancha cubierto de polvo.|0|0|-1|-1|0|0|
 #o:53|PepitaOro|82|Una gran piedra irregular y muy brillante.|0|1|-1|-1|0|0|
 #o:54|Reloj|101|Un reloj de bolsillo de plata parado a mediodia.|0|1|-1|-1|0|0|
 #o:55|Escrituras|62|Las escrituras manchadas de un rancho lejano.|0|1|-1|-1|0|0|
 #o:56|Dolar|61|Un dolar de plata troquelado y algo rayado.|0|1|-1|-1|0|0|
 #o:57|Espuela|91|Una espuela dentada escondida bajo la arena.|0|1|-1|-1|0|0|
-#o:58|Panuelo|41|Un pañuelo de algodon rojo para atar al rostro.|0|0|-1|-1|5|0|
+#o:58|Panuelo|41|Un pañuelo de algodon rojo para atar al rostro.|0|0|-1|-1|0|0|
 #o:59|Botas|41|Unas botas de cuero de montar gastadas.|0|0|-1|-1|20|0|
-#o:60|Frijoles|41|Una lata de frijoles en conserva todavia sellada.|1|0|-1|-1|8|0|
+#o:60|Frijoles|41|Una lata de frijoles en conserva todavia sellada.|5|0|-1|-1|8|0|
 #s:110|Calle1|.............|  : = = = :  |  : = = = :  |  : = = = :  |.............|1|
 #s:21|Cantina|.===========.|I  SALOON   I|I [_______] I|I   }{ /^/  I|'==========='|0|
 #s:22|HabitacionesCantina|.===========.|I  [=] [=]  I|I  \v\ /^/  I|I   _   _   I|'==========='|0|

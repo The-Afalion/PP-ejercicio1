@@ -521,7 +521,7 @@ Status game_managment_load(Game *game, char *filename){
     if(!game||!filename){
         return ERROR;
     }
-    if(!game_managment_load_characters(game,filename)||!game_managment_load_links(game,filename)||!game_managment_load_objects(game,filename)||!game_managment_load_players(game,filename)||!game_managment_load_spaces(game,filename)){
+    if(!game_managment_load_spaces(game,filename)||!game_managment_load_links(game,filename)||!game_managment_load_objects(game,filename)||!game_managment_load_players(game,filename)||!game_managment_load_characters(game,filename)){
         return ERROR;
     }
     return OK;
