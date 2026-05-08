@@ -1,5 +1,8 @@
+# p = jugador: id|nombre|gdesc|localización|salud|max_objetos|dinero|objeto_1|...|objeto_max|
 #p:1|Vaquero|[V]|110|10|5|100|-1|-1|-1|-1|-1|
 #p:2|Bandido|[B]|110|10|5|0|-1|-1|-1|-1|-1|
+
+# c = personaje: id|nombre|gdesc|localización|salud|amigable|mensaje|suguiendo|dinero|
 #c:31|Forajido|{F}|102|8|0|¡Manos arriba!|-1|15|
 #c:32|Cantinero|{C}|21|1|1|¿Que te sirvo, forastero?|-1|2|
 #c:61|Capataz|{C}|81|4|0|La mina esta cerrada.|-1|3|
@@ -10,15 +13,17 @@
 #c:67|Manosrapidas|{M}|32|8|1|¡Sacadme de aqui, soy inocente!|-1|0|
 #c:68|Ezequiel|{E}|91|2|1|Soy el sepulturero.|-1|0|
 #c:69|Alcalde|{A}|101|1|1|Bienvenido a nuestra humilde ciudad.|-1|0|
-#c:70|Sheriff|{S}|31|30|0|Manten las manos donde pueda verlas.|-1|150|
+#c:70|Sheriff|{S}|31|30|1|Manten las manos donde pueda verlas.|-1|150|
+
+# o = objeto: id|nombre|localización|descripción|salud|movible|dependencia|abre|precio|dano|
 #o:21|Revolver|41|Un pesado revolver de tambor de seis tiros.|0|0|-1|-1|15|7|
 #o:23|Poncho|22|Un poncho de lana que protege del polvo y la arena.|1|1|-1|-1|0|0|
 #o:24|Piel_Oso|110|Una autentica piel de oso cazado en las montañas.|1|1|-1|-1|0|0|
-#o:25|CajaFuerte|110|Se dice que en este pueblo hay un tesoro escondido en el fondo del banco... ¡VE A BUSCARLO!|0|0|-1|-1|0|0|
+#o:25|CajaFuerte|62|Se dice que en este pueblo hay un tesoro escondido en el fondo del banco... ¡VE A BUSCARLO!|0|0|-1|-1|0|0|
 #o:27|Winchester|41|Un rifle de repeticion reluciente.|0|0|-1|-1|20|9|
-#o:28|LlaveBanco|101|Una llave gruesa con la insignia del banco local que abre Banco_Boveda.|0|1|41|17|0|0|
-#o:29|LlaveCarcel|31|Una llave aspera de la Comisaria que abre Comisaria_Carcel.|0|1|41|19|0|0|
-#o:30|LlaveMina|102|Una llave negra cubierta de polvo de carbon que abre Cementerio_Mina .|0|1|41|25|0|0|
+#o:28|LlaveBanco|82|Una llave gruesa robada por los bandidos de la mina. Abre Banco_Boveda.|0|1|41|17|0|0|
+#o:29|LlaveCarcel|23|Una llave aspera de la Comisaria perdida en el tejado. Abre Comisaria_Carcel.|0|1|41|19|0|0|
+#o:30|LlaveMina|32|Una llave negra cubierta de polvo escondida en la celda. Abre Cementerio_Mina.|0|1|41|25|0|0|
 #o:41|Anilla|22|Un aro de alambre pesado para agrupar llaves.|0|1|-1|-1|0|0|
 #o:42|Dinamita|81|Un cartucho rojo con la mecha intacta.|0|1|-1|-1|0|3|
 #o:43|Mapa|110|Un mapa a medio dibujar del cañon subterraneo.|0|1|-1|-1|0|0|
@@ -31,6 +36,9 @@
 #o:51|Pico|81|Un pico de minero con mango de roble astillado.|0|1|-1|-1|0|1|
 #o:59|Botas|41|Unas botas de cuero de montar gastadas.|3|0|-1|-1|8|1|
 #o:60|Frijoles|21|Una lata de frijoles en conserva todavia sellada.|1|1|-1|-1|0|0|
+
+# s = espacio: id|nombre|gdesc0|gdesc1|gdesc2|gdesc3|gdesc4|descubierto| 
+# Cada gdesc de espacio debe tener 13 caracteres.
 #s:110|Calle1|.............|  : = = = :  |  : = = = :  |  : = = = :  |.............|1|
 #s:21|Cantina|.===========.|I  SALOON   I|I [_______] I|I   }{ /^/  I|'==========='|0|
 #s:22|HabitacionesCantina|.===========.|I  [=] [=]  I|I  \v\ /^/  I|I   _   _   I|'==========='|0|
@@ -46,8 +54,11 @@
 #s:101|Ayuntamiento|.===========.|I   MAYOR   I|I I I I I I I|I I_I I_I I I|'==========='|0|
 #s:102|Establo|.-----------.|I HORSE (#) I|I   U   U   I|I    (#)    I|'-----------'|0|
 #s:103|Casino|.===========.|I  [ 777 ]  I|I   (R/N)   I|I    $$$    I|'==========='|0|
+
+# l = enlace: id|nombre|origen|destino|dirección|abierto|
 #l:01|Calle_Ayunta|110|101|1|1|
 #l:02|Ayunta_Calle|101|110|0|1|
+#l:03|Calle_Banco|110|61|0|1|
 #l:04|Banco_Calle|61|110|1|1|
 #l:05|Calle_Comisaria|110|31|2|1|
 #l:06|Comisaria_Calle|31|110|3|1|
