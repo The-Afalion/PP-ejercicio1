@@ -1009,6 +1009,7 @@ Status game_actions_use(Game *game)
   {
     return ERROR;
   }
+  printf("object_in_backpack: %d\n", object_in_backpack);
   object_owner = game_actions_find_object_owner_in_team(game, player, object_in_backpack);
   if (!object_owner)
   {
@@ -1028,7 +1029,7 @@ Status game_actions_use(Game *game)
     return ERROR;
   }
 
-  if (arg[1][0] == '\0' || strcasecmp("over", arg[1]) != 0) /**si no se pone over directamente le añade la vide al jugador */
+  if (arg[1][0] == '\0' || strcasecmp("over", arg[1]) != 0) /**si no se pone over directamente le añade la vida al jugador */
   {
     if (player_set_health(player, player_get_health(player) + objhealth) == ERROR)
     {
@@ -1054,22 +1055,6 @@ Status game_actions_use(Game *game)
       {
         return ERROR;
       }
-    }
-    if (!game)
-    {
-      return ERROR;
-    }
-    if (!(last_cmd = game_get_last_command(game)))
-    {
-      return ERROR;
-    }
-    if (!(arg = command_get_arg(last_cmd)))
-    {
-      return ERROR;
-    }
-    if (command_get_nargs(last_cmd) != 3 || strcasecmp(arg[1], "with") != 0)
-    {
-      return ERROR;
     }
   }
 
