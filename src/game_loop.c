@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
   while ((command_get_code(command) != EXIT) && !game_get_finished(game))
   {
     /* Actualiza la interfaz grafica pre-comando */
-    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), FALSE);
+    graphic_engine_paint_game(gengine, game);
 
     /* Obtiene la entrada del usuario */
     command_get_user_input(command);
@@ -150,15 +150,15 @@ int main(int argc, char *argv[])
     if (command_get_code(command) == EXIT || game_get_finished(game)) break;
 
     /* Actualiza la interfaz grafica post-comando */
-    graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
-    sleep(1);
+    graphic_engine_paint_game(gengine, game);
+    sleep(2);
 
     /* Procesa la tirada de turno de F19 */
     game_loop_update_turn(game, command);
   }
 
   /* Imprime el estado final antes de salir */
-  graphic_engine_paint_game(gengine, game, game_get_last_command_status(game), TRUE);
+  graphic_engine_paint_game(gengine, game);
 
   /* Liberacion de recursos generales */
   game_destroy(game);

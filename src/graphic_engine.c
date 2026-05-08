@@ -71,7 +71,7 @@ Graphic_engine *graphic_engine_create()
 
 void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL is_act)
 {
-    Space *west, *east;
+    Space *west, *east, *up, *down;
     Character *character;
     char str[255], west_str[85], middle_str[85], east_str[85], obj_list[ROOM_WIDTH + 1];
     char vertical_exits[3];
@@ -90,6 +90,8 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
     /* Recoleccion de referencias de los espacios adyacentes */
     west = game_get_space(game, game_get_connection(game, space_get_id(middle), W));
     east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
+    up = game_get_space(game, game_get_connection(game, space_get_id(middle), U));
+    down = game_get_space(game, game_get_connection(game, space_get_id(middle), D));
     middle_discovered = space_get_discovered(middle);
 
     /* Generacion grafica del borde superior */
@@ -111,7 +113,7 @@ void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, BOOL
         sprintf(east_str, "+-------------------+");
     }
 
-    sprintf(str, "%s  +-------------------+  %s", west_str, east_str);
+    sprintf(str, "%s  +-------%s------+  %s", west_str, up ? "^-Up-^" : "------", east_str);
     screen_area_puts(area, str);
 
     /* Construccion del bloque de informacion de personajes e identificadores */
