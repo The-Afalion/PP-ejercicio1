@@ -407,7 +407,7 @@ void graphic_engine_destroy(Graphic_engine *ge)
 
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_status, BOOL paint_cmd)
 {
-    Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, obj_loc = NO_ID, object_in_backpack = NO_ID;
+    Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID, object_in_backpack = NO_ID, *obj_ids = NULL;
     Space *act = NULL;
     char str[255];
     CommandCode last_cmd = UNKNOWN;
@@ -418,13 +418,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     Object *obj = NULL;
     int obj_found = 0;
     int max_backpack_obj = 0;
-
+ 
     /* Comprueba la validez del juego */
     if (!game)
     {
         return;
     }
-
+    
     /* Procedimiento de actualizacion de la capa visual del mapa */
     screen_area_clear(ge->map);
     if ((id_act = game_get_player_location(game)) != NO_ID)
@@ -462,22 +462,30 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
 
     /* Procedimiento de actualizacion del panel de descripcion */
     screen_area_clear(ge->descript);
+    screen_area_puts(ge->descript, "You are in:");
+    if (act)    {
+        screen_area_puts(ge->descript, space_get_name(act));
+    }
 
     /* Renderizado de ubicaciones de objetos globales */
     screen_area_puts(ge->descript, " Objects:");
-    for (i = 0; i < MAX_OBJECTS; i++)
+    for (i = 0; i < space_get_number_of_objects(act); i++)
     {
-        obj = game_get_object(game, i);
-        if (obj)
+        obj_ids = space_get_objects(act);
+        if (obj_ids[i] != NO_ID)
         {
-            obj_loc = game_get_object_location(game, i);
-            if (game_get_object_location(game,object_get_id(obj))==game_get_player_location(game))
+            if (game_get_object_location(game,obj_ids[i])==game_get_player_location(game))
             {
-                sprintf(str, "  - %s -Health:%d -Damage:%d -Dependency:%ld", object_get_name(obj),object_get_health(obj),object_get_damage(obj),object_get_dependency(obj));
-                screen_area_puts(ge->descript, str);
-            }
+                obj = game_get_object(game, obj_ids[i]);
+                if (obj)
+                {
+                    sprintf(str, "  - %s -Health:%d -Damage:%d -Dependency:%ld", object_get_name(obj),object_get_health(obj),object_get_damage(obj),object_get_dependency(obj));
+                    screen_area_puts(ge->descript, str);
+                }
+                }
         }
     }
+
 
     /* Renderizado del estado y ubicacion de los personajes */
     screen_area_puts(ge->descript, " Characters:");
@@ -562,7 +570,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game, Status last_cmd_s
     screen_area_clear(ge->help);
     screen_area_puts(ge->help, " The commands you can use are:");
     screen_area_puts(ge->help, "     exit/e, take/t, drop/d, attack/a, chat/c, move/m");
-    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, use/u, team/tm, open/o,steal/s,buy/b,save/s,load/l");
+    screen_area_puts(ge->help, "     inspect/i, recruit/r, abandon/ab, use/u, team/tm, open/o,steal/st,buy/b,save/s,load/l");
     screen_area_puts(ge->help, "     move: north/south/east/west/up/down; U/D marks up/down exits");
 
     if (paint_cmd == TRUE)

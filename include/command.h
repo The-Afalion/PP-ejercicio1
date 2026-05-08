@@ -24,7 +24,7 @@ typedef enum { CMDS, CMDL } CommandType;
 /**
  * @brief Códigos de los comandos disponibles en el juego
  */
-typedef enum { NO_CMD = -1, UNKNOWN, EXIT, TAKE, DROP, ATTACK, CHAT, MOVE, INSPECT, RECRUIT, ABANDON, USE, OPEN, TEAM, SAVE, LOAD ,BUY,STEAL} CommandCode;
+typedef enum { NO_CMD = -1, UNKNOWN, EXIT, TAKE, DROP, ATTACK, CHAT, MOVE, INSPECT, RECRUIT, ABANDON, USE, OPEN, COLAB, SAVE, LOAD ,BUY,STEAL} CommandCode;
 
 /**
  * @brief Estructura opaca del comando

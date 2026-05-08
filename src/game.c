@@ -895,6 +895,23 @@ Space*game_get_space_from_index(Game*game,int n){
   }
   return game->spaces[n];
 }
+
+Character *game_get_character_from_id(Game *game, Id id)
+{
+  int i;
+  if (!game || id == NO_ID)
+  {
+    return NULL;
+  }
+  for (i = 0; i < game->n_characters; i++)
+  {
+    if (game->characters[i] != NULL && character_get_id(game->characters[i]) == id)
+    {
+      return game->characters[i];
+    }
+  }
+  return NULL;
+}
 Link *game_get_link_from_index(Game*game, int n){
   if(!game||n>=game_get_number_of_links(game)||n<0){
     return NULL;

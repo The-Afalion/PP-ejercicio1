@@ -119,7 +119,7 @@ Status space_set_name(Space *space, char *name)
   return OK;
 }
 
-const char *space_get_name(Space *space)
+char *space_get_name(Space *space)
 {
   /* Comprobamos si es NULL y devolvemos nombre*/
   if (!space)

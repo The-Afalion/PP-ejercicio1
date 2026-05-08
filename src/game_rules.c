@@ -19,6 +19,10 @@
 #define VAULT_ID 62
 BOOL game_rules_sheriff_is_dead(Game *game, Command *cmd);
 BOOL game_rules_iam_drunk(Game *game, Command *cmd);
+BOOL game_rules_weapon_damage_decrease(Game *game, Command *cmd);
+BOOL game_rules_game_completed(Game *game, Command *cmd);
+BOOL game_rules_killedNPC(Game *game, Command *cmd);
+BOOL game_rules_heavy_inventory(Game *game, Command *cmd);
 Status game_rules_update(Game *game, Command *cmd)
 {
     int i;
@@ -101,9 +105,8 @@ BOOL game_rules_iam_drunk(Game *game, Command *cmd)
 {
 
     Player *player = NULL;
-    Object *object = NULL;
     char **args = NULL;
-    CommandCode cmd;
+    CommandCode cmdc;
     if (!game || !cmd)
     {
         return ERROR;
@@ -112,11 +115,11 @@ BOOL game_rules_iam_drunk(Game *game, Command *cmd)
     {
         return FALSE;
     }
-    if (!(args = command_get_args(cmd)))
+    if (!(args = command_get_arg(cmd)))
     {
         return FALSE;
     }
-    if ((cmd = cmd_get_code(cmd)) != USE)
+    if ((cmdc = command_get_code(cmd)) != USE)
     {
         return FALSE;
     }
@@ -133,7 +136,11 @@ BOOL game_rules_weapon_damage_decrease(Game *game, Command *cmd)
     Player *player = NULL;
     Object *object = NULL;
     char **args = NULL;
-    CommandCode cmd;
+    CommandCode cmdc;
+     if (!game || !cmd)
+    {
+        return ERROR;
+    }  
     if (!game || !cmd)
     {
         return ERROR;
@@ -142,11 +149,11 @@ BOOL game_rules_weapon_damage_decrease(Game *game, Command *cmd)
     {
         return FALSE;
     }
-    if (!(args = command_get_args(cmd)))
+    if (!(args = command_get_arg(cmd)))
     {
         return FALSE;
     }
-    if ((cmd = cmd_get_code(cmd)) != ATTACK)
+    if ((cmdc = command_get_code(cmd)) != ATTACK)
     {
         return FALSE;
     }
@@ -165,7 +172,6 @@ BOOL game_rules_weapon_damage_decrease(Game *game, Command *cmd)
 BOOL game_rules_game_completed(Game *game, Command *cmd)
 {
     Player *player = NULL;
-    Id space = NO_ID;
     if (!game || !cmd)
     {
         return ERROR;
@@ -186,8 +192,8 @@ BOOL game_rules_killedNPC(Game *game, Command *cmd)
     Player *player = NULL;
     Character *character = NULL;
     char **args = NULL;
-    CommandCode cmd;
-    if (!game || !cmd)
+    CommandCode cmdc;
+     if (!game || !cmd)
     {
         return ERROR;
     }
@@ -195,15 +201,15 @@ BOOL game_rules_killedNPC(Game *game, Command *cmd)
     {
         return FALSE;
     }
-    if (!(args = command_get_args(cmd)))
+    if (!(args = command_get_arg(cmd)))
     {
         return FALSE;
     }
-    if ((cmd = cmd_get_code(cmd)) != ATTACK)
+    if ((cmdc = command_get_code(cmd)) != ATTACK)
     {
         return FALSE;
     }
-    if (!(character = game_get_character_from_id(game, game_get_character_id_from_name(game, args[0]))))
+    if (!(character = game_get_character_from_name(game, args[0])))
     {
         return FALSE;
     }

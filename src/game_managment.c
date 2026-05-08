@@ -106,8 +106,8 @@ Status game_managment_load_objects(Game *game, char *filename)
     char description[WORD_SIZE] = "";
     int health = 0;
     int movable = 0;
-    int price=0;
-    int damage=0;
+    int price = 0;
+    int damage = 0;
 
     /* Comprueba la validez del nombre de archivo */
     if (!filename)
@@ -129,15 +129,19 @@ Status game_managment_load_objects(Game *game, char *filename)
         {
             toks = strtok(line + 3, "|");
             id = strtol(toks, &endptr, 10);
+            
             toks = strtok(NULL, "|");
             strcpy(name, toks);
+            
             toks = strtok(NULL, "|");
             location_id = strtol(toks, &endptr, 10);
+            
             toks = strtok(NULL, "|");
             if (toks)
             {
                 strcpy(description, toks);
             }
+            
             toks = strtok(NULL, "|");
             if (toks)
             {
@@ -147,6 +151,7 @@ Status game_managment_load_objects(Game *game, char *filename)
             {
                 health = 0;
             }
+            
             toks = strtok(NULL, "|");
             if (toks)
             {
@@ -156,6 +161,7 @@ Status game_managment_load_objects(Game *game, char *filename)
             {
                 movable = 0;
             }
+            
             toks = strtok(NULL, "|");
             if (toks)
             {
@@ -165,6 +171,28 @@ Status game_managment_load_objects(Game *game, char *filename)
             {
                 dependency = NO_ID;
             }
+
+            toks = strtok(NULL, "|");
+            if (toks)
+            {
+                damage = (int)strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                damage = 0;
+            }
+            
+            /* Precio */
+            toks = strtok(NULL, "|");
+            if (toks)
+            {
+                price = (int)strtol(toks, &endptr, 10);
+            }
+            else
+            {
+                price = 0;
+            }
+
             toks = strtok(NULL, "|");
             if (toks)
             {
@@ -174,23 +202,7 @@ Status game_managment_load_objects(Game *game, char *filename)
             {
                 open = NO_ID;
             }
-             if (toks)
-            {
-                price = strtol(toks, &endptr, 10);
-            }
-            else
-            {
-                price = 0;
-            }
-            if (toks)
-            {
-                damage = strtol(toks, &endptr, 10);
-            }
-            else
-            {
-                damage = 0;
-            }
-            /* Creacion e integracion del objeto en el motor de juego */
+
             object = object_create(id);
             if (object != NULL)
             {
@@ -199,20 +211,14 @@ Status game_managment_load_objects(Game *game, char *filename)
                 object_set_health(object, health);
                 object_set_movable(object, movable ? TRUE : FALSE);
                 object_set_dependency(object, dependency);
+                object_set_damage(object, damage);
+                object_set_price(object, price);
                 object_set_open(object, open);
-                object_set_price(object,price);
-                object_set_damage(object,damage);
+                
                 game_add_object(game, object);
                 game_set_object_location(game, location_id, id);
-            
             }
         }
-    }
-
-    /* Verificacion de errores de lectura */
-    if (ferror(file))
-    {
-        status = ERROR;
     }
 
     fclose(file);
@@ -497,7 +503,7 @@ Status game_managment_save_game(Game *game, char *filename){
     }
     for(i=0;i<game_get_number_of_objects(game);i++){
         o=game_get_object_from_index(game,i);
-        fprintf(file, "#o:%ld|%s|%ld|%s|%d|%d|%ld|%ld|%d|%d|\n", object_get_id(o),object_get_name(o),game_get_object_location(game,object_get_id(o)),object_get_desc(o),object_get_health(o),object_get_movable(o),object_get_dependency(o),object_get_open(o),object_get_price(o),object_get_damage(o));
+       fprintf(file, "#o:%ld|%s|%ld|%s|%d|%d|%ld|%d|%d|%ld|\n", object_get_id(o), object_get_name(o), game_get_object_location(game,object_get_id(o)), object_get_desc(o), object_get_health(o), object_get_movable(o), object_get_dependency(o), object_get_damage(o), object_get_price(o), object_get_open(o));
     }
     if(game_get_number_of_space(game)<0){
         return ERROR;

@@ -54,7 +54,7 @@ Status space_set_name(Space* space, char* name);
  * @param space Puntero al espacio
  * @return Cadena con el nombre del espacio o NULL en caso de error
  */
-const char* space_get_name(Space* space);
+char* space_get_name(Space* space);
 
 
 /**
