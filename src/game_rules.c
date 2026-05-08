@@ -84,12 +84,12 @@ BOOL game_rules_sheriff_is_dead(Game *game, Command *cmd)
     Character *character = NULL;
     if (!game)
     {
-        return ERROR;
+        return FALSE;
     }
 
     if (!(character = game_get_character_from_id(game, (long)SHERIFF_ID)))
     {
-        return NO_ID;
+        return FALSE;
     }
 
     sheriffhp = character_get_health(character);
@@ -98,7 +98,7 @@ BOOL game_rules_sheriff_is_dead(Game *game, Command *cmd)
     {
         return 1;
     }
-    return NO_ID;
+    return FALSE;
 }
 
 BOOL game_rules_iam_drunk(Game *game, Command *cmd)
