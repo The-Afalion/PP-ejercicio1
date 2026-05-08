@@ -1009,7 +1009,6 @@ Status game_actions_use(Game *game)
   {
     return ERROR;
   }
-  printf("object_in_backpack: %d\n", object_in_backpack);
   object_owner = game_actions_find_object_owner_in_team(game, player, object_in_backpack);
   if (!object_owner)
   {
@@ -1117,7 +1116,7 @@ Status game_actions_open(Game *game)
   {
     return ERROR;
   }
-  if (link_get_origin(link) != player_loc && link_get_destination(link) != player_loc)
+  if (link_get_origin(link) != player_loc)
   {
     return ERROR;
   }
